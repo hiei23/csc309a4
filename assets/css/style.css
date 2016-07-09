@@ -28,7 +28,7 @@ li
 
 #header
 {
-    background-color: rgba(0,0,0,0.85);
+    background-color: rgba(0,0,0,0.8);
     position: fixed;
     width: 100%;
     height: 55px;
@@ -102,9 +102,6 @@ nav div
 }
 
 
-
-
-
 /*When hovering on the register or login button, turn it red*/
 #Register_Button a
 {
@@ -163,7 +160,7 @@ nav div
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-attachment: scroll;
-    height: 400px;
+    height: 410px;
 }
 
 .Banner-Text
@@ -200,6 +197,10 @@ nav div
     border-radius: 20px;
     text-align: center;
     margin-left: 45%;
+}
+
+.SignUpLink:hover{
+    background-color: #51B266;
 }
 
 #AboutUs
