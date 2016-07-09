@@ -6,7 +6,7 @@
         <meta name="registration" content="Registration form">
         
         <link rel="stylesheet" href="assets/css/style1.css" type="text/css">
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab|Open+Sans' rel='stylesheet' type='text/css'>
         
     </head>
     <body>
@@ -78,6 +78,7 @@
                     <span class="label">Height:</span>
                     <input type="text" name="height">
                     <span>cm</span>
+                    <span class="error"><%- errors.error_Height %></span>
                 </label>
             </section>
 
@@ -86,7 +87,18 @@
                     <span class="label">Weight:</span>
                     <input type="text" name="weight">
                     <span>kg</span>
+                    <span class="error"><%- errors.error_Weight %></span>
                 </label>
+            </section>
+
+            <section>
+                <label>
+                    <span class="label">Gender:</span>
+                    <input type="radio" name="gender" value="male"> Male
+                    <input type="radio" name="gender" value="female"> Female
+                    <span class="error"><%- errors.error_Gender %></span>
+                </label>
+
             </section>
             
             <section>
@@ -343,20 +355,9 @@
                         <option value="ZM">Zambia</option>
                         <option value="ZW">Zimbabwe</option>
                     </select>
+                    <span class="error"><%- errors.error_Country %></span>
                 </label>
             </section>
-
-            <section>
-                <label id="SportsField">
-                    <span >Sports:</span>
-                    <ul>
-                        <li><input type="checkbox" name="Sport" value="Volleyball">Volleyball</li>
-                        <li><input type="checkbox" name="Sport" value="Football">Football</li>
-                        <li><input type="checkbox" name="Sport" value="Basketball">Basketball</li>
-                        <li><input type="checkbox" name="Sport" value="Tennis">Tennis</li>
-                    </ul>
-                </label>
-            <section>
 
             <section>
                 <label id="AboutMeField">
@@ -364,8 +365,58 @@
                     <textarea name="AboutMe" rows="6" cols="35">
                 </textarea>
             </section>
-            
 
+            <fieldset id="SportsFieldset">
+                <legend id="sportsLabel">Sports:</legend>
+                <article class="column">
+                    <ul>
+                        <li><input type="checkbox" name="Sports" value="Archery">Archery</li>
+                        <li><input type="checkbox" name="Sports" value="Artistic Gymnastics">Artistic Gymnastics</li>
+                        <li><input type="checkbox" name="Sports" value="Athletics">Athletics</li>
+                        <li><input type="checkbox" name="Sports" value="Badminton">Badminton</li>
+                        <li><input type="checkbox" name="Sports" value="Basketball">Basketball</li>
+                        <li><input type="checkbox" name="Sports" value="Beach Volleyball">Beach Volleyball</li>
+                        <li><input type="checkbox" name="Sports" value="Boxing">Boxing</li>
+                        <li><input type="checkbox" name="Sports" value="Canoe Slalom">Canoe Slalom</li>
+                        <li><input type="checkbox" name="Sports" value="Canoe Sprint">Canoe Sprint</li>
+                        <li><input type="checkbox" name="Sports" value="Cycling BMX">Cycling BMX</li>
+                        <li><input type="checkbox" name="Sports" value="Cycling Mountain Bike">Cycling Mountain Bike</li>
+                        <li><input type="checkbox" name="Sports" value="Cycling Road">Cycling Road</li>
+                        <li><input type="checkbox" name="Sports" value="Cycling Track">Cycling Track</li>
+                        <li><input type="checkbox" name="Sports" value="Diving">Diving</li>
+                        <li><input type="checkbox" name="Sports" value="Equestrian">Equestrian</li>
+                        <li><input type="checkbox" name="Sports" value="Fencing">Fencing</li>
+                        <li><input type="checkbox" name="Sports" value="Football">Football</li>
+                        <li><input type="checkbox" name="Sports" value="Golf">Golf</li>
+                        <li><input type="checkbox" name="Sports" value="Handball">Handball</li>
+                        <li><input type="checkbox" name="Sports" value="Hockey">Hockey</li>
+                    </ul>
+                </article>
+
+                <article class="column">
+                    <ul>
+                        <li><input type="checkbox" name="Sports" value="Judo">Judo</li>
+                        <li><input type="checkbox" name="Sports" value="Marathon Swimming">Marathon Swimming</li>
+                        <li><input type="checkbox" name="Sports" value="Modern Pentathlon">Modern Pentathlon</li>
+                        <li><input type="checkbox" name="Sports" value="Rhythmic Gymnastics">Rhythmic Gymnastics</li>
+                        <li><input type="checkbox" name="Sports" value="Rowing">Rowing</li>
+                        <li><input type="checkbox" name="Sports" value="Rugby Sevens">Rugby Sevens</li>
+                        <li><input type="checkbox" name="Sports" value="Sailing">Sailing</li>
+                        <li><input type="checkbox" name="Sports" value="Shooting">Shooting</li>
+                        <li><input type="checkbox" name="Sports" value="Swimming">Swimming</li>
+                        <li><input type="checkbox" name="Sports" value="Synchronised Swimming">Synchronised Swimming</li>
+                        <li><input type="checkbox" name="Sports" value="Table Tennis">Table Tennis</li>
+                        <li><input type="checkbox" name="Sports" value="Taekwondo">Taekwondo</li>
+                        <li><input type="checkbox" name="Sports" value="Tennis">Tennis</li>
+                        <li><input type="checkbox" name="Sports" value="Trampoline Gymnastics">Trampoline Gymnastics</li>
+                        <li><input type="checkbox" name="Sports" value="Triathlon">Triathlon</li>
+                        <li><input type="checkbox" name="Sports" value="Volleyball">Volleyball</li>
+                        <li><input type="checkbox" name="Sports" value="Water Polo">Water Polo</li>
+                        <li><input type="checkbox" name="Sports" value="Weightlifting">Weightlifting</li>
+                        <li><input type="checkbox" name="Sports" value="Wrestling">Wrestling</li>
+                    </ul>
+                </article>
+            </fieldset>    
             
             <section class="form_element">
                 <input id="SubmitButton" type="submit" value="Submit">

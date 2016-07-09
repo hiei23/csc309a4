@@ -1,5 +1,11 @@
+.column
+{
+    width: 20em;
+    float:left;
+}
+
 body {
-    font: 400 18pt/24pt "Open+Sans", "DINPro", "Helvetica", sans-serif;
+    font: 400 16pt/24pt "Roboto Slab", "Open+Sans", "DINPro", "Helvetica", sans-serif;
 }
 
 
@@ -7,14 +13,48 @@ form {
     border: 1px solid #ccc;
     padding: 2rem;
     margin: 2rem auto;
-    width: 66%;
-    background-color: #70C1B3;
+    width: 90%;
+    background-color: #e7e7e7;
+    border-radius: 25px;
+}
+
+select {
+    width: 50%;
+    padding: 0px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+    border: 2px solid #ccc;
+    font-size: 16pt;
+}
+
+textarea {
+    max-width: 100%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    resize: none;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    margin: 3rem 0;
 }
 
 input, textarea, select, option {
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     padding: 0.25rem;
-    
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16pt;  
+}
+
+input:focus
+{
+    background-color: lightblue;
 }
 
 
@@ -23,9 +63,11 @@ label {
     display: block;
     margin: 2rem 0;
 }
+
 label:first-child {
     margin-top: 0;
 }
+
 label:after {
     clear: both;
     display: table;
@@ -35,9 +77,10 @@ label:after {
 label span.label {
     float: left;
     display: block;
-    width: 20rem;
+    width: 15rem;
     font-weight: bold;
 }
+
 label span.error {
     color: red;
     padding-left: 1rem;
@@ -50,29 +93,42 @@ input[type="reset"] {
     /*margin-left: 10rem;*/
     font-size: 16pt;
 }
-input[type="submit"]:hover,
+
 input[type="reset"]:hover {
     background-color: #f3f3f3;
 }
-input[type="submit"]:active,
+
 input[type="reset"]:active {
     border-color: #999;
     background-color: #ccc;
 }
 
-input#otherdept {
-    display: none;
-    margin-left: 20rem;
+input[type="submit"] {
+    background-color: #555555; /* Black */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    -webkit-transition-duration: 0.3s; /* Safari */
+    transition-duration: 0.3s;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-textarea {
-    max-width: 100%;
+input[type="submit"]:hover {
+    background-color: #008CBA; /* Blue */
+    color: white;
 }
 
-fieldset {
-    border: 1px solid #ccc;
-    margin: 3rem 0;
+input[type="submit"]:active {
+  background-color: #008CBA;/* Blue */
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
+
 
 /* STYLING FIELDS WITH ERRORS */
 /* New pseudo-classes to style fields that have an error: */
@@ -82,8 +138,18 @@ input:invalid {
   background-color: #FFC6B3;
 }
 
-#SportsField > ul > li
+#sportsLabel
+{
+    font-weight: bold;
+}
+
+#SportsFieldset > article > ul > li
 {
     margin:0px;
     list-style-type: none;
 }
+#SportsFieldset > article
+{
+    padding-left: 5%;
+}
+
