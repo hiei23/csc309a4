@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<!-- Google Rokkitt Font-->
+	<link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
+</head>
+<body>
+	<main>
+		<section class="login_form">
+			<h1>Sign in</h1>
+			<form action="" method="" autocomplete="off">
+		            <input type="email" class="input_email" name="email" placeholder="Email address" required />
+		            <!--<span class="form_hint">Enter a valid email</span> -->
+		            <input type="password" pattern=".{6,}" required title="Minimum 6 characters required"class="input_password" name="password" placeholder="Password" required/>
+		            <!-- <p><img src="images/lock.png" alt=""></p> -->
+		            <input type="submit" class="input_submit" value="Login In"/>
+
+		            <span id="divison_img"><img src="assets/images/border.png"></span>
+		    </form>
+		</section>
+
+		<section class="other_accounts">
+			<h1>Sign in using other methods</h1>
+			<button class="facebook"><img src="assets/images/facebook.png" width="17" height="17">
+			<span>Login with Facebook</span></button>
+			<button class="google"><img src="assets/images/google.png" width="17" height="17">
+			<span>Login with Google</span></button>	
+			<button class="github"><img src="assets/images/github.png" width="17" height="17">
+			<span>Login with Github</span></button>
+		</section>
+		
+	</main>
+</body>
+</html>

@@ -1,0 +1,181 @@
+body{
+	background: url(../images/background.png) no-repeat;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-size: cover;
+}
+
+main{
+	background:#fff;
+	padding: 70px;
+	margin: auto;
+	margin-top: 23%;
+	width:550px;
+	height:200px;
+	position: relative;
+	border-radius: 12px;
+}
+
+main{
+	font-family: 'Rokkitt';
+}
+
+section h1{
+	margin:0px;
+	padding: 0px;
+}
+
+input {
+	float: left;
+	border: 1px solid #DDDDDD;
+	font-size: 1em;
+	color: #B6B6B6;
+	margin-top: 2%;
+	position: relative;
+	height: 40px;
+	border-radius: 4px;
+}
+input:focus{
+	color: #000000;
+	outline: none !important;
+    border:1px solid #93C7F2;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+form{
+	position: relative;
+}
+.input_email{
+	background: url(../images/email-icon.png) no-repeat scroll 7px 7px;
+	background-size: 30px 30px;
+	padding-left: 40px;
+	width: 200px;
+	position: absolute;
+
+}
+
+.input_password{
+	background: url(../images/password-icon.png) no-repeat scroll 7px 7px;
+	background-size: 30px 30px;
+	padding-left: 40px;
+	width: 200px;
+	position: absolute;
+	top: 50px;
+}
+
+.input_submit{
+	position: absolute;
+	background-color: #008CBA;
+	color: white;
+	width: 244px;
+	top: 100px;
+}
+
+.input_submit:hover{
+	background-color: #4797D9;
+}
+
+#divison_img{
+	position: absolute;
+	left: 260px;
+}
+
+section.other_accounts h1{
+	position: absolute;
+	left: 370px;
+	top: 70px;
+}
+
+.facebook{
+	width: 250px;
+	height: 40px;
+	position: absolute;
+	left: 370px;
+	top: 107px;
+	position: absolute;
+	font-size: 1em;
+	background: #3b5998;
+	border-radius: 4px;
+	border: none;
+	padding: 11px;
+	padding-left: 15px;
+	color: #ffffff;
+}
+.facebook:hover{
+	background: #2b4170;
+}
+
+.google{
+	width: 250px;
+	height: 40px;
+	position: absolute;
+	left: 370px;
+	top: 157px;
+	position: absolute;
+	font-size: 1em;
+	background: #db3236;
+	border-radius: 4px;
+	border: none;
+	padding: 11px;
+	padding-left: 4px;
+	color: #ffffff;
+}
+.google:hover{
+	background: #c33219;
+}
+
+.github{
+	width: 250px;
+	height: 40px;
+	position: absolute;
+	left: 370px;
+	top: 206px;
+	position: absolute;
+	font-size: 1em;
+	background: #4d4f53;
+	border-radius: 4px;
+	border: none;
+	padding: 11px;
+	padding-left: 0px;
+	color: #ffffff;
+}
+.github:hover{
+	background: #333333;
+}
+
+@media screen and (max-width: 720px){
+	main{
+		background:#fff;
+		padding: 60px;
+		margin: auto;
+		margin-top: 10%;
+		width:235px;
+		height:350px;
+		position: relative;
+		border-radius: 12px;
+	}
+	#divison_img{
+		display: none;
+	}
+	section.other_accounts h1{
+		position: absolute;
+		left: 60px;
+		top: 245px;
+	}
+	.facebook{
+		position: absolute;
+		left: 60px;
+		top: 275px;
+	}
+	.google{
+		position: absolute;
+		left: 60px;
+		top: 323px;
+	}
+	.github{
+		position: absolute;
+		left: 60px;
+		top: 371px;
+	}
+}
