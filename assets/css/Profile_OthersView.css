@@ -1,0 +1,291 @@
+/*Clear the default margin and padding for all elements*/
+*
+{
+    margin:0px;
+    padding:0px;
+    font-family: "Lato","Helvetica Neue", Arial ,Helvetica, sans-serif;
+}
+
+/* Background color*/
+body
+{
+    background-color: rgb(250,250,250);
+    height: 100%;
+    width:100%;
+    position: relative;
+}
+
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+li
+{
+    list-style: none;
+}
+
+#header
+{
+    background-color: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 45px;
+    z-index: 1000;  /*To prevent images from overlapping the fixed header*/
+    border-bottom: 2px solid grey;
+    position: fixed;
+}
+
+
+#SiteLogo img
+{
+    margin-left: 5px;
+    margin-top: 5px;
+    width: 100px;
+    float: left;
+}
+
+#Site_Nav
+{
+    padding-top: 10px;
+}
+
+#Main_Nav li
+{
+    display: inline-block;
+    margin: 0px 10px;
+    vertical-align: middle;
+    color: rgb(54,215,183);
+    cursor: pointer;
+}
+
+#Main_Nav #HomeButton
+{
+    border-top: 2px solid transparent;  /*When we hover, border appears*/
+    transition: all ease-in-out 0.3s;
+}
+
+/*Make the links bold on hover*/
+#Main_Nav #HomeButton:hover
+{
+    border-color: white;
+}
+
+
+/*Add a border to the SignOut_Button button*/
+#SignOut_Button
+{
+    border: 2px solid rgb(54,215,183);
+    border-radius: 20px;
+    padding: 5px 10px;
+    transition: all ease-in-out 0.3s;
+    cursor: pointer;
+    color: rgb(54,215,183);
+}
+
+
+
+/*Make the links bold on hover*/
+#SignOut_Button:hover
+{
+   color: red;
+}
+
+
+#SearchBar
+{
+    float: left;
+    margin-left: 40px;
+}
+
+#SearchBar input
+{
+    line-height: 2em;
+    padding-left: 10px;
+}
+
+#RightNav
+{
+    float: right;
+    padding-right: 10px;
+}
+
+
+#FB_Friend_SVG
+{
+    position: relative;
+}
+
+/*If its zero (ie. no requests), we will hide the p tag*/
+#FB_Friend_SVG p
+{
+    position: absolute;
+    padding: 2px 2px;
+    border-radius: 3px;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+    left: 15px;
+    top: -11%;
+    opacity: 0.9;
+}
+
+
+#FB_Message_SVG
+{
+    position: relative;
+}
+
+/*If its zero (ie. no requests), we will hide the p tag*/
+#FB_Message_SVG p
+{
+    position: absolute;
+    padding: 2px 2px;
+    border-radius: 3px;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+    left: 15px;
+    top: -11%;
+    opacity: 0.9;
+}
+
+
+#ProfileHeader
+{
+    text-align: center;
+}
+
+#ProfilePic
+{
+    margin-top: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 175px;
+    height: 175px;
+    text-align: center;
+}
+
+#ProfileHeader #Profile_UserName
+{
+    letter-spacing: 1.5px;
+    margin: 10px 0px;
+}
+
+
+/*Adding a user as a friend or messaging a user*/
+#ProfileHeader .Add_Message_User
+{
+    display: inline-block;
+}
+
+#AddFriend, #MessageUser
+{
+    border: 1px solid rgb(52,65,61);
+    background-color: rgb(255, 255, 255);
+    padding: 5px 5px;
+    border-radius: 5px;
+    font-size: 10px;
+    margin-right: 14px;
+    cursor: pointer;
+    transition: all ease-in-out 0.3s;
+    margin-bottom: 35px;
+}
+
+#AddFriend:hover, #MessageUser:hover
+{
+    background-color: rgb(232, 232, 232);
+}
+
+
+#AddFriend *, #MessageUser *
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+#BodyNav
+{
+    background-color: rgb(255,255,255);
+    text-align: center;
+    margin: 0 auto;
+    width: 25%;
+
+    
+    border: 1px solid rgb(185,185,185);
+    box-shadow: 6px 6px 2px rgb(185,185,185);
+}
+
+#BodyNav ul li
+{
+    display: inline-block;
+    padding: 5px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all ease-in-out 0.3s;
+}
+
+#BodyNav ul li:hover
+{
+    background-color: rgb(232, 232, 232);
+}
+
+.BodyNavClicked
+{
+    border-bottom: 1px solid blue;
+    background-color: rgb(232, 232, 232);
+}
+
+
+
+/*This viewport is the same as the viewport for 320px*/
+/*The hover nav bar works and elements did not need to be varied*/
+@media screen and (min-width: 480px)
+{
+
+
+
+
+}
+
+
+
+
+/*For all viewports from 768px until 1024px*/
+@media screen and (min-width: 768px)
+{
+
+ 
+
+}
+
+
+
+/*This viewport is the same as the viewport for 768px*/
+/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
+@media screen and (min-width: 1024px)
+{
+ 
+    
+    
+    
+}
+
+
+
+/*This viewport is the same as the viewport for 768px*/
+/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
+@media screen and (min-width: 1280px)
+{
+
+
+}
+
+
+
+
+
+
+
+
