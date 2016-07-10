@@ -129,7 +129,7 @@ $(document).ready
                                    //"X" svg to close the chat
                                    var $CloseChat = $('<img>',
                                                               {
-                                                                src: '../csc309a4/assets/images/Close_Message.svg',
+                                                                src: './assets/images/Close_Message.svg',
                                                                 width: '12px',
                                                                 id: 'ChatBoxClose'
                                                               }
@@ -584,7 +584,7 @@ $(document).ready
                                                        //Create a star SVG four times
                                                        var $star = $('<img>',
                                                                                    {
-                                                                                       src: '../csc309a4/assets/images/rating_star.svg',
+                                                                                       src: './assets/images/rating_star.svg',
                                                                                        width: '15px'
                                                                                    }
                                                                            );
