@@ -284,14 +284,18 @@ $(document).ready
                                                 function()
                                                 {
                         
-                                                    //Remove all other displayed information about "Reviews" (if exists)
-                                                    $('#ReviewsofUser').remove();
-                                                    //Remove previously shown sporting events (if clicked previously)
-                                                    $('#SportingEventReview').remove();
-                        
-                        
                                                     //Remove all other displayed information about "About" (if exists)
                                                     $('#AboutUser').remove();
+                        
+                                                    //Remove all other displayed information about "Reviews" (if exists)
+                                                    $('#ReviewsofUser').remove();
+                                                    $('#SportingEventReview').remove();
+                        
+                                                    //Remove all other displayed information about "Searching Events" (if exists)
+                                                    $('#SearchEventSection').remove();
+                                                    
+                                                    //Remove all other displayed information about "Creating Events" (if exists)
+                                                    //$('#CreateEventSection').remove();
                         
                         
                                                     //Only run function if friends information is not displayed
@@ -424,15 +428,21 @@ $(document).ready
                             
                                                     function()
                                                     {
-                            
-                                                        //Remove all other displayed information about "Friends" (if exists)
-                                                        $('#FriendsofUser').remove();
-                            
+       
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
                             
-                            
+                                                        //Remove all other displayed information about "Friends" (if exists)
+                                                        $('#FriendsofUser').remove();
                                                         
+                                                        //Remove all other displayed information about "Searching Events" (if exists)
+                                                        $('#SearchEventSection').remove();
+                                                        
+                                                        //Remove all other displayed information about "Creating Events" (if exists)
+                                                        //$('#CreateEventSection').remove();
+                                                        
+                            
+                            
                                                         //Only run function if Reviews information is not displayed
                                                         if( $('#ReviewsofUser').length == 0 )
                                                         {
@@ -662,7 +672,8 @@ $(document).ready
                                 
                                                     function()
                                                     {
-                                                    
+                                
+                                                            
                                                             //Remove all other displayed information about "Friends" (if exists)
                                                             $('#FriendsofUser').remove();
                                                             
@@ -670,8 +681,15 @@ $(document).ready
                                                             $('#ReviewsofUser').remove();
                                                             $('#SportingEventReview').remove();
                                 
+                                                            //Remove all other displayed information about "Searching Events" (if exists)
+                                                            $('#SearchEventSection').remove();
                                 
-                                                            
+                                                            //Remove all other displayed information about "Creating Events" (if exists)
+                                                            //$('#CreateEventSection').remove();
+                                
+                                
+                                
+                                
                                                             //Only run function if About information is not displayed
                                                             if( $('#AboutUser').length == 0 )
                                                             {
@@ -703,6 +721,90 @@ $(document).ready
  
  
  
+ 
+ 
+ 
+                 //When the user clicks on the "SearchEvent" SVG, Create a form element for the user to search
+                 $(document).on('click', '#SearchEvent',
+                                
+                                                    function()
+                                                    {
+                                
+                                                        //Remove all other displayed information about "About" (if exists)
+                                                        $('#AboutUser').remove();
+                                
+                                                        //Remove all other displayed information about "Friends" (if exists)
+                                                        $('#FriendsofUser').remove();
+                                                        
+                                                        //Remove all other displayed information about "Reviews" (if exists)
+                                                        $('#ReviewsofUser').remove();
+                                                        $('#SportingEventReview').remove();
+                                
+                                                        //Remove all other displayed information about "Creating Events" (if exists)
+                                                        //$('#CreateEventSection').remove();
+                             
+                                
+                                                        
+                                                        //Only run function if SearchEvent information is not displayed
+                                                        if( $('#SearchEventSection').length == 0 )
+                                                        {
+                                                        
+                                                        
+                                                            //Create a section to show the search form
+                                                            var $SearchEvent = $('<section>',
+                                                                                                {
+                                                                                                    id: 'SearchEventSection'
+                                                                                                }
+                                                                                    );
+                                
+                                                            //insert $SearchEvent after the #ProfileHeader
+                                                            $SearchEvent.insertAfter('#ProfileHeader');
+                                
+                                
+                                
+                                                            //Create a form for the user to be able to search events
+                                                            var $SearchEventForm = $('<form>',
+                                                                                             {
+                                                                                                id: 'SearchEventForm'
+                                                                                             }
+                                                                                 );
+                                
+                                                            //Append it to the SearchEvent
+                                                            $SearchEvent.append($SearchEventForm);
+                                
+                                
+                             
+       
+                                
+                                
+//                                
+//                                                                   //$Friend has the image and the friend name
+//                                                                   var $sport = $('<li>',
+//                                                                                  {
+//                                                                                  class: 'SportingEvent'
+//                                                                                  }
+//                                                                                  );
+//                                                                   
+//                                                                   //$Friend has the image and the friend name
+//                                                                   var $sportImage = $('<img>',
+//                                                                                       {
+//                                                                                       src: item.url,
+//                                                                                       width: '30px'
+//                                                                                       }
+//                                                                                       );
+//                                                                   
+//                                                                   $sport.append($sportImage);  //Append the sportImage to the <li>
+//                                                                   
+//                                                                   $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
+                                
+                                                                  
+                                                        
+                                                        }
+                                
+                                                    }
+                                
+                                
+                                );
  
  
  
