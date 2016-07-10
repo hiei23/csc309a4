@@ -379,52 +379,52 @@ $(document).ready
          var Sports = [
                           {
                              "EventName" : "cycling",
-                             "url": "../csc309a4/assets/images/cycling.svg"
+                             "url": "./assets/images/cycling.svg"
                           },
                           
                           {
                              "EventName" : "football",
-                             "url": "../csc309a4/assets/images/football.svg"
+                             "url": "./assets/images/football.svg"
                           },
                        
                            {
                                "EventName" : "squash",
-                               "url": "../csc309a4/assets/images/squash.svg"
+                               "url": "./assets/images/squash.svg"
                            },
                            
                            {
                                "EventName" : "basketball",
-                               "url": "../csc309a4/assets/images/basketball.svg"
+                               "url": "./assets/images/basketball.svg"
                            },
                            
                            {
                                "EventName" : "boxing",
-                               "url": "../csc309a4/assets/images/boxing.svg"
+                               "url": "./assets/images/boxing.svg"
                            },
                        
                        {
                        "EventName" : "tennis",
-                       "url": "../csc309a4/assets/images/tennis.svg"
+                       "url": "./assets/images/tennis.svg"
                        },
                        
                        {
                        "EventName" : "volleyball",
-                       "url": "../csc309a4/assets/images/volleyball.svg"
+                       "url": "./assets/images/volleyball.svg"
                        },
                        
                        {
                        "EventName" : "waterpolo",
-                       "url": "../csc309a4/assets/images/waterpolo.svg"
+                       "url": "./assets/images/waterpolo.svg"
                        },
                        
                        {
                        "EventName" : "tabletennis",
-                       "url": "../csc309a4/assets/images/tabletennis.svg"
+                       "url": "./assets/images/tabletennis.svg"
                        },
                        
                        {
                        "EventName" : "taekwondo",
-                       "url": "../csc309a4/assets/images/taekwondo.svg"
+                       "url": "./assets/images/taekwondo.svg"
                        },
                
                        
