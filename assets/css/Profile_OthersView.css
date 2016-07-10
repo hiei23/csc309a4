@@ -78,15 +78,19 @@ li
     border: 2px solid rgb(54,215,183);
     border-radius: 20px;
     padding: 5px 10px;
-    transition: all ease-in-out 0.3s;
     cursor: pointer;
+}
+
+#SignOut_Button a
+{
     color: rgb(54,215,183);
+    transition: all ease-in-out 0.3s;
 }
 
 
 
 /*Make the links bold on hover*/
-#SignOut_Button:hover
+#SignOut_Button a:hover
 {
    color: red;
 }
@@ -154,6 +158,7 @@ li
 #ProfileHeader
 {
     text-align: center;
+    margin-bottom: 60px;
 }
 
 #ProfilePic
@@ -212,7 +217,7 @@ li
     margin: 0 auto;
     width: 25%;
 
-    
+    border-radius: 5px;
     border: 1px solid rgb(185,185,185);
     box-shadow: 6px 6px 2px rgb(185,185,185);
 }
@@ -233,9 +238,253 @@ li
 
 .BodyNavClicked
 {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid black;
     background-color: rgb(232, 232, 232);
 }
+
+
+
+/*The Chatbox CSS styles*/
+#ChatBox
+{
+    height: 300px;
+    float: left;
+    position: fixed;
+    width: 220px;
+    margin-left: 15px;
+    z-index: 800;  /*Chatbox has priority*/
+    border-radius: 3px;
+}
+
+#ChatBoxHeader
+{
+    position: fixed;
+    width: 216px;
+    background-color: rgba(0,0,0,0.8);
+    padding: 1px 2px;
+    z-index: 100;
+    padding-bottom: 3px;
+    border-radius: 3px;
+}
+
+#ChatBoxHeader *
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/*Make the ChatBox username and "X" SVG in-line*/
+#ChatBoxHeader p
+{
+    text-align: left;
+    font-size: 13px;
+    cursor: pointer;
+    color: white;
+    padding-left: 2px;
+}
+
+#ChatBoxHeader #ChatBoxClose
+{
+    float: right;
+    padding-top: 5px;
+    padding-right: 7px;
+    cursor: pointer;
+}
+
+
+#ChatContent
+{
+  padding: 5px 5px;
+  background-color: rgb(237, 238, 241);
+  height: 290px;
+  overflow: scroll;
+}
+
+/*Alternate the Chat Data like Facebook*/
+#ChatContent .ChatContentDatas:nth-child(odd)
+{
+    float: right;
+    border: 1px solid rgb(213, 213, 213);
+    background-color: rgb(254, 254, 254);
+    border-radius: 3px;
+    width: 70%;
+}
+
+#ChatContent .ChatContentDatas:nth-child(even)
+{
+    float: left;
+    border: 1px solid rgb(188, 199, 214);
+    background-color: rgb(224, 237, 255);
+    border-radius: 9px;
+    border-bottom-left-radius: 0px;
+    width: 70%;
+}
+
+/*Give the last message a margin-below so it doesn't overlap with the form*/
+#ChatContent .ChatContentDatas:last-child
+{
+    margin-bottom: 25px;
+}
+
+
+#ChatContent .ChatContentDatas
+{
+    font-size: 13px;
+    padding: 3px 3px;
+    margin: 3px 3px;
+}
+
+
+#ChatBoxForm
+{
+    position: fixed;
+    z-index: 100;  /*So it goes on top of the previous messages*/
+}
+
+#ChatBoxForm textarea
+{
+    overflow: scroll;
+    height: 20px;
+    resize: none;
+    
+}
+
+
+#FriendsofUser
+{
+    text-align: center;
+    margin: 0 auto;
+    width: 60%;
+}
+
+/*Make the Friends display inline-block*/
+#FriendsofUser .Friend
+{
+    display: inline-block;
+    cursor: pointer;
+    margin: 20px 25px;
+}
+
+.FriendImage
+{
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
+
+#MoreFriendsButton
+{
+    padding: 5px 0px;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    transition: all ease-in-out 0.3s;
+    background-color: rgb(255,255,255);
+    font-weight: bold;
+    width: 25%;
+    margin: 15px auto;
+}
+
+/*On Hover,change the background color*/
+#MoreFriendsButton:hover
+{
+    background-color: rgb(232,232,232);
+    color: red;
+}
+
+#ReviewsofUser
+{
+    text-align: center;
+    background-color: rgb(255,255,255);
+    margin-bottom: 25px;
+}
+
+#ReviewsofUser #SportsPlayed .SportingEvent
+{
+    display: inline-block;
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all ease-in-out 0.3s;
+}
+
+
+#ReviewsofUser #SportsPlayed .SportingEvent:hover
+{
+    background-color: rgb(232, 232, 232);
+}
+
+.SportingEventClicked
+{
+    border-bottom: 1px solid black;
+    background-color: rgb(232, 232, 232);
+}
+
+
+#SportingEventReview
+{
+    text-align: center;
+}
+
+
+#SportingEventReview #StarRatings
+{
+    display: inline-block;
+}
+
+/*Space the stars apart*/
+#SportingEventReview #StarRatings img
+{
+    margin: 5px 5px;
+}
+
+
+
+
+/*Comments left by other users*/
+#Comments
+{
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    background-color: rgb(255,255,255);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+}
+
+#Comments ul .Individual_Comment *
+{
+    display: inline-block;
+}
+
+#Comments ul .Individual_Comment
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 16px 16px;
+}
+
+#Comments ul .commentTime
+{
+    float: left;
+    margin-right: 30px;
+    width: 20%;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+#Comments ul .commentContent
+{
+    text-align: left;
+    width: 65%;
+    font-weight: 400;
+}
+
+
+
+
+
+
 
 
 
