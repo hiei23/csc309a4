@@ -666,6 +666,13 @@ $(document).ready
 
  
  
+				//IMPORTANT!!: HERE is MOCK data: Delete for phase 2.
+				var about_mockData = {"Campus": "St.George", "Given_Name": "Parham", "Family_Name": "Oghabi", 
+									"Phone_number": "(647)123-9999", "Email_Address": "parham@hotmail.com", 
+									"Birthday": "January 1, 1994", "Height": "180cm",
+									"Weight": "72kg", "Gender": "Male", "About_Me": "Best hockey player.", 
+									"Sports": ["Hockey", "Soccer"]};
+				var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address", "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
  
                  //When the user clicks on the "About" Tab, show all info about the user
@@ -701,6 +708,33 @@ $(document).ready
                                 
                                 
                                                                 //ADD CODE HERE
+																for (var i = 0; i < about_order.length; i++) {
+																	var $div = $('<div/>', {
+																		class: "each_info"
+																	});
+																	
+																	var $label = $('<label/>', {
+																		class: about_order[i]
+																	});
+																	
+																	var $label_text = $('<span/>', {
+																		class: "label",
+																		text: about_order[i].replace("_", " ") + ":"
+																	});
+																	
+																	var $info = $('<span/>', {
+																		class: "info",
+																		text: about_mockData[about_order[i]]
+																	});
+																	
+																	$label.append($label_text);
+																	$label.append($info);
+																	$div.append($label);
+																	
+																	$AboutSection.append($div);
+																	
+																	
+																}
                                 
                                 
                                 

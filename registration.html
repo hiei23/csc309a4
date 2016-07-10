@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>TA Profile Information </title>
+        <title>TSports Registration</title>
         <meta name="registration" content="Registration form">
         
         <link rel="stylesheet" href="assets/css/registrationStyle.css" type="text/css">
@@ -11,24 +11,30 @@
     </head>
     <body>
         
-        <header>
-            <h1>Team-Me</h1>
-            <h2>Personal Information</h2>
-        </header>
-        
         <form action="/signup" method="post">
-            
-            <section class="form_element">
+			<img src="./assets/images/TSportsLogo_red.svg" alt="TSportsLogo" />
+            <h1 id="header">Registration</h1>
+            <!-- section class="form_element">
                 <label id="stunumField">
                     <span class="label">Student Number:</span>
-                    <input type="text" name="stunum" pattern="^\d{9}$">
+                    <input type="text" name="stunum" pattern="^\d{9,10}$">
                     <span class="error"><%- errors.error_stunum %></span>
+                </label>
+            </section -->
+			<section class="form_element">
+                <label id="campusField">
+                    <span class="label">Campus:</span><br>
+					<select>
+						<option value="SG">St.George</option>
+						<option value="MS">Missisauga</option>
+						<option value="SC">Scarborough</option>
+					</select>
                 </label>
             </section>
             
             <section class="form_element">
                 <label id="givenField">
-                    <span class="label">Given Name:</span> 
+                    <span class="label">Given Name:</span> <br>
                     <!-- Create a REQ'D text input here with name "givenname" -->
                     <input type="text" name="givenname"
                     pattern="^[a-z0-9_-]{1,15}$">
@@ -36,7 +42,7 @@
             </section>
             <section class="form_element">
                 <label id="familyField">
-                    <span class="label">Family Name:</span>
+                    <span class="label">Family Name:</span><br>
                     <input type="text" name="familyname"
                     pattern="^[a-z0-9_-]{1,15}$">
                 </label>
@@ -44,7 +50,7 @@
             
             <section class="form_element">
                 <label id="phoneField">
-                    <span class="label">Phone Number:</span> 
+                    <span class="label">Phone Number:</span> <br>
                     <!-- Create a REQ'D text input here with name "phone" -->
                     <input type="text" name="phone"
                     pattern="\d{10}|(\(\d{3}\))?(\d{3})?-?\d{3}-\d{4}|\(\d{3}\)\d{7}">
@@ -55,7 +61,7 @@
 
             <section class="form_element">
                 <label id="emailField">
-                    <span class="label">Email Address:</span>
+                    <span class="label">Email Address:</span><br>
                     <input type="text" name="email"
                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                     <span class="error"><%- errors.error_email %></span>
@@ -66,34 +72,43 @@
             <!-- Date format is yyyy-mm-dd. Use the "placeholder" attribute to tell the user. -->
             <section class="form_element">
                 <label id="birthdayField">
-                    <span class="label">Birthday:</span>
-                    <input input="text" name="birthday"
-                    pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])">
+                    <span class="label">Birthday:</span><br>
+                    <input type="text" name="birthday" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])">
                     <span class="error"><%- errors.error_birthday %></span>
                 </label>
             </section>
 
             <section>
                 <label id="heightField">
-                    <span class="label">Height:</span>
+                    <span class="label">Height:</span><br>
                     <input type="text" name="height">
-                    <span>cm</span>
+                    <span>
+						<select class="unit">
+							<option value="cm">cm</option>
+							<option value="inch">in.</option>
+						</select>
+					</span>
                     <span class="error"><%- errors.error_Height %></span>
                 </label>
             </section>
 
             <section>
                 <label id="WeightField">
-                    <span class="label">Weight:</span>
+                    <span class="label">Weight:</span><br>
                     <input type="text" name="weight">
-                    <span>kg</span>
+                    <span>
+						<select class="unit">
+							<option value="kg">kg</option>
+							<option value="lb">lb</option>
+						</select>
+					</span>
                     <span class="error"><%- errors.error_Weight %></span>
                 </label>
             </section>
 
             <section>
                 <label>
-                    <span class="label">Gender:</span>
+                    <span class="label">Gender:</span><br>
                     <input type="radio" name="gender" value="male"> Male
                     <input type="radio" name="gender" value="female"> Female
                     <span class="error"><%- errors.error_Gender %></span>
@@ -101,7 +116,7 @@
 
             </section>
             
-            <section>
+            <!-- section>
                  <label id="countryField">
                     <span class="label">Country:</span>
                     <select>
@@ -357,17 +372,16 @@
                     </select>
                     <span class="error"><%- errors.error_Country %></span>
                 </label>
-            </section>
+            </section -->
 
             <section>
                 <label id="AboutMeField">
-                    <span  class="label">About Me:</span>
-                    <textarea name="AboutMe" rows="6" cols="35">
-                </textarea>
+                    <span  class="label">About Me:</span><br>
+                    <textarea name="AboutMe" rows="6" cols="35"></textarea>
             </section>
 
             <fieldset id="SportsFieldset">
-                <legend id="sportsLabel">Sports:</legend>
+                <legend id="sportsLabel">Sports:</legend><br>
                 <article class="column">
                     <ul>
                         <li><input type="checkbox" name="Sports" value="Archery">Archery</li>
@@ -403,6 +417,7 @@
                         <li><input type="checkbox" name="Sports" value="Rugby Sevens">Rugby Sevens</li>
                         <li><input type="checkbox" name="Sports" value="Sailing">Sailing</li>
                         <li><input type="checkbox" name="Sports" value="Shooting">Shooting</li>
+						<li><input type="checkbox" name="Sports" value="Soccer">Soccer</li>
                         <li><input type="checkbox" name="Sports" value="Swimming">Swimming</li>
                         <li><input type="checkbox" name="Sports" value="Synchronised Swimming">Synchronised Swimming</li>
                         <li><input type="checkbox" name="Sports" value="Table Tennis">Table Tennis</li>
