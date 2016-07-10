@@ -1,0 +1,44 @@
+user obj = {
+	createdAt: Date,
+	updatedAt: Date,
+	username: String,
+	password: String (hashed for security),
+	messages: list of messages,
+	birthday: Date,
+	height: Integer,
+	weight: Double (up to 1 decimal place)
+	sports: list of String,
+	teams: list of String,
+	rating: Double (up to 1 decimal place),
+	following: list of post obj
+}
+
+message obj = {
+	from: String,
+	to: String,
+	texts: list of String,
+	sent: Date
+}
+
+team obj = {
+	createdAt: Date,
+	updatedAt: Date,
+	name: String,
+	numberOfPlayers: Integer,
+	players: list of usernames,
+	gamesPlayed: Integer,
+	win: integer,
+	lose: Integer,
+	post: lst of post obj
+}
+
+post obj = {
+	text: String,
+	published: Date,
+}
+
+session obj = {
+	expiresAt: Date,
+	createdAt: Date,
+	installationId: String (to be stored in a cookie)
+}
