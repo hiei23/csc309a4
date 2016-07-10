@@ -246,42 +246,42 @@ $(document).ready
         //Create a temporary variable to store all the user's friends as placeholder data
          var FriendsImages = [
                                   {
-                                    "url": "../csc309a4/assets/images/PM.jpg",
+                                    "url": "./assets/images/PM.jpg",
                                     "name": "Piers Morgan"
                                   },
                               
                                   {
-                                  "url": "../csc309a4/assets/images/MN.jpg",
+                                  "url": "./assets/images/MN.jpg",
                                   "name": "Manuel Neur"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/EM.jpg",
+                                  "url": "./assets/images/EM.jpg",
                                   "name": "Eminem"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/CH.jpg",
+                                  "url": "./assets/images/CH.jpg",
                                   "name": "Calvin Harris"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/SC.jpg",
+                                  "url": "./assets/images/SC.jpg",
                                   "name": "SC"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/JN.jpg",
+                                  "url": "./assets/images/JN.jpg",
                                   "name": "John Newman"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/EC.jpg",
+                                  "url": "./assets/images/EC.jpg",
                                   "name": "Emilia Clarke"
                                   },
                                   
                                   {
-                                  "url": "../csc309a4/assets/images/Hector.jpg",
+                                  "url": "./assets/images/Hector.jpg",
                                   "name": "Jonas Hector"
                                   },
 
@@ -427,8 +427,7 @@ $(document).ready
                        "url": "./assets/images/taekwondo.svg"
                        },
                
-                       
-               ];
+                    ];
  
  
              //When the user clicks on the "UserReviews" Tab, show all the reviews/ratings/comments of the user in different sports
