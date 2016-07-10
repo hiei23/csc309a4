@@ -13,6 +13,7 @@ body
     height: 100%;
     width:100%;
     position: relative;
+    padding-bottom: 60px;
 }
 
 a
@@ -57,11 +58,6 @@ li
     vertical-align: middle;
     color: rgb(54,215,183);
     cursor: pointer;
-}
-
-#HomeButton a
-{
-    color: rgb(54,215,183);
 }
 
 #Main_Nav #HomeButton
@@ -160,6 +156,7 @@ li
 }
 
 
+
 #FB_Notification_SVG
 {
     position: relative;
@@ -179,6 +176,7 @@ li
     top: -11%;
     opacity: 0.9;
 }
+
 
 
 
@@ -206,44 +204,13 @@ li
 }
 
 
-/*Adding a user as a friend or messaging a user*/
-#ProfileHeader .Add_Message_User
-{
-    display: inline-block;
-}
-
-#AddFriend, #MessageUser
-{
-    border: 1px solid rgb(52,65,61);
-    background-color: rgb(255, 255, 255);
-    padding: 5px 5px;
-    border-radius: 5px;
-    font-size: 10px;
-    margin-right: 14px;
-    cursor: pointer;
-    transition: all ease-in-out 0.3s;
-    margin-bottom: 35px;
-}
-
-#AddFriend:hover, #MessageUser:hover
-{
-    background-color: rgb(232, 232, 232);
-}
-
-
-#AddFriend *, #MessageUser *
-{
-    display: inline-block;
-    vertical-align: middle;
-}
-
-
 #BodyNav
 {
     background-color: rgb(255,255,255);
     text-align: center;
     margin: 0 auto;
     width: 30%;
+    margin-top: 30px;
 
     border-radius: 5px;
     border: 1px solid rgb(185,185,185);
@@ -268,6 +235,34 @@ li
 {
     border-bottom: 1px solid black;
     background-color: rgb(232, 232, 232);
+}
+
+/*Show a tooltip for the search event and add event SVG*/
+#SearchEvent, #AddEvent
+{
+    position: relative;
+}
+
+.Profile_Tooltip
+{
+    visibility: hidden;
+    width: 80px;
+    font-size: 10px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+    top: -70%;
+
+}
+
+/*On hover make tooltip available*/
+#SearchEvent:hover .Profile_Tooltip, #AddEvent:hover .Profile_Tooltip
+{
+    visibility: visible;
 }
 
 

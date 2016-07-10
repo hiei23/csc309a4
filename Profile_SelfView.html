@@ -4,12 +4,12 @@
     
     <head>
         <meta charset = "UTF-8">
-        <title> Profile </title>  <!--Change this to user's name-->
+        <title> Profile Self View </title>  <!--Change this to user's name-->
         
         
-        <link rel="stylesheet" type="text/css" href="./assets/css/Profile_OthersView.css">
+        <link rel="stylesheet" type="text/css" href="./assets/css/Profile_SelfView.css">
         <script type="text/javascript" src="assets/scripts/jquery-2.2.4.min.js" defer></script><!-- jQuery should be first -->
-        <script type="text/javascript" src="assets/scripts/Profile_OthersView.js" defer></script>
+        <script type="text/javascript" src="assets/scripts/Profile_SelfView.js" defer></script>
 
 
     </head>
@@ -45,7 +45,13 @@
                          <li id="FB_Message_SVG"> <img src="./assets/images/FB_Message_Notification.svg" alt="FB_Messaging" width="25px" />
                                                 <p> 9 </p>
                          </li>
-                         <li id="SignOut_Button">  Sign Out </li>
+                         
+                         
+                         <li id="FB_Notification_SVG"> <img src="./assets/images/notification.svg" alt="FB_Notification_SVG" width="25px" />
+                             <p> 5 </p>
+                         </li>
+                         
+                         <li id="SignOut_Button"> <a href="./index.html"> Sign Out </a> </li>
                     </div>
                      
                  </ul>
@@ -64,42 +70,31 @@
            
            <h2 id="Profile_UserName"> Parham Oghabi </h2>
            
-           <div id="AddFriend" class="Add_Message_User">
-               <img src="./assets/images/FB_AddFriend.svg" alt="FBAddFriend" width="20px"/>
-               <p> Add Friend </p>
-           </div>
            
-           <div id="MessageUser" class="Add_Message_User">
-               <img src="./assets/images/FB_Message.svg" alt="FBMessageUser" width="20px"/>
-               <p> Message </p>
-           </div>
-           
-        
-        
        
             <nav id="BodyNav">
                 
                 <ul>
-                    <li> About  </li>
-                    <li> Friends </li>
-                    <li> Reviews </li>
+                    <li id="UserAbout"> About  </li>
+                    <li id="UserFriends"> Friends </li>
+                    <li id="UserReviews"> Reviews </li>
+                    
+                    <!--User's own view of his/her profile offers more options-->
+                    <li id="SearchEvent">
+                        <img src="./assets/images/searchMagnifier.svg" alt="searchMagnifier" width="15px"/>
+                        <p class="Profile_Tooltip"> Search Events </p>
+                    </li>
+                    <li id="AddEvent">
+                        <img src="./assets/images/AddEvent.svg" alt="searchMagnifier" width="15px"/>
+                        <p class="Profile_Tooltip"> Create Event </p>
+                    </li>
                     
                 </ul>
                 
             </nav>
-       
+
         </section>
        
-
-
-      
-      
-    
-    
-    
-    
-    
-    
 
 
 
