@@ -252,9 +252,13 @@ section.other_accounts h1{
 	padding: 11px;
 	padding-left: 15px;
 	color: #ffffff;
+	outline: none;
 }
 .facebook:hover{
 	background: #2b4170;
+}
+.facebook:active{
+	transform: translateY(1px);
 }
 
 .google{
@@ -271,9 +275,13 @@ section.other_accounts h1{
 	padding: 11px;
 	padding-left: 4px;
 	color: #ffffff;
+	outline: none;
 }
 .google:hover{
 	background: #c33219;
+}
+.google:active{
+	transform: translateY(1px);
 }
 
 .github{
@@ -290,9 +298,13 @@ section.other_accounts h1{
 	padding: 11px;
 	padding-left: 0px;
 	color: #ffffff;
+	outline: none;
 }
 .github:hover{
 	background: #333333;
+}
+.github:active{
+	transform: translateY(1px);
 }
 
 @media screen and (max-width: 720px){
