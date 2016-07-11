@@ -667,11 +667,14 @@ $(document).ready
  
  
 				//IMPORTANT!!: HERE is MOCK data: Delete for phase 2.
+				var sport_list = ["Hockey", "Soccer", "Archery", "Artistic Gymnastics", "Athletics", "Badminton", "Basketball", "Beach Volleyball", "Boxing", "Canoe Slalom", "Canoe Sprint", "Cycling BMX", "Cycling Mountain Bike", "Cycling Road", "Cycling Track", "Diving", "Equestrian", "Fencing", "Football", "Golf"];
+				
+				var detail = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
 				var about_mockData = {"Campus": "St.George", "Given_Name": "Parham", "Family_Name": "Oghabi", 
 									"Phone_number": "(647)123-9999", "Email_Address": "parham@hotmail.com", 
 									"Birthday": "January 1, 1994", "Height": "180cm",
-									"Weight": "72kg", "Gender": "Male", "About_Me": "Best hockey player.", 
-									"Sports": ["Hockey", "Soccer"]};
+									"Weight": "72kg", "Gender": "Male", "About_Me": detail, 
+									"Sports": sport_list};
 				var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address", "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
  
@@ -691,9 +694,10 @@ $(document).ready
                                 
                                                             
                                                             //Only run function if About information is not displayed
-                                                            if( $('#AboutUser').length == 0 )
-                                                            {
-                                                            
+                                                            if( $('#AboutUser').length == 0 ) 
+															{
+																
+																
                                                             
                                                                 //Create a section to info about the user
                                                                 var $AboutSection = $('<section>',
@@ -705,10 +709,14 @@ $(document).ready
                                                                 
                                                                 //insert $AboutSection after the #ProfileHeader
                                                                 $AboutSection.insertAfter('#ProfileHeader');
-                                
+																
+																
+																var $div_input = $('<div/>', {
+																	class: "info_input"  //group of infos in input style.
+																});
                                 
                                                                 //ADD CODE HERE
-																for (var i = 0; i < about_order.length; i++) {
+																for (var i = 0; i < about_order.length - 1; i++) {
 																	var $div = $('<div/>', {
 																		class: "each_info"
 																	});
@@ -722,20 +730,108 @@ $(document).ready
 																		text: about_order[i].replace("_", " ") + ":"
 																	});
 																	
-																	var $info = $('<span/>', {
-																		class: "info",
-																		text: about_mockData[about_order[i]]
-																	});
+																	var $br = $('<br>');
+																	
+																	var $info;
+																	
+																	//Display About me section as <textarea>
+																	if (about_order[i] === "About_Me") {
+																		$info = $('<textarea>', {
+																			name: about_order[i],
+																			text: about_mockData[about_order[i]],
+																			rows: 6,
+																			cols: 35,
+																			disabled: "disabled"
+																		});
+																	//Display Sports section as <fieldset> and lists.
+																	} else {
+																		$info = $('<input>', {
+																			type: "text",
+																			name: about_order[i],
+																			value: about_mockData[about_order[i]],
+																			disabled: "disabled"
+																		});
+																	}
+																	
+																	
 																	
 																	$label.append($label_text);
+																	$label.append($br);
 																	$label.append($info);
 																	$div.append($label);
 																	
-																	$AboutSection.append($div);
-																	
+																	$div_input.append($div);
 																	
 																}
+
+																
+																if (about_mockData[about_order[i]].length > 20) {
+																	$info = $('<fieldset/>', {
+																		class: "field_sports",
+																		width: "50%"
+																	});
+																} else {
+																	$info = $('<fieldset/>', {
+																		class: "field_sports"
+																	});
+																}
                                 
+																
+																
+																
+																$label_text = $('<legend/>', {
+																	class: "label",
+																	text: about_order[i].replace("_", " ") + ":"
+																});
+																
+																$info.append($label_text);
+																$info.append($br);
+																
+																var len = about_mockData[about_order[i]].length;
+																
+																//each column contains max. 20 elements.
+																var num_col = Math.ceil(len/20);
+																
+																for (var col = 0; col < num_col; col++) {
+																	var $article = $('<article/>', {
+																		class: "column"
+																	});
+																	
+																	var $ul = $('<ul/>');
+																	
+																	//number of elements in column excluding previous column.
+																	var num = len - col * 20;
+																	var j = 0;
+																	while (j < 20 && j < num) {
+																		var $li = $('<li/>');
+																		
+																		var $sport = $('<input>', {
+																			type: "checkbox",
+																			name: about_order[i],
+																			value: about_mockData[about_order[i]][j + col * 20],
+																			disabled: "disabled",
+																			checked: "checked"
+																		});
+																		
+																		var $text = $('<span/>', {
+																			text: about_mockData[about_order[i]][j + col * 20]
+																		});
+																		
+																		$li.append($sport);
+																		$li.append($text);
+																		
+																		$ul.append($li);
+																		
+																		j++;
+																	}
+																	
+																	$article.append($ul);
+																	$info.append($article);
+																	
+																}
+																
+																$AboutSection.append($div_input);
+																$AboutSection.append($info);
                                 
                                 
                                 

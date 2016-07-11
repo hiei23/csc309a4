@@ -26,22 +26,23 @@ li
     list-style: none;
 }
 
+/* header: top menu */
 #header
 {
-    background-color: rgba(0,0,0,0.8);
+    background-color: #3b3a36;
     width: 100%;
-    height: 45px;
+    height: 55px;
     z-index: 1000;  /*To prevent images from overlapping the fixed header*/
-    border-bottom: 2px solid grey;
     position: fixed;
 }
 
 
 #SiteLogo img
 {
-    margin-left: 5px;
-    margin-top: 5px;
-    width: 100px;
+    margin-left: 4px;
+    margin-top: 6px;
+	height: 42px;
+    width: 150px;
     float: left;
 }
 
@@ -50,10 +51,15 @@ li
     padding-top: 10px;
 }
 
+#Site_Nav a
+{
+	color: #74AD1B;
+}
+
 #Main_Nav li
 {
     display: inline-block;
-    margin: 0px 10px;
+    margin: 0px 7px;
     vertical-align: middle;
     color: rgb(54,215,183);
     cursor: pointer;
@@ -61,34 +67,31 @@ li
 
 #HomeButton a
 {
-    color: rgb(54,215,183);
-}
-
-#Main_Nav #HomeButton
-{
-    border-top: 2px solid transparent;  /*When we hover, border appears*/
-    transition: all ease-in-out 0.3s;
+	padding-top:18px;
+    padding-bottom:19px;
+    padding-left: 3px;
+    padding-right: 3px;
+    color: #74AD1B;
 }
 
 /*Make the links bold on hover*/
-#Main_Nav #HomeButton:hover
+#Main_Nav #HomeButton a:hover
 {
-    border-color: white;
+    color: #A0F6F6;
+	transition: all ease-in-out 0.3s;
+	background-color: #111111;
 }
-
 
 /*Add a border to the SignOut_Button button*/
 #SignOut_Button
 {
-    border: 2px solid rgb(54,215,183);
+    border: 2px solid #74AD1B;
     border-radius: 20px;
     padding: 5px 10px;
-    cursor: pointer;
 }
 
 #SignOut_Button a
 {
-    color: rgb(54,215,183);
     transition: all ease-in-out 0.3s;
 }
 
@@ -97,7 +100,7 @@ li
 /*Make the links bold on hover*/
 #SignOut_Button a:hover
 {
-   color: red;
+   color: #A0F6F6;
 }
 
 
@@ -181,8 +184,7 @@ li
 }
 
 
-
-
+/* Profile Style */
 #ProfileHeader
 {
     text-align: center;
@@ -381,6 +383,86 @@ li
 }
 
 
+/* About section style */
+#AboutUser
+{
+	position: absolute;
+	margin: auto;
+	margin-left: 20%;
+	margin-bottom: 10%;
+	width: 60%;
+	padding: 10px 10px;
+	border: 1px groove rgba(128,128,128, 0.2);
+	background-color: rgba(230, 247, 255, 0.3);
+}
+
+#AboutUser div div.each_info, #AboutUser fieldset
+{
+	margin: 10px 10px;
+	float: left;
+	width: 30%;
+}
+
+#AboutUser div div span.label
+{
+	font-size: 90%;
+	color: rgba(128, 128, 128, 0.5);
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+#AboutUser div div input
+{
+	width: 100%;
+	font-weight: normal;
+	background-color: white;
+	padding-left: 3px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	border-radius: 10px;
+}
+
+#AboutUser div div textarea[name="About_Me"]
+{
+	padding: 10px 10px;
+	width: 100%;
+	border-radius: 10px;
+}
+
+#AboutUser div.info_input
+{
+	width: 100%;
+}
+
+
+#AboutUser  fieldset 
+{
+	color: rgba(128, 128, 128, 0.5);
+	padding-bottom: 15px;
+	clear: left;
+	border-radius: 10px;
+}
+
+#AboutUser fieldset legend 
+{
+	font-size: 90%;
+	margin-left: 10px;
+	color: rgba(128, 128, 128, 0.5);
+}
+
+#AboutUser > fieldset > article > ul > li
+{
+	margin: 0px;
+	color: rgba(128, 128, 128, 0.8);
+}
+
+#AboutUser > fieldset > article 
+{
+	padding-left: 3%;
+	float: left;
+}
+
+/* Friends section style */
 #FriendsofUser
 {
     text-align: center;
@@ -403,17 +485,16 @@ li
 }
 
 
-
 #MoreFriendsButton
 {
-    padding: 5px 0px;
+	padding: 5px 0px;
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 4px;
     transition: all ease-in-out 0.3s;
     background-color: rgb(255,255,255);
     font-weight: bold;
-    width: 25%;
+    width: 150px;
     margin: 15px auto;
 }
 
@@ -424,6 +505,7 @@ li
     color: red;
 }
 
+/* Review section style */
 #ReviewsofUser
 {
     text-align: center;
