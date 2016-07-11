@@ -57,8 +57,29 @@ jQuery_old(document).ready
  
          //Set datepicker option animations
          jQuery_old( "#datepicker" ).datepicker("option", "showAnim", 'fadeIn');
+ 
+ 
+         jQuery_old(window).resize(function()
+                                  {
+                                   
+                                  console.log( jQuery_old('.ui-datepicker-trigger').position().top );
+                                   
+                                  console.log( jQuery_old('.ui-datepicker-trigger').position() );
+                                   
+                                   
+                                   
+                                   jQuery_old('.ui-datepicker').css('position','fixed');
+                                  jQuery_old('.ui-datepicker').css('top', jQuery_old('.ui-datepicker-trigger').position().top );
+                                   jQuery_old('.ui-datepicker').css('left',  jQuery_old('.ui-datepicker-trigger').position().left );
+                                  }
+                          );
+ 
      }
  
+ 
+ 
+ 
+
 );
 
 

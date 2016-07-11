@@ -295,7 +295,7 @@ $(document).ready
                                                     $('#SearchEventSection').remove();
                                                     
                                                     //Remove all other displayed information about "Creating Events" (if exists)
-                                                    //$('#CreateEventSection').remove();
+                                                    $('#CreateEventSection').remove();
                         
                         
                                                     //Only run function if friends information is not displayed
@@ -439,7 +439,7 @@ $(document).ready
                                                         $('#SearchEventSection').remove();
                                                         
                                                         //Remove all other displayed information about "Creating Events" (if exists)
-                                                        //$('#CreateEventSection').remove();
+                                                        $('#CreateEventSection').remove();
                                                         
                             
                             
@@ -685,7 +685,7 @@ $(document).ready
                                                             $('#SearchEventSection').remove();
                                 
                                                             //Remove all other displayed information about "Creating Events" (if exists)
-                                                            //$('#CreateEventSection').remove();
+                                                            $('#CreateEventSection').remove();
                                 
                                 
                                 
@@ -741,8 +741,9 @@ $(document).ready
                                                         $('#SportingEventReview').remove();
                                 
                                                         //Remove all other displayed information about "Creating Events" (if exists)
-                                                        //$('#CreateEventSection').remove();
+                                                        $('#CreateEventSection').remove();
                              
+                                
                                 
                                                         
                                                         //Only run function if SearchEvent information is not displayed
@@ -808,6 +809,313 @@ $(document).ready
  
  
  
+             //When the user clicks on the "AddEvent" SVG, Create a form element for the user to create events
+             $(document).on('click', '#AddEvent',
+                            
+                                                function()
+                                                {
+                                                
+                                                    //Remove all other displayed information about "About" (if exists)
+                                                    $('#AboutUser').remove();
+                                                    
+                                                    //Remove all other displayed information about "Friends" (if exists)
+                                                    $('#FriendsofUser').remove();
+                                                    
+                                                    //Remove all other displayed information about "Reviews" (if exists)
+                                                    $('#ReviewsofUser').remove();
+                                                    $('#SportingEventReview').remove();
+                                                    
+                                                    //Remove all other displayed information about "SearchEvent" (if exists)
+                                                    $('#SearchEventSection').remove();
+                            
+                                                    
+                                                    
+                                                    //Only run function if CreateEventSection information is not displayed
+                                                    if( $('#CreateEventSection').length == 0 )
+                                                    {
+                                                    
+                                                    
+                                                        //Create a section to show the add event form
+                                                        var $CreateEvent = $('<section>',
+                                                                                         {
+                                                                                            id: 'CreateEventSection'
+                                                                                         }
+                                                                             );
+                            
+                                                        //Blur background first
+                                                        $('#ProfileHeader').wrap('<div class="blur-all">');
+                            
+                            
+                            
+                                                        //insert $CreateEvent after the #ProfileHeader
+                                                        //Update: insert $CreateEvent after the Blurred Background
+                                                        $CreateEvent.insertAfter('.blur-all');
+                                                        
+                                                        
+                                                        
+                                                        //Create a form for the user to be able to create events
+                                                        var $CreateEventForm = $('<form>',
+                                                                                         {
+                                                                                            id: 'CreateEventForm'
+                                                                                         }
+                                                                                 );
+                                                        
+                                                        //Append it to the CreateEvent
+                                                        $CreateEvent.append($CreateEventForm);
+                                                        
+                            
+                            
+                            
+                                                        //Creating input types
+                            
+                            
+                            
+                                                        //Create a label for Event Name
+                                                        var $EventNameLabel = $('<label>',
+                                                                                          {
+                                                                                            id: 'EventNameLabel',
+                                                                                            class: 'CreateEventLabel'
+                                                                                          }
+                                                                                ).append(
+                                                                                         $('<span>',     //Whats shown next to the input
+                                                                                                   {
+                                                                                                      text: 'Event Name'
+                                                                                                   }
+                                                                                           )
+                                                                                        ).append(
+                                                                                                 $('<input>',     //Input for the EventName
+                                                                                                           {
+                                                                                                              type: 'text'
+                                                                                                           }
+                                                                                                  )
+                                                                                                );
+                            
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventNameLabel);
+                            
+                            
+                            
+                                                        //Create a label for Event Type
+                                                        var $EventTypeLabel = $('<label>',
+                                                                                        {
+                                                                                          id: 'EventTypeLabel',
+                                                                                          class: 'CreateEventLabel'
+                                                                                        }
+                                                                                ).append(
+                                                                                         $('<span>',     //Whats shown next to the input
+                                                                                                   {
+                                                                                                     text: 'Event Type'
+                                                                                                   }
+                                                                                           )
+                                                                                         ).append(
+                                                                                                  $('<input>',     //Input for the EventType
+                                                                                                            {
+                                                                                                              type: 'text'
+                                                                                                            }
+                                                                                                    )
+                                                                                                  );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventTypeLabel);
+                            
+                            
+                        
+                                                        //Create a label for Event Numppl
+                                                        var $EventNumpplLabel = $('<label>',
+                                                                                            {
+                                                                                              id: 'EventNumpplLabel',
+                                                                                              class: 'CreateEventLabel'
+                                                                                            }
+                                                                                ).append(
+                                                                                         $('<span>',     //Whats shown next to the input
+                                                                                                   {
+                                                                                                      text: 'Number of people'
+                                                                                                   }
+                                                                                           )
+                                                                                         ).append(
+                                                                                                  $('<input>',     //Input for the EventName
+                                                                                                              {
+                                                                                                                type: 'number'
+                                                                                                              }
+                                                                                                    )
+                                                                                                  );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventNumpplLabel);
+                            
+                            
+                            
+                                                        //Create a label for Event DateTime
+                                                        var $EventDateTimeLabel = $('<label>',
+                                                                                              {
+                                                                                                id: 'EventDateTimeLabel',
+                                                                                                class: 'CreateEventLabel'
+                                                                                              }
+                                                                                  ).append(
+                                                                                           $('<span>',     //Whats shown next to the input
+                                                                                                     {
+                                                                                                       text: 'Event Date & Time'
+                                                                                                     }
+                                                                                             )
+                                                                                           ).append(
+                                                                                                    $('<input>',     //Input for the EventDate and Time
+                                                                                                                {
+                                                                                                                  type: 'datetime-local'
+                                                                                                                }
+                                                                                                      )
+                                                                                                    );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventDateTimeLabel);
+
+                            
+                            
+                                                        //Create a label for Event EndTime
+                                                        var $EventEndTimeLabel = $('<label>',
+                                                                                            {
+                                                                                              id: 'EventEndTimeLabel',
+                                                                                              class: 'CreateEventLabel'
+                                                                                            }
+                                                                                    ).append(
+                                                                                             $('<span>',     //Whats shown next to the input
+                                                                                                       {
+                                                                                                         text: 'Event End Time'
+                                                                                                       }
+                                                                                               )
+                                                                                             ).append(
+                                                                                                      $('<input>',     //Input for the Event EndTime
+                                                                                                                    {
+                                                                                                                      type: 'time'
+                                                                                                                    }
+                                                                                                        )
+                                                                                                      );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventEndTimeLabel);
+                            
+                            
+                            
+                                                        //Create a label for Event Location
+                                                        var $EventLocationLabel = $('<label>',
+                                                                                               {
+                                                                                                 id: 'EventLocationLabel',
+                                                                                                 class: 'CreateEventLabel'
+                                                                                               }
+                                                                                   ).append(
+                                                                                            $('<span>',     //Whats shown next to the input
+                                                                                                      {
+                                                                                                        text: 'Event Location'
+                                                                                                      }
+                                                                                              )
+                                                                                            ).append(
+                                                                                                     $('<input>',     //Input for the Event Location
+                                                                                                                   {
+                                                                                                                   type: 'text'
+                                                                                                                   }
+                                                                                                       )
+                                                                                                     );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventLocationLabel);
+
+                            
+                                                        //Create a label for Event Description
+                                                        var $EventDescriptionLabel = $('<label>',
+                                                                                                {
+                                                                                                  id: 'EventDescriptionLabel',
+                                                                                                  class: 'CreateEventLabel'
+                                                                                                }
+                                                                                    ).append(
+                                                                                             $('<span>',     //Whats shown next to the input
+                                                                                                       {
+                                                                                                         text: 'Event Description'
+                                                                                                       }
+                                                                                               )
+                                                                                             ).append(
+                                                                                                      $('<textarea>',     //Input for the Event Description
+                                                                                                                    {
+                                                                                                                      placeholder: 'Brief Description of event',
+                                                                                                                      rows: 4
+                                                                                                        
+                                                                                                        
+                                                                                                                    }
+                                                                                                        )
+                                                                                                      );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($EventDescriptionLabel);
+                            
+                            
+                            
+                                                        //Add the submit button
+                                                        //Create a label for Event Description
+                                                        var $CreateEventSubmit = $('<input>',
+                                                                                               {
+                                                                                                 type: 'submit',
+                                                                                                 id: 'CreateEventSubmit',
+                                                                                                 value: 'Create Event'
+                                                                                               }
+                                                                                   );
+                                                        
+                                                        
+                                                        //Append it to the CreateEventForm
+                                                        $CreateEventForm.append($CreateEventSubmit);
+                            
+                            
+                            
+                                                        //Append the close event SVG sign
+                                                        var $CloseEvent = $('<img>',
+                                                                                   {
+                                                                                       src: './assets/images/Close_Message.svg',
+                                                                                       width: '15px',
+                                                                                       id: 'CloseEventButton'
+                                                                                   }
+                                                                           );
+                            
+                            
+                                                        //Append it to the CreateEvent
+                                                        $CreateEvent.append($CloseEvent);
+                            
+                            
+
+                            
+                            
+                            
+                                                    }
+                            
+                                                }
+                            
+                            
+                            );
+
+ 
+ 
+ 
+             //Clicking on the CloseEventButton SVG, it removes the event
+             $(document).on('click', '#CloseEventButton',
+                            
+                                                        function()
+                                                        {
+                                                        
+                                                            //Remove the event creation section
+                                                            $('#CreateEventSection').remove();
+                         
+                                                            //unwrap div with the class for blurring the background from #ProfileHeader
+                                                            $('#ProfileHeader').unwrap();
+                            
+                            
+       
+                            
+                                                        }
+                            );
+
  
     } //End of $(document).ready function
 
