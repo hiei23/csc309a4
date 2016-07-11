@@ -227,6 +227,20 @@ form{
 	background-color: #4797D9;
 }
 
+#forgot_pw{
+	position: absolute;
+	top: 250px;
+	left: 200px;
+}
+
+#forgot_pw a{
+	color: black;
+}
+
+#forgot_pw a:hover{
+	color: #008CBA;
+}
+
 #divison_img{
 	position: absolute;
 	left: 260px;
