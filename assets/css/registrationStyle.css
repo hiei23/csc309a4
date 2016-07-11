@@ -97,7 +97,7 @@ label span.label {
 	position: absolute;
     float: left;
     display: block;
-    width: 10rem;
+    width: 15rem;
 	font-size: 120%;
     font-weight: bold;
 	left: 30;
@@ -221,4 +221,11 @@ input:invalid {
 	select.unit {
 		margin-left: 130px;
 	}
+	
+	#SportsFieldset > article
+	{
+		padding-left: 0%;
+		left: 0;
+	}
+	
 }

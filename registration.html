@@ -21,6 +21,34 @@
                     <span class="error"><%- errors.error_stunum %></span>
                 </label>
             </section -->
+			
+			<section class="form_element">
+                <label id="emailField">
+                    <span class="label">Email Address:</span><br>
+                    <input type="text" name="email"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                    <span class="error"><%- errors.error_email %></span>
+                </label>
+            </section>
+			
+            <section class="form_element">
+                <label id="passwordField">
+                    <span class="label">Password:</span><br>
+                    <input type="text" name="password"
+                    pattern=".{6,}">
+                    <span class="error"><%- errors.password %></span>
+                </label>
+            </section>
+			
+            <section class="form_element">
+                <label id="confirmField">
+                    <span class="label">Confirm Password:</span><br>
+                    <input type="text" name="confirmPass"
+                    pattern=".{6,}">
+                    <span class="error"><%- errors.password %></span>
+                </label>
+            </section>
+			
 			<section class="form_element">
                 <label id="campusField">
                     <span class="label">Campus:</span><br>
@@ -53,18 +81,9 @@
                     <span class="label">Phone Number:</span> <br>
                     <!-- Create a REQ'D text input here with name "phone" -->
                     <input type="text" name="phone"
-                    pattern="\d{10}|(\(\d{3}\))?(\d{3})?-?\d{3}-\d{4}|\(\d{3}\)\d{7}" title="Needs to be 10 numbers">
+                    pattern="\d{10}|(\(\d{3}\))?(\d{3})?-?\d{3}-\d{4}|\(\d{3}\)\d{7}">
                     <!-- Use the HTML5 validation "pattern" attribute to validate -->
-                  
-                </label>
-            </section>
-
-            <section class="form_element">
-                <label id="emailField">
-                    <span class="label">Email Address:</span><br>
-                    <input type="text" name="email"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                    <span class="error"><%- errors.error_email %></span>
+                    <span class="error"><%- errors.error_phone %></span>
                 </label>
             </section>
             
@@ -378,6 +397,7 @@
                 <label id="AboutMeField">
                     <span  class="label">About Me:</span><br>
                     <textarea name="AboutMe" rows="6" cols="35"></textarea>
+				</label>
             </section>
 
             <fieldset id="SportsFieldset">
