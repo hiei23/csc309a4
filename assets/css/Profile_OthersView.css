@@ -374,7 +374,10 @@ li
     overflow: scroll;
     height: 20px;
     resize: none;
-    
+    line-height: 1.2em;
+    padding-left: 3px;
+    padding-top: 5px;
+    border-radius: 3px;
 }
 
 

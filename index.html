@@ -5,10 +5,19 @@
         <meta charset = "UTF-8">
         <title> UofT Sports </title>
         <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+            
         <!-- Google Rokkitt Font-->
-        <link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
-        <script type="text/javascript" src="assets/scripts/jquery-2.2.4.min.js" defer></script><!--jQuery should be first -->
+        <link href="http://fonts.googleapis.com/css?family=Rokkitt" rel='stylesheet' type='text/css'>
+            
+        <script type="text/javascript" src="assets/scripts/jquery-2.2.4.min.js" defer></script> <!--New JQuery-->
         <script type="text/javascript" src="assets/scripts/FrontEnd.js" defer></script>
+        
+        <!--JQuery UI-->
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="http://code.jquery.com/jquery-1.10.2.js"></script>  <!--Old JQuery needed for the JQuery UI-->
+        <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+   
+        
     </head>
 
     <body>
@@ -56,7 +65,7 @@
               
               <h2 id="AboutUs_Header"> About TSports </h2>
               
-              <p id="AboutUs_Text"> <strong> TSports </strong> is University of Toronto's largest sports social network to meet others. TSports makes it easy for anyone to organize a team or find thousands of other individuals willing to show up and play sports. UofT is home to more than 30,000 students, majority of which have the goal of socializing and playing sports </p>
+              <p id="AboutUs_Text"> <strong> TSports </strong> is University of Toronto's largest sports social network to meet others. TSports makes it easy for anyone to organize a team or find thousands of other individuals willing to show up and play sports. UofT is home to more than 30,000 students, majority of which have the goal of socializing and playing sports. </p>
               
               <p id="AboutUs_MissionStatement"> <strong> TSport's Mission Statement  </strong> is to connect University of Toronto's community and enhance a student's experience while university.
               </p>
@@ -215,6 +224,9 @@
               <p id="ShowMoreButton">  Show more </p>
           
           </div>
+          
+        <!--datepicker is activated by clicking on the calendar icon-->
+          <input type="hidden" id="datepicker" />
           
       </section>
     

@@ -206,7 +206,7 @@ $(document).ready
                                    var $ChatBoxFormTextarea = $('<textarea>',
                                                                         {
                                                                              placeholder: 'Type a message...',
-                                                                             width:  $ChatBox.width() - 3   //Width of the chatbox -3px
+                                                                             width:  $ChatBox.width() - 5   //Width of the chatbox -3px
                                                                         }
                                                              );
                        

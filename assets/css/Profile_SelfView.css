@@ -209,7 +209,7 @@ li
     background-color: rgb(255,255,255);
     text-align: center;
     margin: 0 auto;
-    width: 30%;
+    width: 33%;
     margin-top: 30px;
 
     border-radius: 5px;
@@ -369,7 +369,10 @@ li
     overflow: scroll;
     height: 20px;
     resize: none;
-    
+    line-height: 1.2em;
+    padding-left: 3px;
+    padding-top: 5px;
+    border-radius: 3px;
 }
 
 
@@ -502,6 +505,7 @@ li
     width: 65%;
     font-weight: 400;
 }
+
 
 
 

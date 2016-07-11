@@ -284,7 +284,8 @@ nav div
     font-size: 50px;
     font-weight: 100;
     height: 50px;
-    margin-bottom: 18px;
+    margin-bottom: 60px;
+    width: 100%;
 }
 #UpcomingEvents_Content
 {
@@ -404,6 +405,38 @@ nav div
     background-color: rgb(232,232,232);
     color: red;
 }
+
+
+
+/*datepicker input location*/
+#datepicker
+{
+    position: relative;
+    left: 77%;
+    top: -580px;
+}
+
+/*Change the datepicker size*/
+/*Inspect classes using firebug*/
+div.ui-datepicker
+{
+    font-size:11px;
+    margin-left: 30px;
+    margin-top: 30px;
+}
+
+/*size of the datepicker trigger icon*/
+/*Inspect classes using firebug*/
+.ui-datepicker-trigger
+{
+    cursor: pointer;
+    width: 30px;
+    position: relative;
+    left: 75%;
+    top: -620px;
+}
+
+
 
 
 
