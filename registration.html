@@ -14,114 +14,98 @@
         <form action="/signup" method="post">
 			<img src="./assets/images/TSportsLogo_red.svg" alt="TSportsLogo" />
             <h1 id="header">Registration</h1>
-			
-			<section class="form_element">
-                <label id="emailField">
-                    <span class="label">Email Address:</span><br>
-                    <input type="text" name="email"
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
-                    <span class="error"><%- errors.error_email %></span>
-                </label>
-            </section>
-			
-            <section class="form_element">
-                <label id="passwordField">
-                    <span class="label">Password:</span><br>
-                    <input type="text" name="password"
-                    pattern=".{6,}">
-                    <span class="error"><%- errors.password %></span>
-                </label>
-            </section>
-			
-            <section class="form_element">
-                <label id="confirmField">
-                    <span class="label">Confirm Password:</span><br>
-                    <input type="text" name="confirmPass"
-                    pattern=".{6,}">
-                    <span class="error"><%- errors.password %></span>
-                </label>
-            </section>
-	
-			<section class="form_element">
-                <label id="campusField">
-                    <span class="label">Campus:</span><br>
-					<select>
-						<option value="SG">St.George</option>
-						<option value="MS">Missisauga</option>
-						<option value="SC">Scarborough</option>
-					</select>
-                </label>
-            </section>
             
             <section class="form_element">
-                <label id="givenField">
-                    <span class="label">Given Name:</span> <br>
-                    <!-- Create a REQ'D text input here with name "givenname" -->
-                    <input type="text" name="givenname"
-                    pattern="^[a-z0-9_-]{1,15}$">
-                </label>
-            </section>
-            <section class="form_element">
-                <label id="familyField">
-                    <span class="label">Family Name:</span><br>
-                    <input type="text" name="familyname"
-                    pattern="^[a-z0-9_-]{1,15}$">
-                </label>
-            </section>
-            
-            <section class="form_element">
-                <label id="phoneField">
-                    <span class="label">Phone Number:</span> <br>
-                    <!-- Create a REQ'D text input here with name "phone" -->
-                    <input type="text" name="phone"
-                    pattern="\d{10}|(\(\d{3}\))?(\d{3})?-?\d{3}-\d{4}|\(\d{3}\)\d{7}">
-                    <!-- Use the HTML5 validation "pattern" attribute to validate -->
-                    <span class="error"><%- errors.error_phone %></span>       
-                </label>
-            </section>
-            
-            <!-- Firefox doesn't support the "date" type, Chrome does. -->
-            <!-- Date format is yyyy-mm-dd. Use the "placeholder" attribute to tell the user. -->
-            <section class="form_element">
-                <label id="birthdayField">
-                    <span class="label">Birthday:</span><br>
-                    <input type="text" name="birthday" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])">
-                </label>
-            </section>
+                <article class="column2">
 
-            <section>
-                <label id="heightField">
-                    <span class="label">Height:</span><br>
-                    <input type="text" name="height">
-                    <span>
-						<select class="unit">
-							<option value="cm">cm</option>
-							<option value="inch">in.</option>
-						</select>
-					</span>
-                </label>
-            </section>
+                    <label id="emailField">
+                        <span class="label">Email Address:</span><br>
+                        <input type="text" name="email"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                    </label>
 
-            <section>
-                <label id="WeightField">
-                    <span class="label">Weight:</span><br>
-                    <input type="text" name="weight">
-                    <span>
-						<select class="unit">
-							<option value="kg">kg</option>
-							<option value="lb">lb</option>
-						</select>
-					</span>
-                </label>
-            </section>
+                    <label id="passwordField">
+                        <span class="label">Password:</span><br>
+                        <input type="text" name="password"
+                        pattern=".{6,}">
+                    </label>
 
-            <section>
+                    <label id="givenField">
+                        <span class="label">Given Name:</span> <br>
+                        <input type="text" name="givenname"
+                        pattern="^[a-z0-9_-]{1,15}$"><br>
+                    </label>
+
+                    <label id="phoneField">
+                        <span class="label">Phone Number:</span><br> 
+                        <input type="text" name="phone"
+                        pattern="\d{10}|(\(\d{3}\))?(\d{3})?-?\d{3}-\d{4}|\(\d{3}\)\d{7}"><br>       
+                    </label>
+
+                    <label id="heightField">
+                        <span class="label">Height:</span><br>
+                        <input type="text" name="height">
+                        <span>
+                            <select class="unit">
+                                <option value="cm">cm</option>
+                                <option value="inch">in.</option>
+                            </select>
+                        </span>
+                    </label>
+
                 <label>
                     <span class="label">Gender:</span><br>
-                    <input type="radio" name="gender" value="male"> Male
-                    <input type="radio" name="gender" value="female"> Female
+                    <input type="radio" name="gender" value="male"> <span class="radioOption">Male</span>
+                    <input type="radio" name="gender" value="female"> <span class="radioOption">Female</span>
                 </label>
 
+                </article>
+                    
+                <article class="column2">
+
+                    <label id="confirmEmailField">
+                        <span class="label">Confirm Email Address:</span><br>
+                        <input type="text" name="email"
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                    </label>
+
+                    <label id="confirmPasswordField">
+                        <span class="label">Confirm Password:</span><br>
+                        <input type="text" name="confirmPass"
+                        pattern=".{6,}">
+                    </label>
+                    <label id="familyField">
+                        <span class="label">Family Name:</span><br>
+                        <input type="text" name="familyname"
+                        pattern="^[a-z0-9_-]{1,15}$"><br>
+                    </label>
+
+                    <label id="birthdayField">
+                        <span class="label">Birthday:</span><br>
+                        <input type="text" placeholder ="yyyy-mm-dd"name="birthday" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"><br>
+                    </label>
+
+                    <label id="WeightField">
+                        <span class="label">Weight:</span><br>
+                        <input type="text" name="weight">
+                        <span>
+                            <select class="unit">
+                                <option value="kg">kg</option>
+                                <option value="lb">lb</option>
+                            </select>
+                        </span>
+                    </label>
+
+                <label id="campusField">
+                    <span class="label">Campus:</span><br>
+                    <select>
+                        <option value="SG">St.George</option>
+                        <option value="MS">Missisauga</option>
+                        <option value="SC">Scarborough</option>
+                    </select>
+                </label><br>
+
+                </article>
             </section>
 
             <section>

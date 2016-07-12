@@ -3,6 +3,17 @@
     float:left;
 }
 
+.column2{
+    float: left;
+    width: 46%;
+    padding-right: 4%;
+}
+
+.radioOption
+{
+	font-size: 14pt;
+}
+
 body {	
     font-family: 'Rokkitt';
 	background: url(../images/background.png) no-repeat;
@@ -28,23 +39,11 @@ form {
 	padding: 70px;
 	margin: auto;
 	margin-top: 15%;
-	width: 550px;
+	width: 700px;
 	position: relative;
 	border-radius: 12px;
-
 }
 
-select {
-    border-radius: 4px;
-	margin-right: 80%;
-	margin-top: 5px;
-    background-color: #f1f1f1;
-    border: 2px solid #ccc;
-}
-
-select.unit {
-	margin-left: 222px;
-}
 
 textarea {
     max-width: 100%;
@@ -63,65 +62,43 @@ fieldset {
     margin: 3rem 0;
 }
 
-input, textarea, select, option {
+
+input, textarea, option {
     border: 2px solid #ccc;
     padding: 0.25rem;
     padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 16pt;  
+    padding-bottom: 5px;
+    font-size: 15pt; 
+}
+
+
+select {
+    border-radius: 4px;
+	margin-top: 5px;
+    background-color: #f1f1f1;
+    border: 2px solid #ccc;
+    font-size: 16pt;
 }
 
 input:focus
 {
-    background-color: lightblue;
+    background-color: lightgreen;
 }
-
 
 label {
     cursor: pointer;
     display: block;
-    margin: 2rem 0;
+   	padding-top: 1%;
+	padding-bottom: 1%;
 }
 
-label:first-child {
-    margin-top: 0;
-}
-
-label:after {
-    clear: both;
-    display: table;
-    content: " ";
-}
 
 label span.label {
-	position: absolute;
-    float: left;
-    display: block;
-    width: 15rem;
-	font-size: 120%;
     font-weight: bold;
-	left: 30;
-}
-
-label span.error {
-    color: red;
-    padding-left: 1rem;
-}
-
-input[type="text"] {
-	margin-top: 5px;
-	width: 60%;
-	left: 0;
 }
 
 input[type="radio"] {
 	margin-top: 10px;
-}
-
-input[name="height"], input[name="weight"]{
-	position: absolute;
-	margin-left: 70px;
-	width: 30%;
 }
 
 
