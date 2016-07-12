@@ -256,6 +256,7 @@ li
     vertical-align: middle;
 }
 
+/* PARHAM HERE!! -> from here to */
 
 #BodyNav, #secondBodyNav
 {
@@ -281,6 +282,8 @@ li
 {
     background-color: rgb(232, 232, 232);
 }
+
+/* PARHAM HERE!! <- ABOVE (there is more)*/
 
 .BodyNavClicked
 {
@@ -511,7 +514,10 @@ li
 {
 	padding-left: 3%;
 	float: left;
+
 }
+
+/* PARHAM HERE!! -> from here to --> */
 
 #AboutUser input[disabled], #AboutUser div div textarea[disabled]
 {
@@ -548,6 +554,8 @@ li
 	bottom: 10px;
 	left: 150px;
 }
+
+/* <--PARHAM HERE !! <-- ABOVE  ENDDDDDDDDDDD */
 
 /* Friends section style */
 #FriendsofUser

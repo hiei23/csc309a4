@@ -669,7 +669,7 @@ $(document).ready
                             );
 
  
- 
+				
  
  
 				//IMPORTANT!!: HERE is MOCK data: Delete for phase 2.
@@ -683,6 +683,9 @@ $(document).ready
 									"Sports": sport_list};
 				var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address", "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
+ 
+ 
+				//----> PARHAM HERE!! --> STARRRRRT
  
                  //When the user clicks on the "About" Tab, show all info about the user
                  $(document).on('click', '#UserAbout', userAboutClickFcn);
@@ -860,6 +863,9 @@ $(document).ready
 
 				}
 
+				
+				//----> PARHAM HERE!! -->
+				
 				$(document).on('click', '.edit_button', 
 													function()
 													{
@@ -890,6 +896,8 @@ $(document).ready
 													}
 								);
 								
+				//----> PARHAM HERE!! -->
+								
 				$(document).on('click', '.cancel_button', 
 													function()
 													{
@@ -897,6 +905,8 @@ $(document).ready
 														userAboutClickFcn();
 													}
 								);
+				
+				//----> PARHAM HERE!! -->
 								
 				$(document).on('submit', '.submit_button', 
 													function()
@@ -915,6 +925,8 @@ $(document).ready
 														
 													}
 								);
+								
+				//<---- //PARHAM HERE @@@@ENDDDD@@@@
  
  
 				$(document).on('click', '#UserEvents',
