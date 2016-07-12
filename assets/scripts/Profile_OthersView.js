@@ -37,8 +37,9 @@ $(document).ready
                         );
 
  
-        //Get the window height for the chat box
-        $Window_Height = $(window).height();
+         //Get the window height for the chat box
+         $Window_Height = $(window).height();
+         $Window_Width = $(window).width();
  
  
         //Update window_height if browser is resized
@@ -46,14 +47,17 @@ $(document).ready
          (
               function()
               {
-                  //Update Window_Height
+                  //Update Window_Height and Window_Width
                   $Window_Height = $(window).height();
+                  $Window_Width = $(window).width();
           
           
                   //If the chatbox exists, reposition it when window is resized
                   if( $('#ChatBox').length > 0 )
                   {
-                       $('#ChatBox').css('top', $Window_Height -  $('#ChatBox').height() );
+                      $('#ChatBox').css('top', $Window_Height -  $('#ChatBox').height() );
+                      $('#ChatBox').css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
+          
                        $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
                   }
           
@@ -111,6 +115,10 @@ $(document).ready
                                 if( $('#ChatBox').length == 0 )
                                 {
                        
+                                   $Window_Height = $(window).height();
+                                   $Window_Width = $(window).width();
+
+                       
                                     //Create a dynamic div for the chatbox header
                                     var $ChatBoxHeader = $('<div>',
                                                                     {
@@ -155,7 +163,8 @@ $(document).ready
                        
                                     //$ChatBox should be fixed on the bottom of the page
                                     //Position should be "Height of window" - "Height of chatbox"
-                                    $ChatBox.css('top', $Window_Height - $ChatBox.height() );
+                                   $ChatBox.css('top', $Window_Height - $ChatBox.height() );
+                                   $ChatBox.css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
                        
                        
                                     $ChatBox.append($ChatBoxHeader);

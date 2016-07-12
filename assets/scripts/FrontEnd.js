@@ -50,7 +50,8 @@ jQuery_old(document).ready
                                                                             //Load new corresponding events from the DB
                                                 
                                                                             //console.log(dateText);
-                                                                          }
+                                                                          },
+                                        minDate: 0  //Users can only see future events, not past
                                                 
                                                 
                                                 });
@@ -59,9 +60,11 @@ jQuery_old(document).ready
          jQuery_old( "#datepicker" ).datepicker("option", "showAnim", 'fadeIn');
  
  
+         //When we resize the window, make the calendar be positioned appropriately
          jQuery_old(window).resize(function()
                                   {
-                                    jQuery_old('#ui-datepicker-div').css('top', jQuery_old('.ui-datepicker-trigger').position().top );
+                                    //Make the new position be the position of the calendar icon trigger
+                                    jQuery_old('#ui-datepicker-div').css('top',   jQuery_old('.ui-datepicker-trigger').position().top );
                                     jQuery_old('#ui-datepicker-div').css('left',  jQuery_old('.ui-datepicker-trigger').position().left );
                                   }
                           );

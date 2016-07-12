@@ -27,6 +27,7 @@ $(document).ready
  
         //Get the window height for the chat box
         $Window_Height = $(window).height();
+         $Window_Width = $(window).width();
  
  
         //Update window_height if browser is resized
@@ -34,15 +35,19 @@ $(document).ready
          (
               function()
               {
-                  //Update Window_Height
+                  //Update Window_Height and Window_Width
                   $Window_Height = $(window).height();
+                  $Window_Width = $(window).width();
           
           
                   //If the chatbox exists, reposition it when window is resized
                   if( $('#ChatBox').length > 0 )
                   {
                        $('#ChatBox').css('top', $Window_Height -  $('#ChatBox').height() );
-                       $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
+                       $('#ChatBox').css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
+          
+                        $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
+          
                   }
           
           
@@ -96,9 +101,18 @@ $(document).ready
                                 function()
                                 {
                        
+//                               //Remove all other displayed information about "Creating Events" (if exists)
+//                               $('#CreateEventSection').remove();
+//                               //unwrap div with the class for blurring the background from #ProfileHeader
+//                               $('#ProfileHeader').unwrap();
+                       
                                 //If a ChatBox exists, don't make a new one
                                 if( $('#ChatBox').length == 0 )
                                 {
+                       
+                                   $Window_Height = $(window).height();
+                                   $Window_Width = $(window).width();
+
                        
                                     //Create a dynamic div for the chatbox header
                                     var $ChatBoxHeader = $('<div>',
@@ -142,14 +156,13 @@ $(document).ready
                                     $('body').append($ChatBox);
                        
                        
-                                    //$ChatBox should be fixed on the bottom of the page
-                                    //Position should be "Height of window" - "Height of chatbox"
-                                    $ChatBox.css('top', $Window_Height - $ChatBox.height() );
-                       
-                       
                                     $ChatBox.append($ChatBoxHeader);
                        
-                       
+                                   //$ChatBox should be fixed on the bottom of the page
+                                   //Position should be "Height of window" - "Height of chatbox"
+                                   $ChatBox.css('top', $Window_Height - $ChatBox.height() );
+                                   $ChatBox.css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
+                                   
                        
                                     //Get Message Data from the web server, and append list of previous messages with the user
                        
@@ -207,6 +220,7 @@ $(document).ready
                        
                                     //position the form at the bottom of the ChatBox
                                     $ChatBoxForm.css('top', $Window_Height -  $ChatBoxForm.height() );
+                   
                        
                               }
                                 }
@@ -283,8 +297,6 @@ $(document).ready
                         
                                                 function()
                                                 {
-													//Make background clear by clearing blur-all class.
-													$('.blur-all').removeClass('blur-all');
                         
                                                     //Remove all other displayed information about "About" (if exists)
                                                     $('#AboutUser').remove();
@@ -298,6 +310,8 @@ $(document).ready
                                                     
                                                     //Remove all other displayed information about "Creating Events" (if exists)
                                                     $('#CreateEventSection').remove();
+                                                    //unwrap div with the class for blurring the background from #ProfileHeader
+                                                    $('#ProfileHeader').unwrap();
                         
                         
                                                     //Only run function if friends information is not displayed
@@ -373,54 +387,59 @@ $(document).ready
          //This will eventually come from the database
          var Sports = [
                           {
-                             "EventName" : "cycling",
+                             "EventName" : "Cycling",
                              "url": "./assets/images/cycling.svg"
                           },
                           
                           {
-                             "EventName" : "football",
+                             "EventName" : "Football",
                              "url": "./assets/images/football.svg"
                           },
                        
                            {
-                               "EventName" : "squash",
+                               "EventName" : "Squash",
                                "url": "./assets/images/squash.svg"
                            },
                            
                            {
-                               "EventName" : "basketball",
+                               "EventName" : "Basketball",
                                "url": "./assets/images/basketball.svg"
                            },
                            
                            {
-                               "EventName" : "boxing",
+                               "EventName" : "Boxing",
                                "url": "./assets/images/boxing.svg"
                            },
                        
                        {
-                       "EventName" : "tennis",
+                       "EventName" : "Tennis",
                        "url": "./assets/images/tennis.svg"
                        },
                        
                        {
-                       "EventName" : "volleyball",
+                       "EventName" : "Volleyball",
                        "url": "./assets/images/volleyball.svg"
                        },
                        
                        {
-                       "EventName" : "waterpolo",
+                       "EventName" : "Waterpolo",
                        "url": "./assets/images/waterpolo.svg"
                        },
                        
                        {
-                       "EventName" : "tabletennis",
+                       "EventName" : "Tabletennis",
                        "url": "./assets/images/tabletennis.svg"
                        },
                        
                        {
-                       "EventName" : "taekwondo",
+                       "EventName" : "Taekwondo",
                        "url": "./assets/images/taekwondo.svg"
                        },
+                       
+                       {
+                       "EventName" : "Swimming",
+                       "url": "./assets/images/swimming.svg"
+                       }
                
                     ];
  
@@ -430,9 +449,6 @@ $(document).ready
                             
                                                     function()
                                                     {
-														
-														//Make background clear by clearing blur-all class.
-														$('.blur-all').removeClass('blur-all');
        
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
@@ -445,7 +461,8 @@ $(document).ready
                                                         
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
-                                                        
+                                                        //unwrap div with the class for blurring the background from #ProfileHeader
+                                                        $('#ProfileHeader').unwrap();
                             
                             
                                                         //Only run function if Reviews information is not displayed
@@ -669,286 +686,287 @@ $(document).ready
                             );
 
  
-				
- 
- 
-				//IMPORTANT!!: HERE is MOCK data: Delete for phase 2.
-				var sport_list = ["Hockey", "Soccer", "Archery", "Artistic Gymnastics", "Athletics", "Badminton", "Basketball", "Beach Volleyball", "Boxing", "Canoe Slalom", "Canoe Sprint", "Cycling BMX", "Cycling Mountain Bike", "Cycling Road", "Cycling Track", "Diving", "Equestrian", "Fencing", "Football", "Golf"];
-				
-				var detail = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-				var about_mockData = {"Campus": "St.George", "Given_Name": "Parham", "Family_Name": "Oghabi", 
-									"Phone_number": "(647)123-9999", "Email_Address": "parham@hotmail.com", 
-									"Birthday": "January 1, 1994", "Height": "180cm",
-									"Weight": "72kg", "Gender": "Male", "About_Me": detail, 
-									"Sports": sport_list};
-				var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address", "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
  
  
-				//----> PARHAM HERE!! --> STARRRRRT
+                 var sport_list = ["Hockey", "Soccer", "Archery", "Artistic Gymnastics", "Badminton",
+                                   "Basketball", "Volleyball", "Boxing", "Canoe Slalom", "Canoe Sprint",
+                                   "Cycling Track", "Diving", "Equestrian", "Fencing", "Football"];
+ 
+ 
+                 var about_mockData = {
+                                        "Campus": "St.George",
+                                        "Given_Name": "Parham",
+                                        "Family_Name": "Oghabi",
+                                        "Phone_number": "(647)123-9999",
+                                        "Email_Address": "parham@hotmail.com",
+                                        "Birthday": "January 1, 1994",
+                                        "Height": "180cm",
+                                        "Weight": "72kg",
+                                        "Gender": "Male",
+                                        "About_Me": "",
+                                        "Sports": sport_list
+                                      };
+ 
+                 var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address",
+                                    "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
+ 
  
                  //When the user clicks on the "About" Tab, show all info about the user
-                 $(document).on('click', '#UserAbout', userAboutClickFcn);
-								
-				function userAboutClickFcn()
-				{
-						
-						//Make background clear by clearing blur-all class.
-						$('.blur-all').removeClass('blur-all');
-						
-						//Remove all other displayed information about "Friends" (if exists)
-						$('#FriendsofUser').remove();
-						
-						//Remove all other displayed information about "Reviews" (if exists)
-						$('#ReviewsofUser').remove();
-						$('#SportingEventReview').remove();
+                $(document).on('click', '#UserAbout', userAboutClickFcn);
+ 
+                                                    function userAboutClickFcn()
+                                                    {
+                                
+                                                            
+                                                            //Remove all other displayed information about "Friends" (if exists)
+                                                            $('#FriendsofUser').remove();
+                                                            
+                                                            //Remove all other displayed information about "Reviews" (if exists)
+                                                            $('#ReviewsofUser').remove();
+                                                            $('#SportingEventReview').remove();
+                                
+                                                            //Remove all other displayed information about "Searching Events" (if exists)
+                                                            $('#SearchEventSection').remove();
+                                
+                                                            //Remove all other displayed information about "Creating Events" (if exists)
+                                                            $('#CreateEventSection').remove();
+                                                            //unwrap div with the class for blurring the background from #ProfileHeader
+                                                            $('#ProfileHeader').unwrap();
+                                
+                                
+                                
+                                                            //Only run function if About information is not displayed
+                                                            if( $('#AboutUser').length == 0 )
+                                                            {
+                                                            
+                                                            
+                                                                //Create a section to info about the user
+                                                                var $AboutSection = $('<section>',
+                                                                                                    {
+                                                                                                        id: 'AboutUser'  //Please don't change this ID
+                                                                                                    }
+                                                                                     );
 
-						//Remove all other displayed information about "Searching Events" (if exists)
-						$('#SearchEventSection').remove();
+                                                                
+                                                                //insert $AboutSection after the #ProfileHeader
+                                                                $AboutSection.insertAfter('#ProfileHeader');
+                                
+                                
+                                                                //ADD CODE HERE
+                                                                $div_input = $('<div/>',
+                                                                                       {
+                                                                                          class: "info_input"
+                                                                                       }
+                                                                               );
+                                
+                                                                for (var i = 0; i < about_order.length - 1; i++)
+                                                                {
+                                                                        var $div = $('<div/>',
+                                                                                             {
+                                                                                                class: "each_info"
+                                                                                             }
+                                                                                     );
+                                                                        
+                                                                        var $label = $('<label/>',
+                                                                                                   {
+                                                                                                     class: about_order[i]
+                                                                                                   }
+                                                                                       );
+                                                                        
+                                                                        var $label_text = $('<span/>',
+                                                                                                        {
+                                                                                                          class: "label",
+                                                                                                          text: about_order[i].replace("_", " ") + ":"
+                                                                                                        }
+                                                                                            );
+                                                                        
+                                                                        var $br = $('<br>');
+                                                                        
+                                                                        var $info;
+                                                                        
+                                                                        //Display About me section as <textarea>
+                                                                        if (about_order[i] === "About_Me")
+                                                                        {
+                                                                            $info = $('<textarea>',
+                                                                                                  {
+                                                                                                      name: about_order[i],
+                                                                                                      placeholder: "Brief Personal Description",
+                                                                                                      class: about_order[i],
+                                                                                                      text: about_mockData[about_order[i]],
+                                                                                                      rows: 6,
+                                                                                                      cols: 35,
+                                                                                                      disabled: "disabled"
+                                                                                                  }
+                                                                                      );
+                                                                            //Display Sports section as <fieldset> and lists.
+                                                                        }
+                                
+                                                                        else
+                                                                        {
+                                                                            $info = $('<input>',
+                                                                                                  {
+                                                                                                      type: "text",
+                                                                                                      name: about_order[i],
+                                                                                                      class: about_order[i],
+                                                                                                      value: about_mockData[about_order[i]],
+                                                                                                      disabled: "disabled"
+                                                                                                  }
+                                                                                      );
+                                                                        }
+                                                                        
+                                                                        
+                                                                        
+                                                                        $label.append($label_text);
+                                                                        $label.append($br);
+                                                                        $label.append($info);
+                                                                        $div.append($label);
+                                                                        
+                                                                        $div_input.append($div);
+                                                                
+                                                                }
+                                                                
+                                                                
+                                                                if (about_mockData[about_order[i]].length > 20)
+                                                                {
+                                                                $info = $('<fieldset/>', {
+                                                                          class: "field_sports",
+                                                                          width: "50%"
+                                                                          });
+                                                                } else {
+                                                                $info = $('<fieldset/>', {
+                                                                          class: "field_sports"
+                                                                          });
+                                                                }
+                                                                
+                                                                
+                                                                
+                                                                
+                                                                $label_text = $('<legend/>', {
+                                                                                class: "label",
+                                                                                text: about_order[i].replace("_", " ") + ":"
+                                                                                });
+                                                                
+                                                                $info.append($label_text);
+                                                                $info.append($br);
+                                                                
+                                                                var len = about_mockData[about_order[i]].length;
+                                                                
+                                                                //each column contains max. 20 elements.
+                                                                var num_col = Math.ceil(len/20);
+                                                                
+                                                                for (var col = 0; col < num_col; col++) {
+                                                                var $article = $('<article/>', {
+                                                                                 class: "column"
+                                                                                 });
+                                                                
+                                                                var $ul = $('<ul/>');
+                                                                
+                                                                //number of elements in column excluding previous column.
+                                                                var num = len - col * 20;
+                                                                var j = 0;
+                                                                while (j < 20 && j < num) {
+                                                                var $li = $('<li/>');
+                                                                
+                                                                var $sport = $('<input>', {
+                                                                               type: "checkbox",
+                                                                               name: about_order[i],
+                                                                               value: about_mockData[about_order[i]][j + col * 20],
+                                                                               disabled: "disabled",
+                                                                               checked: "checked"
+                                                                               });
+                                                                
+                                                                var $text = $('<span/>', {
+                                                                              text: about_mockData[about_order[i]][j + col * 20]
+                                                                              });
+                                                                
+                                                                $li.append($sport);
+                                                                $li.append($text);
+                                                                
+                                                                $ul.append($li);
+                                                                
+                                                                j++;
+                                                                }
+                                                                
+                                                                $article.append($ul);
+                                                                $info.append($article);
+                                                                
+                                                                }
+                                                                
+                                                                var $edit = $('<button/>', {
+                                                                              class: "edit_button",
+                                                                              text: "Edit"
+                                                                              });
+                                                                
+                                                                $AboutSection.append($div_input);
+                                                                $AboutSection.append($info);
+                                                                $AboutSection.append($edit);
+                                                            }
+                                
+                                                    }
 
-						//Remove all other displayed information about "Creating Events" (if exists)
-						$('#CreateEventSection').remove();
-
-						$div_input = $('<div/>', {
-							class: "info_input"
-						});
-						
-						//Only run function if About information is not displayed
-						if( $('#AboutUser').length == 0 ) 
-						{
-							
-							
-						
-							//Create a section to info about the user
-							var $AboutSection = $('<section>',
-																{
-																	id: 'AboutUser'  //Please don't change this ID
-																}
-												 );
-
-							
-							//insert $AboutSection after the #ProfileHeader
-							$AboutSection.insertAfter('#ProfileHeader');
-							
-
-							//ADD CODE HERE
-							for (var i = 0; i < about_order.length - 1; i++) {
-								var $div = $('<div/>', {
-									class: "each_info"
-								});
-								
-								var $label = $('<label/>', {
-									class: about_order[i]
-								});
-								
-								var $label_text = $('<span/>', {
-									class: "label",
-									text: about_order[i].replace("_", " ") + ":"
-								});
-								
-								var $br = $('<br>');
-								
-								var $info;
-								
-								//Display About me section as <textarea>
-								if (about_order[i] === "About_Me") {
-									$info = $('<textarea>', {
-										name: about_order[i],
-										class: about_order[i],
-										text: about_mockData[about_order[i]],
-										rows: 6,
-										cols: 35,
-										disabled: "disabled"
-									});
-								//Display Sports section as <fieldset> and lists.
-								} else {
-									$info = $('<input>', {
-										type: "text",
-										name: about_order[i],
-										class: about_order[i],
-										value: about_mockData[about_order[i]],
-										disabled: "disabled"
-									});
-								}
-								
-								
-								
-								$label.append($label_text);
-								$label.append($br);
-								$label.append($info);
-								$div.append($label);
-								
-								$div_input.append($div);
-								
-							}
-
-							
-							if (about_mockData[about_order[i]].length > 20) {
-								$info = $('<fieldset/>', {
-									class: "field_sports",
-									width: "50%"
-								});
-							} else {
-								$info = $('<fieldset/>', {
-									class: "field_sports"
-								});
-							}
-
-							
-							
-							
-							$label_text = $('<legend/>', {
-								class: "label",
-								text: about_order[i].replace("_", " ") + ":"
-							});
-							
-							$info.append($label_text);
-							$info.append($br);
-							
-							var len = about_mockData[about_order[i]].length;
-							
-							//each column contains max. 20 elements.
-							var num_col = Math.ceil(len/20);
-							
-							for (var col = 0; col < num_col; col++) {
-								var $article = $('<article/>', {
-									class: "column"
-								});
-								
-								var $ul = $('<ul/>');
-								
-								//number of elements in column excluding previous column.
-								var num = len - col * 20;
-								var j = 0;
-								while (j < 20 && j < num) {
-									var $li = $('<li/>');
-									
-									var $sport = $('<input>', {
-										type: "checkbox",
-										name: about_order[i],
-										value: about_mockData[about_order[i]][j + col * 20],
-										disabled: "disabled",
-										checked: "checked"
-									});
-									
-									var $text = $('<span/>', {
-										text: about_mockData[about_order[i]][j + col * 20]
-									});
-									
-									$li.append($sport);
-									$li.append($text);
-									
-									$ul.append($li);
-									
-									j++;
-								}
-								
-								$article.append($ul);
-								$info.append($article);
-								
-							}
-							
-							var $edit = $('<button/>', {
-								class: "edit_button",
-								text: "Edit"
-							});
-							
-							$AboutSection.append($div_input);
-							$AboutSection.append($info);
-							$AboutSection.append($edit);
-
-
-
-						}
-
-				}
-
-				
-				//----> PARHAM HERE!! -->
-				
-				$(document).on('click', '.edit_button', 
-													function()
-													{
-														$(".each_info input").removeAttr("disabled");
-														$(".each_info textarea").removeAttr("disabled");
-														
-														$(".edit_button").remove();
-														
-														var $div = $('<div/>', {
-															class: "submitAndCancel"
-														});
-											
-														
-														var $submit = $('<button/>', {
-																class: "submit_button",
-																text: "Submit"
-														});
-														
-														var $cancel = $('<button/>', {
-																class: "cancel_button",
-																text: "Cancel"
-														});
-														
-														$div.append($submit);
-														$div.append($cancel);
-														
-														$div.insertAfter(".field_sports");
-													}
-								);
-								
-				//----> PARHAM HERE!! -->
-								
-				$(document).on('click', '.cancel_button', 
-													function()
-													{
-														$('#AboutUser').remove();
-														userAboutClickFcn();
-													}
-								);
-				
-				//----> PARHAM HERE!! -->
-								
-				$(document).on('submit', '.submit_button', 
-													function()
-													{
-														$('#AboutUser').remove();
-														
-														// for (var i = 0; i < about_order.length - 1; i++) {
-															// about_mockData[about_order[i]] = $("." + about_order[i]).val();
-														// }
-														
-														
-														console.log($(".Campus").val());
-														
-														
-														userAboutClickFcn();
-														
-													}
-								);
-								
-				//<---- //PARHAM HERE @@@@ENDDDD@@@@
  
  
-				$(document).on('click', '#UserEvents',
-													function()
-													{
-														//Make background clear by clearing blur-all class.
-														$('.blur-all').removeClass('blur-all');
+                 $(document).on('click', '.edit_button',
+                                                        function()
+                                                        {
+                                                            $(".each_info input").removeAttr("disabled");
+                                                            $(".each_info textarea").removeAttr("disabled");
+                                                            
+                                                            $(".edit_button").remove();
+                                                            
+                                                            var $div = $('<div/>', {
+                                                                         class: "submitAndCancel"
+                                                                         });
+                                                            
+                                                            
+                                                            var $submit = $('<button/>', {
+                                                                            class: "submit_button",
+                                                                            text: "Submit"
+                                                                            });
+                                                            
+                                                            var $cancel = $('<button/>', {
+                                                                            class: "cancel_button",
+                                                                            text: "Cancel"
+                                                                            });
+                                                            
+                                                            $div.append($submit);
+                                                            $div.append($cancel);
+                                                            
+                                                            $div.insertAfter(".field_sports");
+                                                        }
+                                );
+ 
+                 
+                 $(document).on('click', '.cancel_button',
+                                                        function()
+                                                        {
+                                                            $('#AboutUser').remove();
+                                                            userAboutClickFcn();
+                                                        }
+                                );
+                 
+ 
+                 
+                 $(document).on('submit', '.submit_button',
+                                                            function()
+                                                            {
+                                                                $('#AboutUser').remove();
+                                                                
+                                                                // for (var i = 0; i < about_order.length - 1; i++) {
+                                                                // about_mockData[about_order[i]] = $("." + about_order[i]).val();
+                                                                // }
+                                                                
+                                                                
+                                                                console.log($(".Campus").val());
                                 
-                                                        //Remove all other displayed information about "About" (if exists)
-                                                        $('#AboutUser').remove();
-                                
-                                                        //Remove all other displayed information about "Friends" (if exists)
-                                                        $('#FriendsofUser').remove();
-                                                        
-                                                        //Remove all other displayed information about "Reviews" (if exists)
-                                                        $('#ReviewsofUser').remove();
-                                                        $('#SportingEventReview').remove();
-                                
-                                                        //Remove all other displayed information about "Creating Events" (if exists)
-                                                        $('#CreateEventSection').remove();
-													}
-								);
+                                                                userAboutClickFcn();
+                                                            
+                                                            }
+                                );
+
+ 
+ 
  
  
  
@@ -957,9 +975,6 @@ $(document).ready
                                 
                                                     function()
                                                     {
-														
-														//Make background clear by clearing blur-all class.
-														$('.blur-all').removeClass('blur-all');
                                 
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
@@ -973,7 +988,8 @@ $(document).ready
                                 
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
-                             
+                                                        //unwrap div with the class for blurring the background from #ProfileHeader
+                                                        $('#ProfileHeader').unwrap();
                                 
                                 
                                                         
@@ -1146,10 +1162,77 @@ $(document).ready
                                                                                                             }
                                                                                                     )
                                                                                                   );
-                                                        
-                                                        
+
                                                         //Append it to the CreateEventForm
                                                         $CreateEventForm.append($EventTypeLabel);
+                            
+                            
+                                                    //Make the EventType input form readonly so the user can't type invalid sports
+                                                    $('#EventTypeLabel input').prop("readonly", true);
+                            
+
+                            
+                                                    //Create a div for AvailableEventTypes
+                                                    var $AvailableEventTypes = $('<div>',
+                                                                                          {
+                                                                                              id: 'AvailableEventTypes',
+                                                                                              //Initially hide it, only show it when user clicks on the input
+                                                                                              class: 'HideAvailableEventTypes'
+                                                                                          }
+                                                                                );
+                            
+                            
+                                                    $EventTypeLabel.append($AvailableEventTypes);
+                            
+                            
+                                                    //Create a <ul> for AvailableEventTypes
+                                                    var $AvailableEventTypesUL = $('<ul>',
+                                                                                         {
+                                                                                            id: 'AvailableEventTypesUL'
+                                                                                         }
+                                                                                 );
+                            
+                                                     //Append the <ul> to the <div>
+                                                     $AvailableEventTypes.append($AvailableEventTypesUL);
+                            
+                            
+                                                     //When the DB is set, we should make an .ajax call and loop over the sports available in the DB
+                                                    //Loop over all the sporting events available and append them
+                                                    $.each(Sports,
+                                                                   function(index, item)
+                                                                   {
+
+                                                                       //Now add the available sports to each <li>
+                                                                       var $IndividualEventType = $('<li>',
+                                                                                                          {
+                                                                                                            class: 'IndividualEventType'
+                                                                                                          }
+                                                                                                  );
+                                                           
+                                                                       //Now add the SVG of the sport first
+                                                                       var $IndividualEventImg = $('<img>',
+                                                                                                            {
+                                                                                                                src: item.url,
+                                                                                                                width: '11px'
+                                                                                                            }
+                                                                                                    );
+                                                           
+                                                                       //Now add the name of the sport
+                                                                       var $IndividualEventName = $('<p>',
+                                                                                                           {
+                                                                                                             text: item.EventName
+                                                                                                           }
+                                                                                                   );
+
+                                                                       $IndividualEventType.append($IndividualEventImg);  //Append the Sport SVG to the <li>
+                                                                       $IndividualEventType.append($IndividualEventName);  //Append the sport name to the <li>
+                                                                       $AvailableEventTypesUL.append($IndividualEventType);  //Append the  <li> to the <ul>
+                                                           
+                                                                   }
+                                                           );
+                        
+        
+                            
                             
                             
                         
@@ -1194,15 +1277,26 @@ $(document).ready
                                                                                            ).append(
                                                                                                     $('<input>',     //Input for the EventDate and Time
                                                                                                                 {
-                                                                                                                  type: 'datetime-local'
+                                                                                                               //   type: 'datetime-local',
+                                                                                                                    type: 'text',
+                                                                                                                    class:'DateTimePicker_Event'
                                                                                                                 }
                                                                                                       )
                                                                                                     );
-                                                        
-                                                        
+                            
+                            
                                                         //Append it to the CreateEventForm
-                                                        $CreateEventForm.append($EventDateTimeLabel);
-
+                                                        //Once its appended and ready in the DOM, call the .datetimepicker()
+                                                        $CreateEventForm.append($EventDateTimeLabel).ready(
+                                                                                                           function() {
+                                                                                                                        $('.DateTimePicker_Event').datetimepicker({
+                                                                                                                                                                      
+                                                                                                                                                                      format:'M d Y H:i',
+                                                                                                                                                                      step:15,
+                                                                                                                                                                      minDate:'0' //Can't choose past Dates for creating event
+                                                                                                                                                                  });
+                                                                                                                      }
+                                                                                                           );
                             
                             
                                                         //Create a label for Event EndTime
@@ -1220,14 +1314,27 @@ $(document).ready
                                                                                              ).append(
                                                                                                       $('<input>',     //Input for the Event EndTime
                                                                                                                     {
-                                                                                                                      type: 'time'
+                                                                                                                      type: 'text',
+                                                                                                                      class:'TimePicker_Event'
                                                                                                                     }
                                                                                                         )
                                                                                                       );
                                                         
                                                         
                                                         //Append it to the CreateEventForm
-                                                        $CreateEventForm.append($EventEndTimeLabel);
+                                                        //Once its appended and ready in the DOM, call the .datetimepicker()
+                                                        $CreateEventForm.append($EventEndTimeLabel).ready(
+                                                                                                          function() {
+                                                                                                                  $('.TimePicker_Event').datetimepicker({
+                                                                                                                                                            datepicker:false, //Can't pick dates
+                                                                                                                                                            step:15,
+                                                                                                                                                            formatTime:'g:i A', //Use AM | PM
+                                                                                                                                                            format: 'h:i A'
+                                                                                                                                                        });
+                                                                                                                    }
+                                                                                                          );
+                            
+                            
                             
                             
                             
@@ -1246,7 +1353,8 @@ $(document).ready
                                                                                             ).append(
                                                                                                      $('<input>',     //Input for the Event Location
                                                                                                                    {
-                                                                                                                   type: 'text'
+                                                                                                                    type: 'text',
+                                                                                                                    class:'TimePicker_Event'
                                                                                                                    }
                                                                                                        )
                                                                                                      );
@@ -1340,13 +1448,67 @@ $(document).ready
                          
                                                             //unwrap div with the class for blurring the background from #ProfileHeader
                                                             $('#ProfileHeader').unwrap();
-                            
-                            
-       
-                            
+
                                                         }
                             );
+ 
+ 
+ 
+ 
+             //Clicking on the #EventTypeLabel form input, opens the sport picker and clicking again toggles/closes it
+             $(document).on('click', '#EventTypeLabel input',
+                            
+                                                            function()
+                                                            {
+                                                                //Toggle the sport picker
+                                                                $('#AvailableEventTypes').toggleClass( 'HideAvailableEventTypes' );
+                                                            }
+                            );
+ 
+ 
+             //Clicking on any .CreateEventLabel form input
+             $(document).on('click', '#CreateEventForm .CreateEventLabel',
+                            
+                                                            function()
+                                                            {
+                                                                //Only remove the sport picker, if we did NOT click on #EventTypeLabel
+                                                                if( $(this).attr('id') != 'EventTypeLabel' )
+                                                                {
+                                                                    //If the sport picker is not hidden, and is being shown
+                                                                    if( !$('#AvailableEventTypes').hasClass( 'HideAvailableEventTypes' ) )
+                                                                    {
+                                                                       //Hide the sport picker
+                                                                       $('#AvailableEventTypes').addClass( 'HideAvailableEventTypes' );
+                                                                    }
+                                                                }
+                                                            }
+                            );
+ 
+ 
 
+             //When the user clicks on any of the sports in the EventType input form, update the form value with that event
+             $(document).on('click', '#AvailableEventTypes #AvailableEventTypesUL li',
+                                                                                     function()
+                                                                                     {
+                                                                                       //Change the form input value to that sport
+                                                                                       $('#EventTypeLabel input').val( $(this).children('p').text() );
+                            
+                                                    //Add the sport event SVG to the form input
+                                                    $('#EventTypeLabel input').css( 'background-image', 'url(' + $(this).children('img').attr('src') + ')');
+                                                    $('#EventTypeLabel input').css( 'background-repeat' , 'no-repeat');
+                                                    $('#EventTypeLabel input').css( 'background-size', '14px');
+                                                    $('#EventTypeLabel input').css('background-position', '3px 5px');
+                                                                                     }
+                            );
+ 
+ 
+             $.datetimepicker.setLocale('en');
+
+ 
+ 
+ 
+ 
+ 
  
     } //End of $(document).ready function
 

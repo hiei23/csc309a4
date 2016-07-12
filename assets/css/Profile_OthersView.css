@@ -29,13 +29,12 @@ li
 /* header: top menu */
 #header
 {
-    background-color: #3b3a36;
+    background-color: rgba(0,0,0,0.8);
     width: 100%;
     height: 55px;
     z-index: 1000;  /*To prevent images from overlapping the fixed header*/
     position: fixed;
 }
-
 
 #SiteLogo img
 {
@@ -59,7 +58,7 @@ li
 #Main_Nav li
 {
     display: inline-block;
-    margin: 0px 7px;
+    margin: 7px 7px;
     vertical-align: middle;
     color: rgb(54,215,183);
     cursor: pointer;
@@ -67,12 +66,14 @@ li
 
 #HomeButton a
 {
-	padding-top:18px;
-    padding-bottom:19px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding-top:23px;
+    padding-bottom:14px;
+    padding-left: 9px;
+    padding-right: 9px;
     color: #74AD1B;
+    font-size: 14px;
 }
+
 
 /*Make the links bold on hover*/
 #Main_Nav #HomeButton a:hover
@@ -83,37 +84,33 @@ li
 }
 
 /*Add a border to the SignOut_Button button*/
-#SignOut_Button
-{
-    border: 2px solid #74AD1B;
-    border-radius: 20px;
-    padding: 5px 10px;
-}
-
 #SignOut_Button a
 {
     transition: all ease-in-out 0.3s;
+    border: 2px solid #74AD1B;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 14px;
 }
-
 
 
 /*Make the links bold on hover*/
 #SignOut_Button a:hover
 {
-   color: #A0F6F6;
+    color: #A0F6F6;
 }
-
 
 #SearchBar
 {
     float: left;
-    margin-left: 40px;
+    margin-left: 58px;
 }
 
 #SearchBar input
 {
-    line-height: 2em;
+    line-height: 2.3em;
     padding-left: 10px;
+    border-radius: 3px;
 }
 
 #RightNav
@@ -284,6 +281,7 @@ li
     margin-left: 15px;
     z-index: 800;  /*Chatbox has priority*/
     border-radius: 3px;
+    left: 80%;
 }
 
 #ChatBoxHeader
@@ -391,9 +389,10 @@ li
 	margin-left: 20%;
 	margin-bottom: 10%;
 	width: 60%;
-	padding: 10px 10px;
-	border: 1px groove rgba(128,128,128, 0.2);
-	background-color: rgba(230, 247, 255, 0.3);
+    padding: 10px 10px;
+    border: 1px solid rgb(185, 185, 185);
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
 }
 
 #AboutUser div div.each_info, #AboutUser fieldset
@@ -403,10 +402,15 @@ li
 	width: 30%;
 }
 
+/*Change the default input border*/
+#AboutUser .each_info input
+{
+    border: 1px solid rgb(185, 185, 185);
+}
+
 #AboutUser div div span.label
 {
 	font-size: 90%;
-	color: rgba(128, 128, 128, 0.5);
 	display: inline-block;
 	margin-bottom: 10px;
 }
