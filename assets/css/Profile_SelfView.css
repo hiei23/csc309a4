@@ -257,7 +257,7 @@ li
 }
 
 
-#BodyNav
+#BodyNav, #secondBodyNav
 {
     background-color: rgb(255,255,255);
     text-align: center;
@@ -268,7 +268,7 @@ li
     /* box-shadow: 6px 6px 2px rgb(185,185,185); */
 }
 
-#BodyNav ul li
+#BodyNav ul li, #secondBodyNav ul li
 {
     display: block;
     padding: 5px 20px;
@@ -277,7 +277,7 @@ li
     transition: all ease-in-out 0.3s;
 }
 
-#BodyNav ul li:hover
+#BodyNav ul li:hover, #secondBodyNav ul li:hover
 {
     background-color: rgb(232, 232, 232);
 }
@@ -491,6 +491,7 @@ li
 	padding-bottom: 15px;
 	clear: left;
 	border-radius: 10px;
+	margin-bottom: 15px;
 }
 
 #AboutUser fieldset legend 
@@ -510,6 +511,42 @@ li
 {
 	padding-left: 3%;
 	float: left;
+}
+
+#AboutUser input[disabled], #AboutUser div div textarea[disabled]
+{
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#AboutUser button
+{
+	margin-left: 10px;
+	margin-bottom: 15px;
+	clear: left;
+	background-color: #555555; /* Black */
+	border: none;
+	color: white;
+    padding: 15px 32px;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    -webkit-transition-duration: 0.3s; /* Safari */
+    transition-duration: 0.3s;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#AboutUser button:hover 
+{
+	background-color: #008CBA; /* Blue */
+    color: white;
+}
+
+#AboutUser button.cancel_button 
+{
+	position: absolute;
+	bottom: 10px;
+	left: 150px;
 }
 
 /* Friends section style */

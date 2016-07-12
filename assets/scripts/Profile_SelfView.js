@@ -685,175 +685,236 @@ $(document).ready
  
  
                  //When the user clicks on the "About" Tab, show all info about the user
-                 $(document).on('click', '#UserAbout',
-                                
-                                                    function()
-                                                    {
-															
-															//Make background clear by clearing blur-all class.
-															$('.blur-all').removeClass('blur-all');
-															
-                                                            //Remove all other displayed information about "Friends" (if exists)
-                                                            $('#FriendsofUser').remove();
-                                                            
-                                                            //Remove all other displayed information about "Reviews" (if exists)
-                                                            $('#ReviewsofUser').remove();
-                                                            $('#SportingEventReview').remove();
+                 $(document).on('click', '#UserAbout', userAboutClickFcn);
+								
+				function userAboutClickFcn()
+				{
+						
+						//Make background clear by clearing blur-all class.
+						$('.blur-all').removeClass('blur-all');
+						
+						//Remove all other displayed information about "Friends" (if exists)
+						$('#FriendsofUser').remove();
+						
+						//Remove all other displayed information about "Reviews" (if exists)
+						$('#ReviewsofUser').remove();
+						$('#SportingEventReview').remove();
 
-                                                            //Remove all other displayed information about "Searching Events" (if exists)
-                                                            $('#SearchEventSection').remove();
-                                
-                                                            //Remove all other displayed information about "Creating Events" (if exists)
-                                                            $('#CreateEventSection').remove();
-                                
-															$div_input = $('<div/>', {
-																class: "info_input"
-															});
-                                                            
-                                                            //Only run function if About information is not displayed
-                                                            if( $('#AboutUser').length == 0 ) 
-															{
-																
-																
-                                                            
-                                                                //Create a section to info about the user
-                                                                var $AboutSection = $('<section>',
-                                                                                                    {
-                                                                                                        id: 'AboutUser'  //Please don't change this ID
-                                                                                                    }
-                                                                                     );
+						//Remove all other displayed information about "Searching Events" (if exists)
+						$('#SearchEventSection').remove();
 
-                                                                
-                                                                //insert $AboutSection after the #ProfileHeader
-                                                                $AboutSection.insertAfter('#ProfileHeader');
-																
-                                
-                                                                //ADD CODE HERE
-																for (var i = 0; i < about_order.length - 1; i++) {
-																	var $div = $('<div/>', {
-																		class: "each_info"
-																	});
-																	
-																	var $label = $('<label/>', {
-																		class: about_order[i]
-																	});
-																	
-																	var $label_text = $('<span/>', {
-																		class: "label",
-																		text: about_order[i].replace("_", " ") + ":"
-																	});
-																	
-																	var $br = $('<br>');
-																	
-																	var $info;
-																	
-																	//Display About me section as <textarea>
-																	if (about_order[i] === "About_Me") {
-																		$info = $('<textarea>', {
-																			name: about_order[i],
-																			text: about_mockData[about_order[i]],
-																			rows: 6,
-																			cols: 35,
-																			disabled: "disabled"
-																		});
-																	//Display Sports section as <fieldset> and lists.
-																	} else {
-																		$info = $('<input>', {
-																			type: "text",
-																			name: about_order[i],
-																			value: about_mockData[about_order[i]],
-																			disabled: "disabled"
-																		});
-																	}
-																	
-																	
-																	
-																	$label.append($label_text);
-																	$label.append($br);
-																	$label.append($info);
-																	$div.append($label);
-																	
-																	$div_input.append($div);
-																	
-																}
+						//Remove all other displayed information about "Creating Events" (if exists)
+						$('#CreateEventSection').remove();
 
-																
-																if (about_mockData[about_order[i]].length > 20) {
-																	$info = $('<fieldset/>', {
-																		class: "field_sports",
-																		width: "50%"
-																	});
-																} else {
-																	$info = $('<fieldset/>', {
-																		class: "field_sports"
-																	});
+						$div_input = $('<div/>', {
+							class: "info_input"
+						});
+						
+						//Only run function if About information is not displayed
+						if( $('#AboutUser').length == 0 ) 
+						{
+							
+							
+						
+							//Create a section to info about the user
+							var $AboutSection = $('<section>',
+																{
+																	id: 'AboutUser'  //Please don't change this ID
 																}
-                                
-																
-																
-																
-																$label_text = $('<legend/>', {
-																	class: "label",
-																	text: about_order[i].replace("_", " ") + ":"
-																});
-																
-																$info.append($label_text);
-																$info.append($br);
-																
-																var len = about_mockData[about_order[i]].length;
-																
-																//each column contains max. 20 elements.
-																var num_col = Math.ceil(len/20);
-																
-																for (var col = 0; col < num_col; col++) {
-																	var $article = $('<article/>', {
-																		class: "column"
-																	});
-																	
-																	var $ul = $('<ul/>');
-																	
-																	//number of elements in column excluding previous column.
-																	var num = len - col * 20;
-																	var j = 0;
-																	while (j < 20 && j < num) {
-																		var $li = $('<li/>');
-																		
-																		var $sport = $('<input>', {
-																			type: "checkbox",
-																			name: about_order[i],
-																			value: about_mockData[about_order[i]][j + col * 20],
-																			disabled: "disabled",
-																			checked: "checked"
-																		});
-																		
-																		var $text = $('<span/>', {
-																			text: about_mockData[about_order[i]][j + col * 20]
-																		});
-																		
-																		$li.append($sport);
-																		$li.append($text);
-																		
-																		$ul.append($li);
-																		
-																		j++;
-																	}
-																	
-																	$article.append($ul);
-																	$info.append($article);
-																	
-																}
-																
-																$AboutSection.append($div_input);
-																$AboutSection.append($info);
-                                
-                                
-                                
-                                                            }
-                                
-                                                    }
-                                
-                                
-                                );
+												 );
+
+							
+							//insert $AboutSection after the #ProfileHeader
+							$AboutSection.insertAfter('#ProfileHeader');
+							
+
+							//ADD CODE HERE
+							for (var i = 0; i < about_order.length - 1; i++) {
+								var $div = $('<div/>', {
+									class: "each_info"
+								});
+								
+								var $label = $('<label/>', {
+									class: about_order[i]
+								});
+								
+								var $label_text = $('<span/>', {
+									class: "label",
+									text: about_order[i].replace("_", " ") + ":"
+								});
+								
+								var $br = $('<br>');
+								
+								var $info;
+								
+								//Display About me section as <textarea>
+								if (about_order[i] === "About_Me") {
+									$info = $('<textarea>', {
+										name: about_order[i],
+										class: about_order[i],
+										text: about_mockData[about_order[i]],
+										rows: 6,
+										cols: 35,
+										disabled: "disabled"
+									});
+								//Display Sports section as <fieldset> and lists.
+								} else {
+									$info = $('<input>', {
+										type: "text",
+										name: about_order[i],
+										class: about_order[i],
+										value: about_mockData[about_order[i]],
+										disabled: "disabled"
+									});
+								}
+								
+								
+								
+								$label.append($label_text);
+								$label.append($br);
+								$label.append($info);
+								$div.append($label);
+								
+								$div_input.append($div);
+								
+							}
+
+							
+							if (about_mockData[about_order[i]].length > 20) {
+								$info = $('<fieldset/>', {
+									class: "field_sports",
+									width: "50%"
+								});
+							} else {
+								$info = $('<fieldset/>', {
+									class: "field_sports"
+								});
+							}
+
+							
+							
+							
+							$label_text = $('<legend/>', {
+								class: "label",
+								text: about_order[i].replace("_", " ") + ":"
+							});
+							
+							$info.append($label_text);
+							$info.append($br);
+							
+							var len = about_mockData[about_order[i]].length;
+							
+							//each column contains max. 20 elements.
+							var num_col = Math.ceil(len/20);
+							
+							for (var col = 0; col < num_col; col++) {
+								var $article = $('<article/>', {
+									class: "column"
+								});
+								
+								var $ul = $('<ul/>');
+								
+								//number of elements in column excluding previous column.
+								var num = len - col * 20;
+								var j = 0;
+								while (j < 20 && j < num) {
+									var $li = $('<li/>');
+									
+									var $sport = $('<input>', {
+										type: "checkbox",
+										name: about_order[i],
+										value: about_mockData[about_order[i]][j + col * 20],
+										disabled: "disabled",
+										checked: "checked"
+									});
+									
+									var $text = $('<span/>', {
+										text: about_mockData[about_order[i]][j + col * 20]
+									});
+									
+									$li.append($sport);
+									$li.append($text);
+									
+									$ul.append($li);
+									
+									j++;
+								}
+								
+								$article.append($ul);
+								$info.append($article);
+								
+							}
+							
+							var $edit = $('<button/>', {
+								class: "edit_button",
+								text: "Edit"
+							});
+							
+							$AboutSection.append($div_input);
+							$AboutSection.append($info);
+							$AboutSection.append($edit);
+
+
+
+						}
+
+				}
+
+				$(document).on('click', '.edit_button', 
+													function()
+													{
+														$(".each_info input").removeAttr("disabled");
+														$(".each_info textarea").removeAttr("disabled");
+														
+														$(".edit_button").remove();
+														
+														var $div = $('<div/>', {
+															class: "submitAndCancel"
+														});
+											
+														
+														var $submit = $('<button/>', {
+																class: "submit_button",
+																text: "Submit"
+														});
+														
+														var $cancel = $('<button/>', {
+																class: "cancel_button",
+																text: "Cancel"
+														});
+														
+														$div.append($submit);
+														$div.append($cancel);
+														
+														$div.insertAfter(".field_sports");
+													}
+								);
+								
+				$(document).on('click', '.cancel_button', 
+													function()
+													{
+														$('#AboutUser').remove();
+														userAboutClickFcn();
+													}
+								);
+								
+				$(document).on('submit', '.submit_button', 
+													function()
+													{
+														$('#AboutUser').remove();
+														
+														// for (var i = 0; i < about_order.length - 1; i++) {
+															// about_mockData[about_order[i]] = $("." + about_order[i]).val();
+														// }
+														
+														
+														console.log($(".Campus").val());
+														
+														
+														userAboutClickFcn();
+														
+													}
+								);
  
  
 				$(document).on('click', '#UserEvents',
