@@ -129,7 +129,7 @@ $(document).ready
                                     //Name of the user we want to message to
                                     var $UserName =  $('<p>',
                                                               {
-                                                                text: 'Parham Oghabi',
+                                                                text: 'Mesut Ozil',
                                                                 class: 'ChatBoxUserName'
                                                               }
                                                       );
