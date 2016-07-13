@@ -1,208 +1,495 @@
-.column
-{
-    float:left;
+body{
+    background: url(../images/background.png) no-repeat;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
 }
-
-.column2{
-    float: left;
-    width: 46%;
-    padding-right: 4%;
-}
-
-.radioOption
-{
-	font-size: 14pt;
-}
-
-body {	
-    font-family: 'Rokkitt';
-	background: url(../images/background.png) no-repeat;
-	background-attachment: fixed;
-	background-position: center;
-	background-size: cover;
-}
-
-img[alt="TSportsLogo"] {
-	width: 150px;
-	margin-left: 38%;
-}
-
-#header {
-	margin-top: 0;
-	text-align: center;
-	color: #000d33;
-}
-
-form {
-	background: url(../images/regis-background.png) no-repeat;
-	background-size: cover;
-	padding: 70px;
-	margin: auto;
-	margin-top: 15%;
-	width: 700px;
-	position: relative;
-	border-radius: 12px;
-}
-
-
-textarea {
-    max-width: 100%;
-    height: 150px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-	margin-top: 5px;
-}
-
-fieldset {
-    border: 1px solid #ccc;
-    margin: 3rem 0;
-}
-
-
-input, textarea, option {
-    border: 2px solid #ccc;
-    padding: 0.25rem;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    font-size: 15pt; 
-}
-
-
-select {
-    border-radius: 4px;
-	margin-top: 5px;
-    background-color: #f1f1f1;
-    border: 2px solid #ccc;
-    font-size: 16pt;
-}
-
-input:focus
-{
-    background-color: lightgreen;
-}
-
-label {
-    cursor: pointer;
-    display: block;
-   	padding-top: 1%;
-	padding-bottom: 1%;
-}
-
-
-label span.label {
-    font-weight: bold;
-}
-
-input[type="radio"] {
-	margin-top: 10px;
-}
-
-
-input[type="submit"],
-input[type="reset"] {
-    cursor: pointer;
-    padding: 0.5rem 2rem;
-    /*margin-left: 10rem;*/
-    font-size: 16pt;
-}
-
-input[type="reset"]:hover {
-    background-color: #f3f3f3;
-}
-
-input[type="reset"]:active {
-    border-color: #999;
-    background-color: #ccc;
-}
-
-input[type="submit"] {
-    background-color: #555555; /* Black */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    display: inline-block;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 8px;
-    -webkit-transition-duration: 0.3s; /* Safari */
-    transition-duration: 0.3s;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-}
-
-input[type="submit"]:hover {
-    background-color: #008CBA; /* Blue */
-    color: white;
-}
-
-input[type="submit"]:active {
-  background-color: #008CBA;/* Blue */
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
-
-
-/* STYLING FIELDS WITH ERRORS */
-/* New pseudo-classes to style fields that have an error: */
-/* :valid, :invalid, :required, :optional, :in-range, :out-of-range */
-input:invalid {
-  outline: 2px solid red;
-  background-color: #FFC6B3;
-}
-
-#sportsLabel
-{
-    font-weight: bold;
-}
-
-#SportsFieldset > article > ul > li
+/*Clear the default margin and padding for all elements*/
+#header *
 {
     margin:0px;
-    list-style-type: none;
+    padding:0px;
+    font-family: "Lato","Helvetica Neue", Arial ,Helvetica, sans-serif;
 }
-#SportsFieldset > article
+
+#header{
+    position: absolute;
+    top:0px; 
+    left:0px;
+}
+
+/* Background color*/
+body
 {
-    padding-left: 3%;
+    background-color: rgba(0,0,0,0.2);
+    height: 100%;
+    width:100%;
+    position: relative;
+}
+
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+li
+{
+    list-style: none;
+}
+
+#header
+{
+    background-color:#3b3a36;
+    position: fixed;
+    width: 100%;
+    height: 55px;
+    z-index: 1000;  /*To prevent images from overlapping the fixed header*/
+    border-bottom: 1px solid #36414c;
 }
 
 
-/* Responsive design */
-@media screen and (max-width: 720px) {
-	
-	form {
-		width: 310px;
-	}
-	
-	img[alt="TSportsLogo"] {
-		margin-left: 30%;
-	}
-	
-	select.unit {
-		margin-left: 150px;
-	}
-	
+#SiteLogo img
+{
+    margin-left: 4px;
+    margin-top: 6px;
+    height: 42px;
+    width: 150px;
 }
 
-@media screen and (max-width: 480px) {
-	form {
-		width: 235px;
-	}
-	
-	img[alt="TSportsLogo"] {
-		margin-left: 22%;
-	}
-	
-	select.unit {
-		margin-left: 130px;
-	}
-	
-	#SportsFieldset > article
-	{
-		padding-left: 0%;
-		left: 0;
-	}
-	
+
+#SiteLogo
+{
+    float: left;
 }
+
+/*display the nav bar as in-line block*/
+nav div
+{
+    display: inline-block;
+    margin-left: 30px;
+    margin-right: 30px;
+    font-size: 14px;
+}
+
+#Main_Nav
+{
+    margin-top: 0px;
+}
+
+#Main_Nav ul li
+{
+    float: left;
+}
+
+#Main_Nav ul a
+{
+    padding-top:20px;
+    padding-bottom:17px;
+    padding-left: 6px;
+    padding-right: 6px;
+    display: block;
+    border-bottom: 2px solid transparent;  /*When we hover, border appears*/
+    transition: all ease-in-out 0.3s;
+}
+
+/*Make the links bold on hover*/
+#Main_Nav ul a:hover
+{
+    color: #A0F6F6;
+    background: #111111;
+}
+
+#Home_Buttons
+{
+    float: right;
+    margin-right: 30px;
+    margin-top: 12px;
+}
+
+#Home_Buttons ul li
+{
+    display: inline-block;
+    margin: 0px 10px;  /*Space the buttons out*/
+}
+
+
+/*When hovering on the register or login button, turn it red*/
+#Register_Button a
+{
+    padding-top:18px;
+    padding-bottom:19px;
+    padding-left: 6px;
+    padding-right: 6px;
+    transition: all ease-in-out 0.3s;
+}
+
+/*Add a border to the login button*/
+#Login_Button
+{
+    border: 2px solid #74AD1B;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+
+/*Make the links bold on hover*/
+#Login_Button a:hover
+{
+   color: #A0F6F6;
+}
+
+/*Make the links bold on hover*/
+#Register_Button a:hover
+{
+   color: #A0F6F6;
+   background-color: #111111;
+}
+
+/*Make the color of the nav bar menu items nice green color*/
+#Main_Nav a
+{
+    color: #74AD1B;
+}
+
+#Home_Buttons a
+{
+    color: #74AD1B;
+}
+
+main{
+    background:#fff;
+    padding-left: 30px;
+    padding-top: 20px;
+    margin: auto;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    width:750px;
+    height:500px;
+    position: relative;
+    border-radius: 3px;
+}
+
+main{
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+form{
+    position: relative;
+}
+
+form p{
+    font-size: 16px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+form input{
+    width: 325px;
+    height: 35px;
+    border-radius:4px;
+    border: 1px solid lightgrey; 
+    padding-left: 10px;
+    font-size: 15px;
+}
+
+form input:focus{
+    color: #000000;
+    outline: none !important;
+    border:1px solid #93C7F2;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+#firstname{
+    position: absolute;
+    padding-left: 10px;
+}
+
+#lastname{
+    position: absolute;
+    left: 265px;
+    margin-left: 100px;
+}
+
+#birthday{
+    position: absolute;
+    top: 70px;
+    margin-left: 10px;
+}
+
+#birthday input{
+    width: 180px;
+}
+
+#gender{
+    position: absolute;
+    top: 70px;
+    margin-left: 212px;
+    font-family:'Lucida Grande', Tahoma, Verdana, sans-serif;
+    color: #000;
+}
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 35px;
+  width: 118px;
+  background: #fff;
+  border: 1px solid;
+  border-color: lightgrey;
+  border-radius: 3px;
+}
+.dropdown:before, .dropdown:after {
+  content: '';
+  position: absolute;
+  z-index: 20;
+  top: 12px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 4px dashed;
+  border-color: #888 transparent;
+  pointer-events: none;
+}
+.dropdown:before {
+  border-bottom-style: solid;
+  border-top: none;
+}
+.dropdown:after {
+  margin-top: 7px;
+  border-top-style: solid;
+  border-bottom: none;
+}
+
+.dropdown-select {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 8px 2px 6px 10px;
+  height: 35px;
+  line-height: 18px;
+  font-size: 14px;
+  color: grey;
+  text-shadow: 0 1px white;
+  /* Fallback for IE 8 */
+  background: #f2f2f2;
+  /* "transparent" doesn't work with Opera */
+  background: rgba(0, 0, 0, 0) !important;
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.dropdown-select:focus {
+  width: 100%;
+  color: #000000;
+  outline: none !important;
+  border:2px solid #93C7F2;
+  box-shadow: 0 0 10px #719ECE;
+}
+
+#height{
+    position: absolute;
+    top: 70px;
+    margin-left: 345px;
+}
+
+#height input{
+    width: 160px;
+    height: 34px;
+}
+
+#weight{
+    position: absolute;
+    top: 70px;
+    margin-left: 530px;
+}
+
+#weight input{
+    width: 160px;
+    height: 34px;
+}
+
+#email{
+    position: absolute;
+    top: 138px;
+    margin-left: 10px;
+}
+
+#email input{
+    width: 280px;
+    height: 34px;
+}
+
+#phone{
+    position: absolute;
+    top: 138px;
+    margin-left: 320px;
+}
+
+#phone input{
+    width: 230px;
+    height: 34px;
+}
+
+#campus{
+    position: absolute;
+    top: 138px;
+    margin-left: 580px;
+    font-family:'Lucida Grande', Tahoma, Verdana, sans-serif;
+    color: #000;
+}
+
+#password{
+    position: absolute;
+    top: 206px;
+    margin-left: 10px;
+}
+
+#cfpassword{
+    position: absolute;
+    top: 206px;
+    margin-left: 365px;
+}
+
+#aboutme{
+    position: absolute;
+    top: 275px;
+    margin-left: 10px;
+}
+
+#aboutme textarea{
+    height: 115px;
+    width: 305px;
+    border-color: lightgrey;
+    border-radius: 4px;
+    padding: 2px;
+    font-size: 15px;
+}
+
+#aboutme textarea:focus{
+    color: #000000;
+    outline: none !important;
+    border:1px solid #93C7F2;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+#sports{
+    position: absolute;
+    top: 275px;
+    margin-left: 333px;
+}
+
+#ck-collection{
+    border:1px solid lightgrey;
+    border-radius: 4px;
+    width: 365px;
+    height: 118px;
+    position: relative;
+}
+
+.ck-button label{ 
+    display: inline-block; 
+    border: solid 1px lightgrey; 
+    background-color: white;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+
+.ck-button input{
+  display:none;
+}
+
+
+input:checked + label{
+  background-color: #97D38D;
+}
+
+.ck-button:hover {
+    color: #000000;
+    outline: none !important;
+    border:1px solid #97D38D;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.ck-button:nth-child(1){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(2){
+    position: absolute;
+    margin-left: 95px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(3){
+    position: absolute;
+    margin-left: 188px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(4){
+    position: absolute;
+    margin-left: 276px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(5){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(6){
+    position: absolute;
+    margin-left: 124px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(7){
+    position: absolute;
+    margin-left: 230px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(8){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(9){
+    position: absolute;
+    margin-left: 92px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(10){
+    position: absolute;
+    margin-left: 202px;
+    margin-top: 80px;
+}
+
+#input_submit{
+    position: absolute;
+    background-color: #74AD1B;
+    color: white;
+    width: 100px;
+    top: 435px;
+    left: 10px;
+}
+
+#input_submit:hover{
+    background-color: #22B90A;
+}
+
+input:invalid {
+    color: #000000;
+    background-color: #FFD9D9;
+}
+
