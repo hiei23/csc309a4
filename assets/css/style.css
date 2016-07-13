@@ -509,6 +509,11 @@ div.ui-datepicker
 
 }
 
+#Footer_Content ul li a
+{
+    color: white;
+}
+
 #fb_img
 {
     width: 30px;

@@ -49,49 +49,7 @@ $(document).ready
                         $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
           
                   }
-          
-          
-                    //For RESPONSIVE DESIGN
-//                  //make a menu button
-//                  if( $Window_Width < 480  )
-//                  {
-//                  
-//                  //hide the nav ul
-//                  $('nav ul').addClass('hide');
-//                  
-//                  //check if svg already exists
-//                  if( $('.menusvg').length > 0 )  {}
-//                  
-//                  
-//                  //doesn't exist so add it
-//                  else
-//                  {
-//                  $('<img>',
-//                    {
-//                    src: './assets/images/menu.svg',
-//                    'class': 'menusvg'
-//                    }
-//                    
-//                    ).appendTo('nav');
-//                  
-//                  },
-//                  
-//                  }
-//                  
-//                  // $Window_Width is >= 480
-//                  else
-//                  {
-//                  //if the menu svg icon exists, remove it
-//                  if( $('.menusvg').length > 0 )
-//                  {
-//                  $('.menusvg').remove();
-//                  //unhide the nav ul
-//                  $('nav ul').removeClass('hide');
-//                  }
-//              
-//              }
-          
-          }
+              }
      );
  
         //Now When the user clicks on the "FB_Message_SVG" on the top right corner
@@ -305,6 +263,9 @@ $(document).ready
                                                     $('#ReviewsofUser').remove();
                                                     $('#SportingEventReview').remove();
                         
+                                                    //Remove all other displayed information about "Upcoming Events" (if exists)
+                                                    $('#EventsofUser').remove();
+                        
                                                     //Remove all other displayed information about "Searching Events" (if exists)
                                                     $('#SearchEventSection').remove();
                                                     
@@ -312,6 +273,8 @@ $(document).ready
                                                     $('#CreateEventSection').remove();
                                                     //unwrap div with the class for blurring the background from #ProfileHeader
                                                     $('#ProfileHeader').unwrap();
+                        
+                        
                         
                         
                                                     //Only run function if friends information is not displayed
@@ -455,7 +418,10 @@ $(document).ready
                             
                                                         //Remove all other displayed information about "Friends" (if exists)
                                                         $('#FriendsofUser').remove();
-                                                        
+                            
+                                                        //Remove all other displayed information about "Upcoming Events" (if exists)
+                                                        $('#EventsofUser').remove();
+                            
                                                         //Remove all other displayed information about "Searching Events" (if exists)
                                                         $('#SearchEventSection').remove();
                                                         
@@ -725,7 +691,10 @@ $(document).ready
                                                             //Remove all other displayed information about "Reviews" (if exists)
                                                             $('#ReviewsofUser').remove();
                                                             $('#SportingEventReview').remove();
-                                
+ 
+                                                             //Remove all other displayed information about "Upcoming Events" (if exists)
+                                                             $('#EventsofUser').remove();
+ 
                                                             //Remove all other displayed information about "Searching Events" (if exists)
                                                             $('#SearchEventSection').remove();
                                 
@@ -734,7 +703,9 @@ $(document).ready
                                                             //unwrap div with the class for blurring the background from #ProfileHeader
                                                             $('#ProfileHeader').unwrap();
                                 
-                                
+ 
+ 
+ 
                                 
                                                             //Only run function if About information is not displayed
                                                             if( $('#AboutUser').length == 0 )
@@ -915,20 +886,26 @@ $(document).ready
                                                             
                                                             $(".edit_button").remove();
                                                             
-                                                            var $div = $('<div/>', {
-                                                                         class: "submitAndCancel"
-                                                                         });
+                                                            var $div = $('<div/>',
+                                                                                 {
+                                                                                  class: "submitAndCancel"
+                                                                                 }
+                                                                         );
                                                             
                                                             
-                                                            var $submit = $('<button/>', {
-                                                                            class: "submit_button",
-                                                                            text: "Submit"
-                                                                            });
+                                                            var $submit = $('<button/>',
+                                                                                        {
+                                                                                          class: "submit_button",
+                                                                                          text: "Submit"
+                                                                                        }
+                                                                            );
                                                             
-                                                            var $cancel = $('<button/>', {
-                                                                            class: "cancel_button",
-                                                                            text: "Cancel"
-                                                                            });
+                                                            var $cancel = $('<button/>',
+                                                                                        {
+                                                                                          class: "cancel_button",
+                                                                                          text: "Cancel"
+                                                                                        }
+                                                                            );
                                                             
                                                             $div.append($submit);
                                                             $div.append($cancel);
@@ -944,7 +921,7 @@ $(document).ready
                                                             $('#AboutUser').remove();
                                                             userAboutClickFcn();
                                                         }
-                                );
+                             );
                  
  
                  
@@ -965,16 +942,69 @@ $(document).ready
 														
 													}
 								);
+ 
+ 
+ 
+ 
+             //List of upcoming events the user has joined
+             var UserEvents = [
+                                   {
+                                       "EventName" : "Indoor Soccer",
+                                       "EventType": "football",
+                                       "EventDateTime": "July 26 2016 10:00 PM",
+                                       "EventEndTime": "11:00 PM",
+                                       "EventLocation": "AC Field 2",
+                                       "EventDescription": "We are playing 5 vs 5. Loser's team has to pay for the field!! That's how it is ;)",
+                                       "EventNumPpl": "10",
+                                       "EventNumSpotsLeft": "2"
+                                   },
+                                   
+                                   {
+                                       "EventName" : "Water Polo Champs",
+                                       "EventType": "waterpolo",
+                                       "EventDateTime": "July 28 2016 8:00 PM",
+                                       "EventEndTime": "11:00 PM",
+                                       "EventLocation": "AC Benson Pool",
+                                       "EventDescription": "Serious game. Please only attend if you are competitive and played in varsity.",
+                                       "EventNumPpl": "20",
+                                       "EventNumSpotsLeft": "8"
+                                   },
+                                   
+                                   {
+                                       "EventName" : "Outdoor Soccer",
+                                       "EventType": "football",
+                                       "EventDateTime": "July 30 2016 10:00 PM",
+                                       "EventEndTime": "11:00 PM",
+                                       "EventLocation": "AC Soccer Field",
+                                       "EventDescription": "We are playing 5 vs 5 half-court. Bring $10 for the field",
+                                       "EventNumPpl": "10",
+                                       "EventNumSpotsLeft": "5"
+                                   },
+                                   
+                                   {
+                                       "EventName" : "Lets Squash!",
+                                       "EventType": "squash",
+                                       "EventDateTime": "August 5 2016 3:00 PM",
+                                       "EventEndTime": "4:00 PM",
+                                       "EventLocation": "Harthouse Squart Courts",
+                                       "EventDescription": "We are doubles 2 vs 2. Join us, just for fun! :)",
+                                       "EventNumPpl": "4",
+                                       "EventNumSpotsLeft": "2"
+                                   }
+                             ];
 
-				$(document).on('click', '#UserEvents',
-													function()
-													{
-														//Make background clear by clearing blur-all class.
-														$('.blur-all').removeClass('blur-all');
+ 
+ 
+ 
+                 //When the user clicks on the "Events" tab, display the list of upcoming events the user has joined in
+                 $(document).on('click', '#UserEvents',
+                                
+                                                    function()
+                                                    {
                                 
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
-                                
+                                                        
                                                         //Remove all other displayed information about "Friends" (if exists)
                                                         $('#FriendsofUser').remove();
                                                         
@@ -982,11 +1012,142 @@ $(document).ready
                                                         $('#ReviewsofUser').remove();
                                                         $('#SportingEventReview').remove();
                                 
+                                                        //Remove all other displayed information about "SearchEvent" (if exists)
+                                                        $('#SearchEventSection').remove();
+                                
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
-													}
-								);
+                                                        //unwrap div with the class for blurring the background from #ProfileHeader
+                                                        $('#ProfileHeader').unwrap();
+                                
+                                
+                                                        //Only run function if EventsofUser information is not displayed
+                                                        if( $('#EventsofUser').length == 0 )
+                                                        {
+                                                        
+                                                        
+                                                            //Create a section to show list of upcoming events the user has joined
+                                                            var $EventsofUser = $('<section>',
+                                                                                             {
+                                                                                               id: 'EventsofUser'
+                                                                                             }
+                                                                                 );
+                                                            
+                                                            //insert $EventsofUser after the #ProfileHeader
+                                                            $EventsofUser.insertAfter('#ProfileHeader');
+                                
+                                
+                                
+                                                            //The <ul> inside which we will place the events
+                                                            var $EventsUL = $('<ul>',
+                                                                                     {
+                                                                                        id: 'EventsofUserUL'
+                                                                                     }
+                                                                             );
+                                                            
+                                                            //Append the $EventsUL to the page
+                                                            $EventsofUser.append($EventsUL);
 
+                                
+                                
+                                                            //Add the upcoming events the user has joined
+                                                            //Loop over the events
+                                                            $.each(UserEvents,
+                                                                           function(index, item)
+                                                                           {
+                                                                           
+                                                                               //$IndividualEvent is each of the individual events the user has joined
+                                                                               var $IndividualEvent = $('<li>',
+                                                                                                                {
+                                                                                                                  class: 'IndividualEvent'
+                                                                                                                }
+                                                                                                );
+                                                                   
+                                                                   
+                                                                   
+                                                                               //$divLeft contains the event Date and Time
+                                                                               var $divLeft = $('<div>',
+                                                                                                                {
+                                                                                                                  class: 'IndividualEventDateTime'
+                                                                                                                }
+                                                                                                        );
+                                                                   
+                                                                               //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
+                                                                               var $divMiddle = $('<div>',
+                                                                                                        {
+                                                                                                            class: 'IndividualEventInfo'
+                                                                                                        }
+                                                                                                );
+                                                                   
+                                                                               //$divRight contains more info about the event Info (The "+" SVG)
+                                                                               var $divRight= $('<div>',
+                                                                                                          {
+                                                                                                            class: 'IndividualEventMoreDetail'
+                                                                                                          }
+                                                                                                  );
+                                                                   
+                                                                               //Append the $IndividualEvent to the EventsUL
+                                                                               $EventsUL.append($IndividualEvent);
+                                                                               
+                                                                               //Append the $EventsUL to the page
+                                                                               $EventsofUser.append($EventsUL);
+                                                                               
+                                                                               //Append the $EventsUL to the page
+                                                                               $EventsofUser.append($EventsUL);
+                                                                               
+                                                                               //Append the $EventsUL to the page
+                                                                               $EventsofUser.append($EventsUL);
+                                                                   
+                                                                   
+//                                                                               //The Time of the comment
+//                                                                               var $commentTime = $('<p>',
+//                                                                                                    {
+//                                                                                                    text: item.Date,
+//                                                                                                    class: 'commentTime'
+//                                                                                                    }
+//                                                                                                    );
+//                                                                               
+//                                                                               //The Content of the comment
+//                                                                               var $commentContent = $('<p>',
+//                                                                                                       {
+//                                                                                                       text: item.Comment,
+//                                                                                                       class: 'commentContent'
+//                                                                                                       }
+//                                                                                                       );
+//                                                                               
+//                                                                               
+//                                                                               
+//                                                                               
+//                                                                               $comment.append($commentTime);  //Append the time to the <li>
+//                                                                               $comment.append($commentContent);  //Append the content to the <li>
+//                                                                               
+//                                                                               
+//                                                                               //Append the <li> comment to the <ul>
+//                                                                               $CommentsUL.append($comment);
+                                                                   
+                                                                           }
+                                                                   );
+
+                                
+                                
+                                
+                                                        }
+                                                    
+                                                    }
+                                
+                                
+                                );
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
  
                  //When the user clicks on the "SearchEvent" SVG, Create a form element for the user to search
                  $(document).on('click', '#SearchEvent',
@@ -999,10 +1160,13 @@ $(document).ready
                                 
                                                         //Remove all other displayed information about "Friends" (if exists)
                                                         $('#FriendsofUser').remove();
-                                                        
+                                
                                                         //Remove all other displayed information about "Reviews" (if exists)
                                                         $('#ReviewsofUser').remove();
                                                         $('#SportingEventReview').remove();
+                                
+                                                        //Remove all other displayed information about "Upcoming Events" (if exists)
+                                                        $('#EventsofUser').remove();
                                 
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
@@ -1010,7 +1174,7 @@ $(document).ready
                                                         $('#ProfileHeader').unwrap();
                                 
                                 
-                                                        
+                                
                                                         //Only run function if SearchEvent information is not displayed
                                                         if( $('#SearchEventSection').length == 0 )
                                                         {
@@ -1089,7 +1253,10 @@ $(document).ready
                                                     //Remove all other displayed information about "Reviews" (if exists)
                                                     $('#ReviewsofUser').remove();
                                                     $('#SportingEventReview').remove();
-                                                    
+                            
+                                                    //Remove all other displayed information about "Upcoming Events" (if exists)
+                                                    $('#EventsofUser').remove();
+                            
                                                     //Remove all other displayed information about "SearchEvent" (if exists)
                                                     $('#SearchEventSection').remove();
                             
@@ -1308,8 +1475,8 @@ $(document).ready
                                                         $CreateEventForm.append($EventDateTimeLabel).ready(
                                                                                                            function() {
                                                                                                                         $('.DateTimePicker_Event').datetimepicker({
-                                                                                                                                                                      
-                                                                                                                                                                      format:'M d Y H:i',
+                                                                                                                                                                      formatTime:'g:i A', //Use AM | PM
+                                                                                                                                                                      format:'M d Y h:i A',
                                                                                                                                                                       step:15,
                                                                                                                                                                       minDate:'0' //Can't choose past Dates for creating event
                                                                                                                                                                   });
