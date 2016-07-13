@@ -948,27 +948,45 @@ $(document).ready
                  
  
                  
-                 $(document).on('submit', '.submit_button',
-                                                            function()
-                                                            {
-                                                                $('#AboutUser').remove();
-                                                                
-                                                                // for (var i = 0; i < about_order.length - 1; i++) {
-                                                                // about_mockData[about_order[i]] = $("." + about_order[i]).val();
-                                                                // }
-                                                                
-                                                                
-                                                                console.log($(".Campus").val());
-                                
-                                                                userAboutClickFcn();
-                                                            
-                                                            }
-                                );
+				$(document).on('click', '.submit_button', 
+													function()
+													{
+						
+														
+														for (var i = 0; i < about_order.length - 2; i++) {
+															about_mockData[about_order[i]] = $("input." + about_order[i]).val();
+														}
+														
+														about_mockData[about_order[i]] = $("textarea." + about_order[i]).val();
+											
+														
+														$('#AboutUser').remove();
+														userAboutClickFcn();
+														
+													}
+								);
 
- 
- 
- 
- 
+				$(document).on('click', '#UserEvents',
+													function()
+													{
+														//Make background clear by clearing blur-all class.
+														$('.blur-all').removeClass('blur-all');
+                                
+                                                        //Remove all other displayed information about "About" (if exists)
+                                                        $('#AboutUser').remove();
+                                
+                                                        //Remove all other displayed information about "Friends" (if exists)
+                                                        $('#FriendsofUser').remove();
+                                                        
+                                                        //Remove all other displayed information about "Reviews" (if exists)
+                                                        $('#ReviewsofUser').remove();
+                                                        $('#SportingEventReview').remove();
+                                
+                                                        //Remove all other displayed information about "Creating Events" (if exists)
+                                                        $('#CreateEventSection').remove();
+													}
+								);
+
  
                  //When the user clicks on the "SearchEvent" SVG, Create a form element for the user to search
                  $(document).on('click', '#SearchEvent',
