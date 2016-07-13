@@ -493,3 +493,11 @@ input:invalid {
     background-color: #FFD9D9;
 }
 
+#error_mes{
+    position: absolute;
+    display: none;
+    top: 400px;
+    left: 40px;
+}
+
+
