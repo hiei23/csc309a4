@@ -1,0 +1,95 @@
+DROP SCHEMA IF EXISTS TSPORTS CASCADE;
+CREATE SCHEMA TSPORTS;
+SET search_path TO TSPORTS;
+
+
+DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE IF EXISTS Friends CASCADE;
+DROP TABLE IF EXISTS Messages CASCADE;
+DROP TABLE IF EXISTS Sports CASCADE;
+DROP TABLE IF EXISTS PlaySport CASCADE;
+DROP TABLE IF EXISTS Teams CASCADE;
+DROP TABLE IF EXISTS Players CASCADE;
+DROP TABLE IF EXISTS Sessions CASCADE;
+DROP TABLE IF EXISTS TeamPosts CASCADE;
+
+
+CREATE TABLE Users (
+	id SERIAL PRIMARY KEY, 
+	username VARCHAR(40) NOT NULL, 
+	email VARCHAR(255) UNIQUE NOT NULL, 
+	password VARCHAR(255) NOT NULL, 
+	birthday DATE NOT NULL, 
+	height INTEGER,
+	weight DECIMAL, 
+	rating DECIMAL, 
+	createdAt TIMESTAMP, 
+	updatedAt TIMESTAMP DEFAULT now()
+);
+
+
+CREATE TABLE Friends(
+	userId INTEGER REFERENCES Users(id), 
+	friendId INTEGER REFERENCES Users(id),
+	CONSTRAINT must_be_different CHECK (friendId != userid)
+	);
+
+
+CREATE TABLE Messages(
+	id serial PRIMARY KEY, 
+	from_user INTEGER REFERENCES Users(id), 
+	to_user INTEGER REFERENCES Users(id), 
+	message VARCHAR(255) NOT NULL, 
+	sent TIMESTAMP DEFAULT now(), 
+	status VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE Sports(
+	id serial PRIMARY KEY, 
+	name VARCHAR(255) NOT NULL
+	);
+
+
+CREATE TABLE PlaySport(
+	sportid INTEGER REFERENCES Sports(id), 
+	userid INTEGER REFERENCES Users(id),
+	PRIMARY KEY(sportid, userid)
+	);
+
+
+CREATE TABLE Teams(
+	id SERIAL PRIMARY KEY, 
+	name VARCHAR(255) NOT NULL, 
+	numberOfPlayers INTEGER DEFAULT 0, 
+	gamesPlayed INTEGER DEFAULT 0, 
+	win INTEGER DEFAULT 0, 
+	lose INTEGER DEFAULT 0, 
+	createdAt TIMESTAMP, 
+	updatedAt TIMESTAMP DEFAULT now()
+	);
+
+
+CREATE TABLE Players(
+	teamid INTEGER REFERENCES Teams(id),  
+	userid INTEGER REFERENCES Users(id),
+	PRIMARY KEY(teamid, userid)
+);
+
+
+CREATE TABLE Sessions(
+	id SERIAL PRIMARY KEY, 
+	createdAt TIMESTAMP, 
+	expiresAt TIMESTAMP, 
+	installationId VARCHAR(255), 
+	userid INTEGER REFERENCES Users(id)
+	);
+
+
+CREATE TABLE TeamPosts(
+	id SERIAL, 
+	teamid INTEGER REFERENCES Teams(id), 
+	post VARCHAR(255), 
+	publishDate TIMESTAMP DEFAULT now(),
+	PRIMARY KEY(id, teamid)
+	);
