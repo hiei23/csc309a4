@@ -877,13 +877,103 @@ input[type="datetime-local"]
 
 
 
+/*The "Events" Button style*/
+
+
+
+
+/*Styling the #EventsofUser Section*/
+#EventsofUser
+{
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    width: 60%;
+    position: absolute;
+    
+    margin-left: 27%;
+    margin-top: 120px;
+}
+
+
+/*Add borders between individual events*/
+#EventsofUser #EventsofUserUL .IndividualEvent
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 16px 16px;
+}
+
+/*Make the Div Left Right and Middle inline-block*/
+#EventsofUser #EventsofUserUL .IndividualEvent div
+{
+    display: inline-block;
+}
+
+
+/* Event DateTime*/
+#EventsofUser #EventsofUserUL .IndividualEvent .IndividualEventDateTime
+{
+    color: rgba(0, 0, 0, 0.54);
+    float: left;
+    
+    padding-right: 5%;
+    font-size: 14px;
+}
+
+
+
+/*Event Info*/
+#EventsofUserUL .IndividualEvent .IndividualEventInfo
+{
+  text-align: left;
+  width: 50%;
+}
+
+
+/*Event Name*/
+#EventsofUserUL .IndividualEvent .IndividualEventInfo h3
+{
+    color: rgba(0, 0, 0, 0.54);
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+
+#EventsofUserUL .IndividualEvent .IndividualEventInfo .EventAttendance
+{
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+}
+
+
+#EventsofUserUL .IndividualEvent .IndividualEventInfo .EventSpotsLeft
+{
+    font-weight: 600;
+    margin: auto 0.5em;
+    color: #ed1c40;
+    letter-spacing: 0.02em;
+}
+
+
+/*The more info "+" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail
+{
+    float: right;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
 
 
 
 
 /*This viewport is the same as the viewport for 320px*/
 /*The hover nav bar works and elements did not need to be varied*/
-@media screen and (min-width: 480px)
+@media screen and (max-width: 480px)
 {
 
 
@@ -895,10 +985,35 @@ input[type="datetime-local"]
 
 
 /*For all viewports from 768px until 1024px*/
-@media screen and (min-width: 768px)
+@media screen and (max-width: 768px)
 {
 
- 
+    #EventsofUserUL .IndividualEvent .IndividualEventInfo
+    {
+        text-align: left;
+        width: 40%;
+    }
+    
+/*    Make the font-size smaller*/
+    #EventsofUser #EventsofUserUL .IndividualEvent .IndividualEventDateTime
+    {
+        padding-right: 0px;
+        font-size: 12px;
+        width: 20%;
+    }
+    
+/*    Make the Event Name smaller*/
+    #EventsofUserUL .IndividualEvent .IndividualEventInfo h3
+    {
+        font-size: 14px;
+    }
+    
+/*    Make the "+" SVG smaller*/
+    #EventsofUserUL .IndividualEvent .IndividualEventMoreDetail img
+    {
+        width: 20px;
+        height: 20px;
+    }
 
 }
 

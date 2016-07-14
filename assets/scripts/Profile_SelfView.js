@@ -1084,47 +1084,82 @@ $(document).ready
                                                                                                           {
                                                                                                             class: 'IndividualEventMoreDetail'
                                                                                                           }
-                                                                                                  );
+                                                                                                );
                                                                    
                                                                                //Append the $IndividualEvent to the EventsUL
                                                                                $EventsUL.append($IndividualEvent);
-                                                                               
-                                                                               //Append the $EventsUL to the page
-                                                                               $EventsofUser.append($EventsUL);
-                                                                               
-                                                                               //Append the $EventsUL to the page
-                                                                               $EventsofUser.append($EventsUL);
-                                                                               
-                                                                               //Append the $EventsUL to the page
-                                                                               $EventsofUser.append($EventsUL);
                                                                    
                                                                    
-//                                                                               //The Time of the comment
-//                                                                               var $commentTime = $('<p>',
-//                                                                                                    {
-//                                                                                                    text: item.Date,
-//                                                                                                    class: 'commentTime'
-//                                                                                                    }
-//                                                                                                    );
-//                                                                               
-//                                                                               //The Content of the comment
-//                                                                               var $commentContent = $('<p>',
-//                                                                                                       {
-//                                                                                                       text: item.Comment,
-//                                                                                                       class: 'commentContent'
-//                                                                                                       }
-//                                                                                                       );
-//                                                                               
-//                                                                               
-//                                                                               
-//                                                                               
-//                                                                               $comment.append($commentTime);  //Append the time to the <li>
-//                                                                               $comment.append($commentContent);  //Append the content to the <li>
-//                                                                               
-//                                                                               
-//                                                                               //Append the <li> comment to the <ul>
-//                                                                               $CommentsUL.append($comment);
+                                                                               //Append the Left, Middle, and Right Divs to the $IndividualEvent
+                                                                               $IndividualEvent.append($divLeft);
+                                                                               $IndividualEvent.append($divMiddle);
+                                                                               $IndividualEvent.append($divRight);
                                                                    
+                                                                   
+                                                                               //Add the Event DateTime to $divLeft
+                                                                               $divLeft.append(
+                                                                                                $('<p>',
+                                                                                                          {
+                                                                                                            text: item.EventDateTime
+                                                                                                          }
+                                                                                                 )
+                                                                                               );
+                                                                   
+                                                                   
+                                                                   
+                                                                               //Add the Event Info to $divMiddle
+                                                                               
+                                                                   
+                                                                               var $EventName= $('<h3>',
+                                                                                                        {
+                                                                                                          text: item.EventName
+                                                                                                        }
+                                                                                                );
+                                                                   
+                                                                               var $EventSVG= $('<img>',
+                                                                                                         {
+                                                                                                            src: './assets/images/' + item.EventType + '.svg',
+                                                                                                            width: '20px'
+                                                                                                         }
+                                                                                               );
+                                                                   
+                                                                   
+                                                                               var $EventAttendance= $('<p>',
+                                                                                                                {
+                                                                                                                  //Calculate #ppl attending
+                                                                                                                  text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
+                                                                                                                  class: 'EventAttendance'
+                                                                                                                }
+                                                                                                     );
+                                                                   
+                                                                   
+                                                                               //Append the number of available spots
+                                                                               $EventAttendance.append(
+                                                                                                         $('<span>',
+                                                                                                               {
+                                                                                                                   text: item.EventNumSpotsLeft  + " Spots left!",
+                                                                                                                   class: 'EventSpotsLeft'
+                                                                                                               }
+                                                                                                          )
+                                                                                                      );
+                                
+                                                                   
+                                                                               $divMiddle.append($EventName);
+                                                                               $divMiddle.append($EventSVG);
+                                                                               $divMiddle.append($EventAttendance);
+                                                                   
+                                                                   
+                                                                   
+                                                                                //Add the "+" SVG to $divRight
+                                                                                $divRight.append(
+                                                                                                    $('<img>',
+                                                                                                              {
+                                                                                                                src: "./assets/images/plus.svg",
+                                                                                                                width: '30px'
+                                                                                                              }
+                                                                                                     )
+                                                                                                );
+
                                                                            }
                                                                    );
 
@@ -1137,17 +1172,190 @@ $(document).ready
                                 
                                 
                                 );
+ 
+ 
+                 //When the user clicks on the "+" SVG for more details, show the user more info about that event
+
+//                 $(document).on('click', '#UserEvents',
+//                                
+//                                function()
+//                                {
+//                                
+//                                //Remove all other displayed information about "About" (if exists)
+//                                $('#AboutUser').remove();
+//                                
+//                                //Remove all other displayed information about "Friends" (if exists)
+//                                $('#FriendsofUser').remove();
+//                                
+//                                //Remove all other displayed information about "Reviews" (if exists)
+//                                $('#ReviewsofUser').remove();
+//                                $('#SportingEventReview').remove();
+//                                
+//                                //Remove all other displayed information about "SearchEvent" (if exists)
+//                                $('#SearchEventSection').remove();
+//                                
+//                                //Remove all other displayed information about "Creating Events" (if exists)
+//                                $('#CreateEventSection').remove();
+//                                //unwrap div with the class for blurring the background from #ProfileHeader
+//                                $('#ProfileHeader').unwrap();
+//                                
+//                                
+//                                //Only run function if EventsofUser information is not displayed
+//                                if( $('#EventsofUser').length == 0 )
+//                                {
+//                                
+//                                
+//                                //Create a section to show list of upcoming events the user has joined
+//                                var $EventsofUser = $('<section>',
+//                                                      {
+//                                                      id: 'EventsofUser'
+//                                                      }
+//                                                      );
+//                                
+//                                //insert $EventsofUser after the #ProfileHeader
+//                                $EventsofUser.insertAfter('#ProfileHeader');
+//                                
+//                                
+//                                
+//                                //The <ul> inside which we will place the events
+//                                var $EventsUL = $('<ul>',
+//                                                  {
+//                                                  id: 'EventsofUserUL'
+//                                                  }
+//                                                  );
+//                                
+//                                //Append the $EventsUL to the page
+//                                $EventsofUser.append($EventsUL);
+//                                
+//                                
+//                                
+//                                //Add the upcoming events the user has joined
+//                                //Loop over the events
+//                                $.each(UserEvents,
+//                                       function(index, item)
+//                                       {
+//                                       
+//                                       //$IndividualEvent is each of the individual events the user has joined
+//                                       var $IndividualEvent = $('<li>',
+//                                                                {
+//                                                                class: 'IndividualEvent'
+//                                                                }
+//                                                                );
+//                                       
+//                                       
+//                                       
+//                                       //$divLeft contains the event Date and Time
+//                                       var $divLeft = $('<div>',
+//                                                        {
+//                                                        class: 'IndividualEventDateTime'
+//                                                        }
+//                                                        );
+//                                       
+//                                       //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
+//                                       var $divMiddle = $('<div>',
+//                                                          {
+//                                                          class: 'IndividualEventInfo'
+//                                                          }
+//                                                          );
+//                                       
+//                                       //$divRight contains more info about the event Info (The "+" SVG)
+//                                       var $divRight= $('<div>',
+//                                                        {
+//                                                        class: 'IndividualEventMoreDetail'
+//                                                        }
+//                                                        );
+//                                       
+//                                       //Append the $IndividualEvent to the EventsUL
+//                                       $EventsUL.append($IndividualEvent);
+//                                       
+//                                       
+//                                       //Append the Left, Middle, and Right Divs to the $IndividualEvent
+//                                       $IndividualEvent.append($divLeft);
+//                                       $IndividualEvent.append($divMiddle);
+//                                       $IndividualEvent.append($divRight);
+//                                       
+//                                       
+//                                       //Add the Event DateTime to $divLeft
+//                                       $divLeft.append(
+//                                                       $('<p>',
+//                                                         {
+//                                                         text: item.EventDateTime
+//                                                         }
+//                                                         )
+//                                                       );
+//                                       
+//                                       
+//                                       
+//                                       //Add the Event Info to $divMiddle
+//                                       
+//                                       
+//                                       var $EventName= $('<h3>',
+//                                                         {
+//                                                         text: item.EventName
+//                                                         }
+//                                                         );
+//                                       
+//                                       var $EventSVG= $('<img>',
+//                                                        {
+//                                                        src: './assets/images/' + item.EventType + '.svg',
+//                                                        width: '20px'
+//                                                        }
+//                                                        );
+//                                       
+//                                       
+//                                       var $EventAttendance= $('<p>',
+//                                                               {
+//                                                               //Calculate #ppl attending
+//                                                               text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
+//                                                               class: 'EventAttendance'
+//                                                               }
+//                                                               );
+//                                       
+//                                       
+//                                       //Append the number of available spots
+//                                       $EventAttendance.append(
+//                                                               $('<span>',
+//                                                                 {
+//                                                                 text: item.EventNumSpotsLeft  + " Spots left!",
+//                                                                 class: 'EventSpotsLeft'
+//                                                                 }
+//                                                                 )
+//                                                               );
+//                                       
+//                                       
+//                                       $divMiddle.append($EventName);
+//                                       $divMiddle.append($EventSVG);
+//                                       $divMiddle.append($EventAttendance);
+//                                       
+//                                       
+//                                       
+//                                       //Add the "+" SVG to $divRight
+//                                       $divRight.append(
+//                                                        $('<img>',
+//                                                          {
+//                                                          src: "./assets/images/plus.svg",
+//                                                          width: '30px'
+//                                                          }
+//                                                          )
+//                                                        );
+//                                       
+//                                       }
+//                                       );
+//                                
+//                                
+//                                
+//                                
+//                                }
+//                                
+//                                }
+//                                
+//                                
+//                                );
 
  
  
  
- 
- 
 
- 
- 
- 
- 
  
                  //When the user clicks on the "SearchEvent" SVG, Create a form element for the user to search
                  $(document).on('click', '#SearchEvent',
@@ -1178,8 +1386,8 @@ $(document).ready
                                                         //Only run function if SearchEvent information is not displayed
                                                         if( $('#SearchEventSection').length == 0 )
                                                         {
-                                                        
-                                                        
+                                
+                                
                                                             //Create a section to show the search form
                                                             var $SearchEvent = $('<section>',
                                                                                                 {
@@ -1207,14 +1415,14 @@ $(document).ready
        
                                 
                                 
-//                                
+//
 //                                                                   //$Friend has the image and the friend name
 //                                                                   var $sport = $('<li>',
 //                                                                                  {
 //                                                                                  class: 'SportingEvent'
 //                                                                                  }
 //                                                                                  );
-//                                                                   
+//
 //                                                                   //$Friend has the image and the friend name
 //                                                                   var $sportImage = $('<img>',
 //                                                                                       {
@@ -1222,13 +1430,13 @@ $(document).ready
 //                                                                                       width: '30px'
 //                                                                                       }
 //                                                                                       );
-//                                                                   
+//
 //                                                                   $sport.append($sportImage);  //Append the sportImage to the <li>
-//                                                                   
+//
 //                                                                   $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
                                 
-                                                                  
-                                                        
+                                
+                                
                                                         }
                                 
                                                     }
@@ -1243,13 +1451,13 @@ $(document).ready
                             
                                                 function()
                                                 {
-                                                
+                            
                                                     //Remove all other displayed information about "About" (if exists)
                                                     $('#AboutUser').remove();
-                                                    
+                            
                                                     //Remove all other displayed information about "Friends" (if exists)
                                                     $('#FriendsofUser').remove();
-                                                    
+                            
                                                     //Remove all other displayed information about "Reviews" (if exists)
                                                     $('#ReviewsofUser').remove();
                                                     $('#SportingEventReview').remove();
@@ -1260,8 +1468,8 @@ $(document).ready
                                                     //Remove all other displayed information about "SearchEvent" (if exists)
                                                     $('#SearchEventSection').remove();
                             
-                                                    
-                                                    
+                            
+                            
                                                     //Only run function if CreateEventSection information is not displayed
                                                     if( $('#CreateEventSection').length == 0 )
                                                     {
