@@ -62,46 +62,6 @@ $(document).ready
                   }
           
           
-                    //For RESPONSIVE DESIGN
-//                  //make a menu button
-//                  if( $Window_Width < 480  )
-//                  {
-//                  
-//                  //hide the nav ul
-//                  $('nav ul').addClass('hide');
-//                  
-//                  //check if svg already exists
-//                  if( $('.menusvg').length > 0 )  {}
-//                  
-//                  
-//                  //doesn't exist so add it
-//                  else
-//                  {
-//                  $('<img>',
-//                    {
-//                    src: './assets/images/menu.svg',
-//                    'class': 'menusvg'
-//                    }
-//                    
-//                    ).appendTo('nav');
-//                  
-//                  },
-//                  
-//                  }
-//                  
-//                  // $Window_Width is >= 480
-//                  else
-//                  {
-//                  //if the menu svg icon exists, remove it
-//                  if( $('.menusvg').length > 0 )
-//                  {
-//                  $('.menusvg').remove();
-//                  //unhide the nav ul
-//                  $('nav ul').removeClass('hide');
-//                  }
-//              
-//              }
-          
           }
      );
  

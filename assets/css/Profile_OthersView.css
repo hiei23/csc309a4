@@ -111,6 +111,7 @@ li
     line-height: 2.3em;
     padding-left: 10px;
     border-radius: 3px;
+    border: 1px solid black;
 }
 
 #RightNav
@@ -378,6 +379,8 @@ li
     padding-left: 3px;
     padding-top: 5px;
     border-radius: 3px;
+    font-size: 10px;
+     border: 1px solid black;
 }
 
 

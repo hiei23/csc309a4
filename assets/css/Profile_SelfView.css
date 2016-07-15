@@ -115,6 +115,7 @@ li
     line-height: 2.3em;
     padding-left: 10px;
     border-radius: 3px;
+    border: 1px solid black;
 }
 
 #RightNav
@@ -231,7 +232,7 @@ li
     margin: 0 auto;
     width: 70%;
     border-radius: 5px;
-    border: 1px solid rgb(185,185,185);
+    border: 1px solid rgb(225,225,225);
     margin-top: 40px;
 }
 
@@ -392,7 +393,9 @@ li
     line-height: 1.2em;
     padding-left: 3px;
     padding-top: 5px;
+    border: 1px solid black;
     border-radius: 3px;
+    font-size: 10px;
 }
 
 
@@ -560,6 +563,7 @@ li
 {
     border-radius: 50%;
     overflow: hidden;
+    cursor: pointer;
 }
 
 
@@ -691,6 +695,11 @@ li
     position: absolute;
 }
 
+#CreateEventSection input
+{
+    border: 1px solid white;
+}
+
 /*Make the forms display one below each other*/
 #CreateEventForm .CreateEventLabel
 {
@@ -738,6 +747,7 @@ input[type="datetime-local"]
     padding: 3px 5px;
     border-radius: 3px;
     font-size: 15px;
+    resize: none;
 }
 
 /*Create Event Submit Button*/
@@ -813,6 +823,7 @@ input[type="datetime-local"]
     margin: 2px 3px;
     transition: all ease-in-out 0.3s;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 /*When you hover the IndividualEvent li, change the color*/
@@ -959,19 +970,329 @@ input[type="datetime-local"]
 }
 
 
-/*The more info "+" SVG*/
+/*The divRight containing the "+" and "x" SVG*/
 #EventsofUserUL .IndividualEvent .IndividualEventMoreDetail
 {
     float: right;
-    margin-top: 20px;
+}
+
+/*The Leave Event "x" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail img
+{
+    margin-bottom: 20px;
     cursor: pointer;
+}
+
+/*The Event more detail "+" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail .SelectedEventForm
+{
+    cursor: pointer;
+}
+
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail input[type=submit]
+{
+    background: url(../images/plus.svg);
+    border: 0;
+    display: block;
+    height: 30px;
+    width: 30px;
 }
 
 
 
 
 
-/*This viewport is the same as the viewport for 320px*/
+/*Details for a specific Event*/
+/*Return2Events Button*/
+
+#SelectedEvent
+{
+    text-align: center;
+    width: 60%;
+    position: absolute;
+    margin-left: 27%;
+    margin-top: 90px;
+}
+
+#SelectedEvent .Return2Events
+{
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+
+#SelectedEvent h3
+{
+    color: rgba(0, 0, 0, 0.54);
+    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+#SelectedEvent .BasicEventInfo_Wrapper
+{
+    text-align: left;
+    margin-left: 35%;
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    width: 25%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 15px 15px;
+}
+
+
+#SelectedEvent .EventSportName *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventSportName
+{
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventDateTime *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventDateTime
+{
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventDuration *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventDuration
+{
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventLocation *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventLocation
+{
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+
+
+#SelectedEvent .EventAttendance
+{
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 11px;
+    padding-left: 5px;
+}
+
+
+#SelectedEvent .EventSpotsLeft
+{
+    font-weight: 600;
+    margin: auto 0.5em;
+    color: #ed1c40;
+    letter-spacing: 0.02em;
+}
+
+#SelectedEvent .EventDescription
+{
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding: 15px 15px;
+}
+
+
+.UserImages
+{
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#SelectedEvent #EventAdmin
+{
+    margin-bottom: 25px;
+}
+
+#SelectedEvent #EventUsers
+{
+    margin-bottom: 40px;
+}
+
+/*Show all the users in the event inline-block*/
+#SelectedEvent #EventUsers div
+{
+    display: inline-block;
+    cursor: pointer;
+    margin: 20px 25px;
+}
+
+
+
+/*Group chat among users in the event*/
+#SelectedEvent #EventGroupChat
+{
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+    background-color: rgb(237, 238, 241);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    margin-bottom: 40px;
+}
+
+/*GroupChat Content*/
+#SelectedEvent #EventGroupChat #GroupChatContent
+{
+    padding: 5px 5px;
+    height: 290px;
+    overflow: scroll;
+}
+
+
+/*Alternate the Chat Data like Facebook*/
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:nth-child(odd)
+{
+    float: right;
+    text-align: left;  /*Message is left-aligned*/
+    border: 1px solid rgb(213, 213, 213);
+    background-color: rgb(254, 254, 254);
+    border-radius: 3px;
+    width: 50%;
+}
+
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:nth-child(even)
+{
+    float: left;
+    text-align: left; /*Message is left-aligned*/
+    border: 1px solid rgb(188, 199, 214);
+    background-color: rgb(224, 237, 255);
+    border-radius: 9px;
+    border-bottom-left-radius: 0px;
+    width: 50%;
+}
+
+/*Give the last message a margin-below so it doesn't overlap with the form*/
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:last-child
+{
+    margin-bottom: 5px;
+}
+
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas
+{
+    font-size: 13px;
+    padding: 3px 3px;
+    margin: 3px 3px;
+}
+
+/*GroupChat Form*/
+#SelectedEvent #EventGroupChat #GroupChatForm textarea
+{
+    overflow: scroll;
+    height: 25px;
+    resize: none;
+    line-height: 1.2em;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 5px;
+    border-radius: 3px;
+    border: 1px solid black;
+    font-size: 12px;
+}
+
+
+
+
+/*Search for Events*/
+#SearchEventSection
+{
+    text-align: center;
+    width: 60%;
+    position: absolute;
+    margin-left: 27%;
+    margin-top: 110px;
+}
+
+#SearchEventSection input#SearchForEvents
+{
+    line-height: 2.3em;
+    padding-left: 20px;
+    border-radius: 3px;
+    border: 1px solid black;
+    width: 280px;
+    cursor: pointer;
+}
+
+
+
+/*Event Types Box shown when EventType input is clicked*/
+#SearchEventSection #AvailableEventTypes
+{
+    border-radius: 5px;
+    margin-top: 3px;
+    width: 35%;
+    background-color: rgb(237,238, 241);
+    position: absolute;
+    left: 33%;
+}
+
+/*display the <li>s inline-block*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li
+{
+    display: inline-block;
+    padding: 5px 5px;
+    margin: 2px 3px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/*When you hover the IndividualEvent li, change the color*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li:hover
+{
+    background-color: white;
+}
+
+/*Make the sport SVG and name inline-block*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li *
+{
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+/*This viewport
+ 
+ is the same as the viewport for 320px*/
 /*The hover nav bar works and elements did not need to be varied*/
 @media screen and (max-width: 480px)
 {
@@ -987,6 +1308,26 @@ input[type="datetime-local"]
 /*For all viewports from 768px until 1024px*/
 @media screen and (max-width: 768px)
 {
+    
+/*    top nav search bar*/
+    #SearchBar
+    {
+        float: left;
+        margin-left: 0px;
+    }
+    
+    #SearchBar input[type="text"] {
+        width: 150px;
+        border: 1px solid black;
+    }
+
+    #Main_Nav li
+    {
+        margin: 7px 2px;
+    }
+
+    
+/*   Displayed Information about the "Events" button*/
 
     #EventsofUserUL .IndividualEvent .IndividualEventInfo
     {
@@ -1007,13 +1348,7 @@ input[type="datetime-local"]
     {
         font-size: 14px;
     }
-    
-/*    Make the "+" SVG smaller*/
-    #EventsofUserUL .IndividualEvent .IndividualEventMoreDetail img
-    {
-        width: 20px;
-        height: 20px;
-    }
+
 
 }
 
