@@ -29,16 +29,16 @@ CREATE TABLE Users (
 
 
 CREATE TABLE Friends(
-	userId INTEGER REFERENCES Users(id), 
-	friendId INTEGER REFERENCES Users(id),
+	userId INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	friendId INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	CONSTRAINT must_be_different CHECK (friendId != userid)
 	);
 
 
 CREATE TABLE Messages(
 	id serial PRIMARY KEY, 
-	from_user INTEGER REFERENCES Users(id), 
-	to_user INTEGER REFERENCES Users(id), 
+	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	to_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
 	message VARCHAR(255) NOT NULL, 
 	sent TIMESTAMP DEFAULT now(), 
 	status VARCHAR(255) NOT NULL
@@ -46,14 +46,14 @@ CREATE TABLE Messages(
 
 
 CREATE TABLE Sports(
-	id serial PRIMARY KEY, 
+	id SERIAL PRIMARY KEY, 
 	name VARCHAR(255) NOT NULL
 	);
 
 
 CREATE TABLE PlaySport(
-	sportid INTEGER REFERENCES Sports(id), 
-	userid INTEGER REFERENCES Users(id),
+	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE, 
+	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	PRIMARY KEY(sportid, userid)
 	);
 
@@ -71,8 +71,8 @@ CREATE TABLE Teams(
 
 
 CREATE TABLE Players(
-	teamid INTEGER REFERENCES Teams(id),  
-	userid INTEGER REFERENCES Users(id),
+	teamid INTEGER REFERENCES Teams(id) ON DELETE CASCADE,  
+	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	PRIMARY KEY(teamid, userid)
 );
 
@@ -82,13 +82,13 @@ CREATE TABLE Sessions(
 	createdAt TIMESTAMP, 
 	expiresAt TIMESTAMP, 
 	installationId VARCHAR(255), 
-	userid INTEGER REFERENCES Users(id)
+	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE
 	);
 
 
 CREATE TABLE TeamPosts(
 	id SERIAL, 
-	teamid INTEGER REFERENCES Teams(id), 
+	teamid INTEGER REFERENCES Teams(id) ON DELETE CASCADE, 
 	post VARCHAR(255), 
 	publishDate TIMESTAMP DEFAULT now(),
 	PRIMARY KEY(id, teamid)
