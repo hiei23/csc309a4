@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 
 app.get('/', function (req, res)
         {
-        res.sendfile('hi'');
+        res.sendfile('hi');
         }
         );
 
