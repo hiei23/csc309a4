@@ -14,15 +14,22 @@ DROP TABLE IF EXISTS Sessions CASCADE;
 DROP TABLE IF EXISTS TeamPosts CASCADE;
 
 
-CREATE TABLE Users (
+
+CREATE TABLE Users
+(
 	id SERIAL PRIMARY KEY, 
-	username VARCHAR(40) NOT NULL, 
-	email VARCHAR(255) UNIQUE NOT NULL, 
-	password VARCHAR(255) NOT NULL, 
-	birthday DATE NOT NULL, 
-	height INTEGER,
-	weight DECIMAL, 
-	rating DECIMAL, 
+	firstname VARCHAR(40) NOT NULL,
+    lastname VARCHAR(40) NOT NULL,
+    birthday DATE NOT NULL,
+    gender text NOT NULL,
+    height INTEGER,
+    weight DECIMAL,
+	email text UNIQUE NOT NULL,
+    phone text NOT NULL,
+    campus text NOT NULL,
+	password text NOT NULL,
+    aboutuser text NOT NULL,
+    --Need to add the sports the user is interested in
 	createdAt TIMESTAMP, 
 	updatedAt TIMESTAMP DEFAULT now()
 );
