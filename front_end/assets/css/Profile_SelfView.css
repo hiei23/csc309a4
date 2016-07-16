@@ -1,0 +1,1383 @@
+/*Clear the default margin and padding for all elements*/
+*
+{
+    margin:0px;
+    padding:0px;
+    font-family: "Lato","Helvetica Neue", Arial ,Helvetica, sans-serif;
+}
+
+/* Background color*/
+body
+{
+    background-color: rgb(250,250,250);
+    height: 100%;
+    width:100%;
+    position: relative;
+    padding-bottom: 60px;
+}
+
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+li
+{
+    list-style: none;
+}
+
+/* header: top menu */
+#header
+{
+    background-color: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 55px;
+    z-index: 1000;  /*To prevent images from overlapping the fixed header*/
+    position: fixed;
+}
+
+
+#SiteLogo img
+{
+    margin-left: 4px;
+    margin-top: 6px;
+	height: 42px;
+    width: 150px;
+    float: left;
+}
+
+#Site_Nav
+{
+    padding-top: 10px;
+}
+
+#Site_Nav a
+{
+	color: #74AD1B;
+}
+
+#Main_Nav li
+{
+    display: inline-block;
+    margin: 7px 7px;
+    vertical-align: middle;
+    color: rgb(54,215,183);
+    cursor: pointer;
+}
+
+
+
+#HomeButton a
+{
+	padding-top:23px;
+    padding-bottom:14px;
+    padding-left: 9px;
+    padding-right: 9px;
+    color: #74AD1B;
+    font-size: 14px;
+}
+
+/*Make the links bold on hover*/
+#Main_Nav #HomeButton a:hover
+{
+    color: #A0F6F6;
+	transition: all ease-in-out 0.3s;
+	background-color: #111111;
+}
+
+
+#SignOut_Button a
+{
+    transition: all ease-in-out 0.3s;
+    border: 2px solid #74AD1B;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+
+/*Make the links bold on hover*/
+#SignOut_Button a:hover
+{
+   color: #A0F6F6;
+}
+
+
+#SearchBar
+{
+    float: left;
+    margin-left: 58px;
+}
+
+#SearchBar input
+{
+    line-height: 2.3em;
+    padding-left: 10px;
+    border-radius: 3px;
+    border: 1px solid black;
+}
+
+#RightNav
+{
+    float: right;
+    padding-right: 10px;
+}
+
+
+#FB_Friend_SVG
+{
+    position: relative;
+}
+
+/*If its zero (ie. no requests), we will hide the p tag*/
+#FB_Friend_SVG p
+{
+    position: absolute;
+    padding: 2px 2px;
+    border-radius: 3px;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+    left: 15px;
+    top: -11%;
+    opacity: 0.9;
+}
+
+
+#FB_Message_SVG
+{
+    position: relative;
+}
+
+/*If its zero (ie. no requests), we will hide the p tag*/
+#FB_Message_SVG p
+{
+    position: absolute;
+    padding: 2px 2px;
+    border-radius: 3px;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+    left: 15px;
+    top: -11%;
+    opacity: 0.9;
+}
+
+
+#FB_Notification_SVG
+{
+    position: relative;
+}
+
+
+/*If its zero (ie. no notifications), we will hide the p tag*/
+#FB_Notification_SVG p
+{
+    position: absolute;
+    padding: 2px 2px;
+    border-radius: 3px;
+    background-color: red;
+    font-size: 10px;
+    color: white;
+    left: 15px;
+    top: -11%;
+    opacity: 0.9;
+}
+
+
+
+
+
+/* Profile style */
+#ProfileHeader
+{
+	height: 100%;
+	width: 15%;
+	position: fixed;
+	z-index: 1;
+	top: 55px;
+	left: 0;
+	background-color: rgba(0,0,0,0.8);
+	overflow-x: hidden;
+	padding-top: 30px;
+	transition: 0.5s;
+    text-align: center;
+}
+
+#ProfilePic
+{
+    margin-top: 0px;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 125px;
+    height: 125px;
+    text-align: center;
+}
+
+#ProfileHeader #Profile_UserName
+{
+    letter-spacing: 1.3px;
+    margin: 10px 0px;
+	font-size: 120%;
+	color: lightgrey;
+}
+
+
+
+#BodyNav
+{
+    background-color: rgb(255,255,255);
+    text-align: center;
+    margin: 0 auto;
+    width: 70%;
+    border-radius: 5px;
+    border: 1px solid rgb(225,225,225);
+    margin-top: 40px;
+}
+
+#BodyNav ul li
+{
+    display: block;
+    padding: 5px 20px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all ease-in-out 0.3s;
+}
+
+#BodyNav ul li:hover
+{
+    background-color: rgb(232, 232, 232);
+}
+
+
+.BodyNavClicked
+{
+    border-bottom: 1px solid black;
+    background-color: rgb(232, 232, 232);
+}
+
+/*Show a tooltip for the search event and add event SVG*/
+#SearchEvent, #AddEvent
+{
+    position: relative;
+}
+
+.Profile_Tooltip
+{
+    visibility: hidden;
+    width: 80px;
+    font-size: 10px;
+    background-color: black;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    
+    /* Position the tooltip */
+    position: absolute;
+	top: 10%;
+    left: 57%;
+
+}
+
+/*On hover make tooltip available*/
+#SearchEvent:hover .Profile_Tooltip, #AddEvent:hover .Profile_Tooltip
+{
+    visibility: visible;
+}
+
+
+
+/*The Chatbox CSS styles*/
+#ChatBox
+{
+    height: 300px;
+    position: fixed;
+    width: 220px;
+    margin-left: 15px;
+    z-index: 800;  /*Chatbox has priority*/
+    border-radius: 3px;
+    left: 80%;
+}
+
+#ChatBoxHeader
+{
+    position: fixed;
+    width: 216px;
+    background-color: rgba(0,0,0,0.8);
+    padding: 1px 2px;
+    z-index: 100;
+    padding-bottom: 3px;
+    border-radius: 3px;
+}
+
+#ChatBoxHeader *
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/*Make the ChatBox username and "X" SVG in-line*/
+#ChatBoxHeader p
+{
+    text-align: left;
+    font-size: 13px;
+    cursor: pointer;
+    color: white;
+    padding-left: 2px;
+}
+
+#ChatBoxHeader #ChatBoxClose
+{
+    float: right;
+    padding-top: 5px;
+    padding-right: 7px;
+    cursor: pointer;
+}
+
+
+#ChatContent
+{
+  padding: 5px 5px;
+  background-color: rgb(237, 238, 241);
+  height: 290px;
+  overflow: scroll;
+}
+
+/*Alternate the Chat Data like Facebook*/
+#ChatContent .ChatContentDatas:nth-child(odd)
+{
+    float: right;
+    border: 1px solid rgb(213, 213, 213);
+    background-color: rgb(254, 254, 254);
+    border-radius: 3px;
+    width: 70%;
+}
+
+#ChatContent .ChatContentDatas:nth-child(even)
+{
+    float: left;
+    border: 1px solid rgb(188, 199, 214);
+    background-color: rgb(224, 237, 255);
+    border-radius: 9px;
+    border-bottom-left-radius: 0px;
+    width: 70%;
+}
+
+/*Give the last message a margin-below so it doesn't overlap with the form*/
+#ChatContent .ChatContentDatas:last-child
+{
+    margin-bottom: 25px;
+}
+
+
+#ChatContent .ChatContentDatas
+{
+    font-size: 13px;
+    padding: 3px 3px;
+    margin: 3px 3px;
+}
+
+
+#ChatBoxForm
+{
+    position: fixed;
+    z-index: 100;  /*So it goes on top of the previous messages*/
+}
+
+#ChatBoxForm textarea
+{
+    overflow: scroll;
+    height: 20px;
+    resize: none;
+    line-height: 1.2em;
+    padding-left: 3px;
+    padding-top: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+
+
+
+/* Paul About Code Starts here */
+
+
+/* About section style */
+#AboutUser
+{
+	position: absolute;
+	margin: auto;
+	margin-left: 27%;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	width: 60%;
+	padding: 10px 10px;
+    border: 1px solid rgb(185, 185, 185);
+    border-radius: 5px;
+	background-color: rgb(255, 255, 255);
+}
+
+#AboutUser div div.each_info, #AboutUser fieldset
+{
+	margin: 10px 10px;
+	float: left;
+	width: 30%;
+}
+
+/*Change the default input border*/
+#AboutUser .each_info input
+{
+    border: 1px solid rgb(185, 185, 185);
+}
+
+#AboutUser div div span.label
+{
+	font-size: 90%;
+
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+#AboutUser div div input
+{
+	width: 100%;
+	font-weight: normal;
+	background-color: white;
+	padding-left: 3px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	border-radius: 10px;
+}
+
+#AboutUser div div textarea[name="About_Me"]
+{
+	padding: 10px 10px;
+	width: 100%;
+	border-radius: 10px;
+}
+
+#AboutUser div.info_input
+{
+	width: 100%;
+}
+
+
+#AboutUser  fieldset 
+{
+	color: rgba(128, 128, 128, 0.5);
+	padding-bottom: 15px;
+	clear: left;
+	border-radius: 10px;
+	margin-bottom: 15px;
+}
+
+#AboutUser fieldset legend 
+{
+	font-size: 90%;
+	margin-left: 10px;
+	color: rgba(128, 128, 128, 0.5);
+}
+
+#AboutUser > fieldset > article > ul > li
+{
+	margin: 0px;
+	color: rgba(128, 128, 128, 0.8);
+}
+
+#AboutUser > fieldset > article 
+{
+	padding-left: 3%;
+	float: left;
+
+}
+
+
+#AboutUser input[disabled], #AboutUser div div textarea[disabled]
+{
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+#AboutUser button
+{
+	margin-left: 10px;
+	margin-bottom: 15px;
+	clear: left;
+	background-color: #555555; /* Black */
+	border: none;
+	color: white;
+    padding: 15px 32px;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    -webkit-transition-duration: 0.3s; /* Safari */
+    transition-duration: 0.3s;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#AboutUser button:hover 
+{
+	background-color: #008CBA; /* Blue */
+    color: white;
+}
+
+#AboutUser button.cancel_button 
+{
+	position: absolute;
+	bottom: 10px;
+	left: 150px;
+}
+
+.edit_button
+{
+    cursor: pointer;
+}
+
+
+/* Paul About Code Ends here */
+
+
+
+
+/* Friends section style */
+#FriendsofUser
+{
+    text-align: center;
+    margin: 0 auto;
+    width: 60%;
+	padding-top: 100px;
+	padding-left: 15%;
+}
+
+/*Make the Friends display inline-block*/
+#FriendsofUser .Friend
+{
+    display: inline-block;
+    cursor: pointer;
+    margin: 20px 25px;
+}
+
+.FriendImage
+{
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+
+#MoreFriendsButton
+{
+    padding: 5px 0px;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    transition: all ease-in-out 0.3s;
+    background-color: rgb(255,255,255);
+    font-weight: bold;
+    width: 150px;
+    margin: 15px auto;
+}
+
+/*On Hover,change the background color*/
+#MoreFriendsButton:hover
+{
+    background-color: rgb(232,232,232);
+    color: red;
+}
+
+
+/* Review section style */
+#ReviewsofUser
+{
+    text-align: center;
+    background-color: rgb(255,255,255);
+    margin-bottom: 25px;
+	padding-top: 100px;
+	padding-left: 15%;
+}
+
+#ReviewsofUser #SportsPlayed .SportingEvent
+{
+    display: inline-block;
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all ease-in-out 0.3s;
+}
+
+
+#ReviewsofUser #SportsPlayed .SportingEvent:hover
+{
+    background-color: rgb(232, 232, 232);
+}
+
+.SportingEventClicked
+{
+    border-bottom: 1px solid black;
+    background-color: rgb(232, 232, 232);
+}
+
+
+#SportingEventReview
+{
+    text-align: center;
+	padding-left: 15%;
+}
+
+
+#SportingEventReview #StarRatings
+{
+    display: inline-block;
+}
+
+/*Space the stars apart*/
+#SportingEventReview #StarRatings img
+{
+    margin: 5px 5px;
+}
+
+/*Comments left by other users*/
+#Comments
+{
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    background-color: rgb(255,255,255);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+}
+
+#Comments ul .Individual_Comment *
+{
+    display: inline-block;
+}
+
+#Comments ul .Individual_Comment
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 16px 16px;
+}
+
+#Comments ul .commentTime
+{
+    float: left;
+    margin-right: 30px;
+    width: 20%;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+#Comments ul .commentContent
+{
+    text-align: left;
+    width: 65%;
+    font-weight: 400;
+}
+
+
+
+
+/*Styling the CreateEventSection Section*/
+#CreateEventSection
+{
+    text-align: center;
+    width: 68%;
+    /* margin: 0 auto; */
+    border-radius: 15px;
+    background-color: rgba(0,0,0,0.7);
+    padding: 40px 5px;
+	/* padding-top: 20%; */
+	left: 20%;
+	top: 100px;
+    position: absolute;
+}
+
+#CreateEventSection input
+{
+    border: 1px solid white;
+}
+
+/*Make the forms display one below each other*/
+#CreateEventForm .CreateEventLabel
+{
+    display: block;
+    cursor: pointer;
+    margin-bottom: 20px;  /*Space between each input*/
+}
+
+
+.CreateEventLabel *
+{
+    display: block;
+}
+
+.CreateEventLabel input
+{
+    border-radius: 3px;
+    padding: 3px 5px;
+    width: 50%;
+}
+
+
+/*The text next to the input*/
+.CreateEventLabel span
+{
+    color: white;
+    float: left;
+    text-align: right;
+    width: 30%;
+    margin-right: 10px;
+}
+
+
+input[type="submit"],#CreateEventSection input[type="text"], input[type="time"], input[type="number"],
+input[type="datetime-local"]
+{
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/*Width of textarea*/
+.CreateEventLabel textarea
+{
+    width: 50%;
+    padding: 3px 5px;
+    border-radius: 3px;
+    font-size: 15px;
+    resize: none;
+}
+
+/*Create Event Submit Button*/
+#CreateEventSubmit
+{
+    background:none;
+    border:1px solid white;
+    font-size:1em;
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px 5px 10px;
+    transition: all ease-in-out 0.3s;
+
+}
+
+/*Hover submit button, turn red*/
+#CreateEventSubmit:hover
+{
+    background-color: red;
+    border: 1px solid red;
+}
+
+/*The close event SVG*/
+#CloseEventButton
+{
+    cursor: pointer;
+    position: absolute;
+    left: 90%;
+    top: 5%;
+}
+
+
+/*Blur the background when clicked on create event*/
+.blur-all
+{
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -o-filter: blur(5px);
+    -ms-filter: blur(5px);
+    filter: blur(5px);
+
+/*    To make it compatible on all browsers*/
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+}
+
+
+
+/*Event Types Box shown when EventType input is clicked*/
+#AvailableEventTypes
+{
+    border-radius: 5px;
+    margin-top: 3px;
+    width: 50%;
+    background-color: rgb(237,238, 241);
+    position: absolute;
+    left: 31.5%;
+}
+
+.HideAvailableEventTypes
+{
+    display: none;
+}
+
+/*display the <li>s inline-block*/
+#EventTypeLabel #AvailableEventTypes #AvailableEventTypesUL li
+{
+    display: inline-block;
+    padding: 5px 5px;
+    margin: 2px 3px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/*When you hover the IndividualEvent li, change the color*/
+#EventTypeLabel #AvailableEventTypes #AvailableEventTypesUL li:hover
+{
+    background-color: white;
+}
+
+/*Make the sport SVG and name inline-block*/
+#EventTypeLabel #AvailableEventTypes #AvailableEventTypesUL li *
+{
+    display: inline-block;
+}
+
+#EventTypeLabel input
+{
+    border-radius: 3px;
+    padding: 3px 5px;
+    width: 48.6%;
+    padding-left: 20px;
+}
+
+
+#AvailableEventTypesUL li p
+{
+    font-size: 11px;
+}
+
+#AvailableEventTypesUL li img
+{
+    padding: 0px 2px;
+}
+
+
+/*Add a mini-calendar SVG to the EventDateTime form input*/
+#EventDateTimeLabel input
+{
+    background: url(../images/calendar.svg) no-repeat 3px 5px;
+    background-size: 14px;
+    background-color: white;
+    padding-left: 20px;
+    width: 48.6%;
+}
+
+/*Make the DateTimePicker smaller*/
+.xdsoft_datetimepicker
+{
+    border-radius: 10px;
+}
+
+/*Add a mini-clock SVG to the EventEndTime form input*/
+#EventEndTimeLabel input
+{
+    background: url(../images/clock.svg) no-repeat 3px 5px;
+    background-size: 14px;
+    background-color: white;
+    padding-left: 20px;
+    width: 48.6%;
+}
+
+
+
+
+
+/*The "Events" Button style*/
+
+
+
+
+/*Styling the #EventsofUser Section*/
+#EventsofUser
+{
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    width: 60%;
+    position: absolute;
+    
+    margin-left: 27%;
+    margin-top: 120px;
+}
+
+
+/*Add borders between individual events*/
+#EventsofUser #EventsofUserUL .IndividualEvent
+{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 16px 16px;
+}
+
+/*Make the Div Left Right and Middle inline-block*/
+#EventsofUser #EventsofUserUL .IndividualEvent div
+{
+    display: inline-block;
+}
+
+
+/* Event DateTime*/
+#EventsofUser #EventsofUserUL .IndividualEvent .IndividualEventDateTime
+{
+    color: rgba(0, 0, 0, 0.54);
+    float: left;
+    
+    padding-right: 5%;
+    font-size: 14px;
+}
+
+
+
+/*Event Info*/
+#EventsofUserUL .IndividualEvent .IndividualEventInfo
+{
+  text-align: left;
+  width: 50%;
+}
+
+
+/*Event Name*/
+#EventsofUserUL .IndividualEvent .IndividualEventInfo h3
+{
+    color: rgba(0, 0, 0, 0.54);
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+
+#EventsofUserUL .IndividualEvent .IndividualEventInfo .EventAttendance
+{
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+}
+
+
+#EventsofUserUL .IndividualEvent .IndividualEventInfo .EventSpotsLeft
+{
+    font-weight: 600;
+    margin: auto 0.5em;
+    color: #ed1c40;
+    letter-spacing: 0.02em;
+}
+
+
+/*The divRight containing the "+" and "x" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail
+{
+    float: right;
+}
+
+/*The Leave Event "x" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail img
+{
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+/*The Event more detail "+" SVG*/
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail .SelectedEventForm
+{
+    cursor: pointer;
+}
+
+#EventsofUserUL .IndividualEvent .IndividualEventMoreDetail input[type=submit]
+{
+    background: url(../images/plus.svg);
+    border: 0;
+    display: block;
+    height: 30px;
+    width: 30px;
+}
+
+
+
+
+
+/*Details for a specific Event*/
+/*Return2Events Button*/
+
+#SelectedEvent
+{
+    text-align: center;
+    width: 60%;
+    position: absolute;
+    margin-left: 27%;
+    margin-top: 90px;
+}
+
+#SelectedEvent .Return2Events
+{
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+
+#SelectedEvent h3
+{
+    color: rgba(0, 0, 0, 0.54);
+    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+#SelectedEvent .BasicEventInfo_Wrapper
+{
+    text-align: left;
+    margin-left: 35%;
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    width: 25%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 15px 15px;
+}
+
+
+#SelectedEvent .EventSportName *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventSportName
+{
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventDateTime *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventDateTime
+{
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventDuration *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventDuration
+{
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+#SelectedEvent .EventLocation *
+{
+    display: inline-block;
+    margin: 0px 2px;
+}
+
+#SelectedEvent .EventLocation
+{
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+
+
+#SelectedEvent .EventAttendance
+{
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 11px;
+    padding-left: 5px;
+}
+
+
+#SelectedEvent .EventSpotsLeft
+{
+    font-weight: 600;
+    margin: auto 0.5em;
+    color: #ed1c40;
+    letter-spacing: 0.02em;
+}
+
+#SelectedEvent .EventDescription
+{
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    padding: 15px 15px;
+}
+
+
+.UserImages
+{
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#SelectedEvent #EventAdmin
+{
+    margin-bottom: 25px;
+}
+
+#SelectedEvent #EventUsers
+{
+    margin-bottom: 40px;
+}
+
+/*Show all the users in the event inline-block*/
+#SelectedEvent #EventUsers div
+{
+    display: inline-block;
+    cursor: pointer;
+    margin: 20px 25px;
+}
+
+
+
+/*Group chat among users in the event*/
+#SelectedEvent #EventGroupChat
+{
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+    background-color: rgb(237, 238, 241);
+    border: 1px solid rgb(225,225,225);
+    border-radius: 4px;
+    margin-bottom: 40px;
+}
+
+/*GroupChat Content*/
+#SelectedEvent #EventGroupChat #GroupChatContent
+{
+    padding: 5px 5px;
+    height: 290px;
+    overflow: scroll;
+}
+
+
+/*Alternate the Chat Data like Facebook*/
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:nth-child(odd)
+{
+    float: right;
+    text-align: left;  /*Message is left-aligned*/
+    border: 1px solid rgb(213, 213, 213);
+    background-color: rgb(254, 254, 254);
+    border-radius: 3px;
+    width: 50%;
+}
+
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:nth-child(even)
+{
+    float: left;
+    text-align: left; /*Message is left-aligned*/
+    border: 1px solid rgb(188, 199, 214);
+    background-color: rgb(224, 237, 255);
+    border-radius: 9px;
+    border-bottom-left-radius: 0px;
+    width: 50%;
+}
+
+/*Give the last message a margin-below so it doesn't overlap with the form*/
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas:last-child
+{
+    margin-bottom: 5px;
+}
+
+#SelectedEvent #EventGroupChat #GroupChatContent .ChatContentDatas
+{
+    font-size: 13px;
+    padding: 3px 3px;
+    margin: 3px 3px;
+}
+
+/*GroupChat Form*/
+#SelectedEvent #EventGroupChat #GroupChatForm textarea
+{
+    overflow: scroll;
+    height: 25px;
+    resize: none;
+    line-height: 1.2em;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 5px;
+    border-radius: 3px;
+    border: 1px solid black;
+    font-size: 12px;
+}
+
+
+
+
+/*Search for Events*/
+#SearchEventSection
+{
+    text-align: center;
+    width: 60%;
+    position: absolute;
+    margin-left: 27%;
+    margin-top: 110px;
+}
+
+#SearchEventSection input#SearchForEvents
+{
+    line-height: 2.3em;
+    padding-left: 20px;
+    border-radius: 3px;
+    border: 1px solid black;
+    width: 280px;
+    cursor: pointer;
+}
+
+
+
+/*Event Types Box shown when EventType input is clicked*/
+#SearchEventSection #AvailableEventTypes
+{
+    border-radius: 5px;
+    margin-top: 3px;
+    width: 35%;
+    background-color: rgb(237,238, 241);
+    position: absolute;
+    left: 33%;
+}
+
+/*display the <li>s inline-block*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li
+{
+    display: inline-block;
+    padding: 5px 5px;
+    margin: 2px 3px;
+    transition: all ease-in-out 0.3s;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/*When you hover the IndividualEvent li, change the color*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li:hover
+{
+    background-color: white;
+}
+
+/*Make the sport SVG and name inline-block*/
+#SearchEventSection #AvailableEventTypes #AvailableEventTypesUL li *
+{
+    display: inline-block;
+}
+
+
+
+
+
+
+
+
+
+/*This viewport
+ 
+ is the same as the viewport for 320px*/
+/*The hover nav bar works and elements did not need to be varied*/
+@media screen and (max-width: 480px)
+{
+
+
+
+
+}
+
+
+
+
+/*For all viewports from 768px until 1024px*/
+@media screen and (max-width: 768px)
+{
+    
+/*    top nav search bar*/
+    #SearchBar
+    {
+        float: left;
+        margin-left: 0px;
+    }
+    
+    #SearchBar input[type="text"] {
+        width: 150px;
+        border: 1px solid black;
+    }
+
+    #Main_Nav li
+    {
+        margin: 7px 2px;
+    }
+
+    
+/*   Displayed Information about the "Events" button*/
+
+    #EventsofUserUL .IndividualEvent .IndividualEventInfo
+    {
+        text-align: left;
+        width: 40%;
+    }
+    
+/*    Make the font-size smaller*/
+    #EventsofUser #EventsofUserUL .IndividualEvent .IndividualEventDateTime
+    {
+        padding-right: 0px;
+        font-size: 12px;
+        width: 20%;
+    }
+    
+/*    Make the Event Name smaller*/
+    #EventsofUserUL .IndividualEvent .IndividualEventInfo h3
+    {
+        font-size: 14px;
+    }
+
+
+}
+
+
+
+/*This viewport is the same as the viewport for 768px*/
+/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
+@media screen and (min-width: 1024px)
+{
+ 
+    
+    
+    
+}
+
+
+
+/*This viewport is the same as the viewport for 768px*/
+/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
+@media screen and (min-width: 1280px)
+{
+
+
+}
+
+
+
+
+
+
+
+

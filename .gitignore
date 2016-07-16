@@ -1,3 +1,4 @@
+
 # Node build artifacts
 node_modules
 npm-debug.log
@@ -12,3 +13,7 @@ Dockerfile
 docker-compose.yml
 
 .DS_Store
+
+./node_modules
+./package.json
+
