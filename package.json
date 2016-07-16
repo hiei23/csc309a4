@@ -1,33 +1,26 @@
 {
-  "name": "csc309a4",
-  "version": "1.0.0",
-  "description": "CSC309 a4",
-  "main": "app.js",
-  "engines":
-   {
-    "node": "4.4.4"
-   },
-   "scripts":
-   {
-    "test": "echo \"Error: no test specified\" && exit 1"
-   },
-   "repository":
-   {
+  "name": "node-js-getting-started",
+  "version": "0.2.5",
+  "description": "A sample Node.js app using Express 4",
+  "engines": {
+    "node": "5.9.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ejs": "2.4.1",
+    "express": "4.13.3"
+  },
+  "repository": {
     "type": "git",
-    "url": "git+https://github.com/hiei23/csc309a4.git"
-   },
-   "author": "",
-   "license": "ISC",
-   "bugs":
-    {
-    "url": "https://github.com/hiei23/csc309a4/issues"
-    },
-    "homepage": "https://github.com/hiei23/csc309a4#readme",
-    "dependencies":
-    {
-    "express": "^4.14.0",
-    "pg": "^6.0.2",
-    "ejs": "2.4.1"
-        
-    }
+    "url": "https://github.com/heroku/node-js-getting-started"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
 }
