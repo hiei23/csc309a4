@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 
 app.get('/', function (req, res)
         {
-        res.sendfile(__dirname + '/front_end/index.html');
+        res.sendfile('hi'');
         }
         );
 
