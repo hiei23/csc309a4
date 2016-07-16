@@ -18,8 +18,8 @@ DROP TABLE IF EXISTS TeamPosts CASCADE;
 CREATE TABLE Users
 (
 	id SERIAL PRIMARY KEY, 
-	firstname VARCHAR(40) NOT NULL,
-    lastname VARCHAR(40) NOT NULL,
+	first_name VARCHAR(40) NOT NULL,
+    last_name VARCHAR(40) NOT NULL,
     birthday DATE NOT NULL,
     gender text NOT NULL,
     height INTEGER,
@@ -28,7 +28,7 @@ CREATE TABLE Users
     phone text NOT NULL,
     campus text NOT NULL,
 	password text NOT NULL,
-    aboutuser text NOT NULL,
+    about text,
     --Need to add the sports the user is interested in
 	createdAt TIMESTAMP, 
 	updatedAt TIMESTAMP DEFAULT now()
