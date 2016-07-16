@@ -3,15 +3,15 @@ var pg = require('pg');
 
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
-
-
-
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-
-app.use(express.static(__dirname + '/front_end'));
+//app.set('port', (process.env.PORT || 5000));
+//
+//
+//
+//app.set('views', __dirname + '/views');
+//app.set('view engine', 'ejs');
+//
+//
+//app.use(express.static(__dirname + '/front_end'));
 
 app.get('/', function (req, res)
                                 {
@@ -21,19 +21,19 @@ app.get('/', function (req, res)
 
 
 
-app.get('/db', function (request, response) {
-        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-                   client.query('Set search_path to tsports;  SELECT * FROM Users;', function(err, result)
-                                
-                                {
-                                done();
-                                if (err)
-                                { console.error(err); response.send("Error " + err); }
-                                else
-                                { response.render('pages/db', {results: result.rows} ); }
-                                });
-                   });
-        });
+//app.get('/db', function (request, response) {
+//        pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+//                   client.query('Set search_path to tsports;  SELECT * FROM Users;', function(err, result)
+//                                
+//                                {
+//                                done();
+//                                if (err)
+//                                { console.error(err); response.send("Error " + err); }
+//                                else
+//                                { response.render('pages/db', {results: result.rows} ); }
+//                                });
+//                   });
+//        });
 
 
 app.listen(3000, function ()
