@@ -463,37 +463,6 @@ li
 	width: 100%;
 }
 
-
-#AboutUser  fieldset 
-{
-	color: rgba(128, 128, 128, 0.5);
-	padding-bottom: 15px;
-	clear: left;
-	border-radius: 10px;
-	margin-bottom: 15px;
-}
-
-#AboutUser fieldset legend 
-{
-	font-size: 90%;
-	margin-left: 10px;
-	color: rgba(128, 128, 128, 0.5);
-}
-
-#AboutUser > fieldset > article > ul > li
-{
-	margin: 0px;
-	color: rgba(128, 128, 128, 0.8);
-}
-
-#AboutUser > fieldset > article 
-{
-	padding-left: 3%;
-	float: left;
-
-}
-
-
 #AboutUser input[disabled], #AboutUser div div textarea[disabled]
 {
 	background-color: rgba(0, 0, 0, 0.1);
@@ -536,6 +505,112 @@ li
 }
 
 
+#sports{
+    position: absolute;
+    top: 254px;
+    margin-left: 38%;
+}
+
+#ck-collection{
+    border:1px solid lightgrey;
+    border-radius: 4px;
+    width: 365px;
+    height: 118px;
+    position: relative;
+}
+
+.ck-button label{ 
+    display: inline-block; 
+    border: solid 1px lightgrey; 
+    background-color: white;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+
+.ck-button input{
+  display:none;
+}
+
+
+input:checked + label{
+  background-color: lightgrey;
+}
+
+.ck-button:hover {
+    color: #000000;
+    outline: none !important;
+    border:1px solid lightgrey;
+    border-radius: 4px;
+    box-shadow: 0 0 10px lightgrey;
+}
+
+.ck-button:nth-child(1){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(2){
+    position: absolute;
+    margin-left: 88px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(3){
+    position: absolute;
+    margin-left: 188px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(4){
+    position: absolute;
+    margin-left: 272px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(5){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(6){
+    position: absolute;
+    margin-left: 121px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(7){
+    position: absolute;
+    margin-left: 230px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(8){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(9){
+    position: absolute;
+    margin-left: 82px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(10){
+    position: absolute;
+    margin-left: 177px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(11){
+    position: absolute;
+    margin-left: 262px;
+    margin-top: 80px;
+}
 /* Paul About Code Ends here */
 
 
