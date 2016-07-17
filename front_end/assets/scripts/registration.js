@@ -10,8 +10,8 @@ function validationForm(){
 		$("main").css("height","600px");
 		$("#error_mes").show();
 		$("#error_mes").css({
-			"top":"530px",
-			"border":"1px solid pink",
+			"top":"508px",
+			"border":"2px solid red",
 			"padding":"5px",
 			"border-radius":"4px"
 		});

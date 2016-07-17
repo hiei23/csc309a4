@@ -52,7 +52,8 @@ CREATE TABLE Messages(
 );
 
 
-CREATE TABLE Sports(
+CREATE TABLE Sports
+    (
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(255) NOT NULL
 	);
@@ -65,7 +66,8 @@ CREATE TABLE PlaySport(
 	);
 
 
-CREATE TABLE Teams(
+CREATE TABLE Teams
+(
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(255) NOT NULL, 
 	numberOfPlayers INTEGER DEFAULT 0, 
@@ -74,7 +76,7 @@ CREATE TABLE Teams(
 	lose INTEGER DEFAULT 0, 
 	createdAt TIMESTAMP, 
 	updatedAt TIMESTAMP DEFAULT now()
-	);
+);
 
 
 CREATE TABLE Players(
@@ -84,13 +86,14 @@ CREATE TABLE Players(
 );
 
 
-CREATE TABLE Sessions(
+CREATE TABLE Sessions
+(
 	id SERIAL PRIMARY KEY, 
 	createdAt TIMESTAMP, 
 	expiresAt TIMESTAMP, 
 	installationId VARCHAR(255), 
 	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE
-	);
+);
 
 
 CREATE TABLE TeamPosts(
