@@ -114,6 +114,7 @@ app.post('/UserRegistration', function(req, res)
         );
 
 
+
 function cb(err, result,res)
 {
     if (err)
@@ -156,28 +157,6 @@ app.listen(app.get('port'), function()
                               console.log('Node app is running on port', app.get('port'));
                            }
           );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

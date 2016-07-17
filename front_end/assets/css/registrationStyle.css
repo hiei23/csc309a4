@@ -419,7 +419,7 @@ input:checked + label{
 
 .ck-button:nth-child(2){
     position: absolute;
-    margin-left: 95px;
+    margin-left: 88px;
     margin-top: 5px;
 }
 
@@ -431,7 +431,7 @@ input:checked + label{
 
 .ck-button:nth-child(4){
     position: absolute;
-    margin-left: 276px;
+    margin-left: 272px;
     margin-top: 5px;
 }
 
@@ -443,7 +443,7 @@ input:checked + label{
 
 .ck-button:nth-child(6){
     position: absolute;
-    margin-left: 124px;
+    margin-left: 121px;
     margin-top: 42px;
 }
 
@@ -461,13 +461,19 @@ input:checked + label{
 
 .ck-button:nth-child(9){
     position: absolute;
-    margin-left: 92px;
+    margin-left: 82px;
     margin-top: 80px;
 }
 
 .ck-button:nth-child(10){
     position: absolute;
-    margin-left: 202px;
+    margin-left: 177px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(11){
+    position: absolute;
+    margin-left: 262px;
     margin-top: 80px;
 }
 
