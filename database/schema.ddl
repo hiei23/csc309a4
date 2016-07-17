@@ -50,20 +50,29 @@ CREATE TABLE Interests(
 	PRIMARY KEY(userid, sportid)
 );
 
+/*
+	status_text: the state of this friend. 
+				 it can be the following states
+				
+				id  Meaning
+				0   Pending Friend Request
+				1   Confirm Friend Request
+				2   You
+*/
+CREATE TABLE Friends_Status(
+	id serial PRIMARY KEY,
+	status_text VARCHAR(45)
+);
+
 CREATE TABLE Friends(
 	friend_one INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	friend_two INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	status INTEGER,
+	status INTEGER REFERENCES Friends_Status(id),
 	createdAt TIMESTAMP DEFAULT now(),
 	CONSTRAINT must_be_different CHECK(friend_one != friend_two),
 	PRIMARY KEY(friend_one, friend_two)
 );
 
-
-CREATE TABLE Friends_Status(
-	id serial PRIMARY KEY,
-	status_text VARCHAR(45)
-);
 
 CREATE TABLE Update_Friends(
 	id SERIAL PRIMARY KEY,
@@ -71,7 +80,7 @@ CREATE TABLE Update_Friends(
 	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE
 );
 
-
+-- status: Open or closed
 CREATE TABLE Conversation(
 	id serial PRIMARY KEY,
 	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE,
@@ -80,6 +89,9 @@ CREATE TABLE Conversation(
 	status VARCHAR(50) NOT NULL
 );
 
+/*
+	status: Read/Unread/Deleted
+*/
 
 CREATE TABLE Conversation_Reply(
 	id serial PRIMARY KEY,
@@ -94,7 +106,8 @@ CREATE TABLE Conversation_Reply(
 CREATE TABLE PlaySport(
 	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE,
 	userid  INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	rating  DECIMAL,
+	sumRating REAL DEFAULT 0.0,
+	totalNumOfRatings INTEGER DEFAULT 0,
 	PRIMARY KEY(sportid, userid)
 );
 
