@@ -4,15 +4,19 @@ SET search_path TO TSPORTS;
 
 
 DROP TABLE IF EXISTS Users CASCADE;
-DROP TABLE IF EXISTS Friends CASCADE;
-DROP TABLE IF EXISTS Messages CASCADE;
+DROP TABLE IF EXISTS Interests CASCADE;
 DROP TABLE IF EXISTS Sports CASCADE;
 DROP TABLE IF EXISTS PlaySport CASCADE;
-DROP TABLE IF EXISTS Teams CASCADE;
-DROP TABLE IF EXISTS Players CASCADE;
+DROP TABLE IF EXISTS Friends CASCADE;
+DROP TABLE IF EXISTS Update_Friends CASCADE;
+DROP TABLE IF EXISTS Friends_Status CASCADE;
+DROP TABLE IF EXISTS Conversation CASCADE;
+DROP TABLE IF EXISTS Conversation_Reply CASCADE;
+DROP TABLE IF EXISTS Team_Conversation CASCADE;
+DROP TABLE IF EXISTS Team_Conversation_Reply CASCADE;
+DROP TABLE IF EXISTS Event CASCADE;
+DROP TABLE IF EXISTS Events CASCADE;
 DROP TABLE IF EXISTS Sessions CASCADE;
-DROP TABLE IF EXISTS TeamPosts CASCADE;
-
 
 
 CREATE TABLE Users
@@ -21,34 +25,16 @@ CREATE TABLE Users
 	first_name VARCHAR(40) NOT NULL,
     last_name VARCHAR(40) NOT NULL,
     birthday DATE NOT NULL,
-    gender text NOT NULL,
+    gender VARCHAR(6) ,
     height INTEGER,
     weight DECIMAL,
-	email text UNIQUE NOT NULL,
-    phone text NOT NULL,
-    campus text NOT NULL,
+	email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    campus VARCHAR(15)NOT NULL,
 	password text NOT NULL,
     about text,
-    --Need to add the sports the user is interested in
-	createdAt TIMESTAMP, 
+	createdAt TIMESTAMP DEFAULT now(), 
 	updatedAt TIMESTAMP DEFAULT now()
-);
-
-
-CREATE TABLE Friends(
-	userId INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
-	friendId INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	CONSTRAINT must_be_different CHECK (friendId != userid)
-	);
-
-
-CREATE TABLE Messages(
-	id serial PRIMARY KEY, 
-	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
-	to_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
-	message VARCHAR(255) NOT NULL, 
-	sent TIMESTAMP DEFAULT now(), 
-	status VARCHAR(255) NOT NULL
 );
 
 
@@ -58,45 +44,95 @@ CREATE TABLE Sports(
 	);
 
 
-CREATE TABLE PlaySport(
+CREATE TABLE Interests(
+	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE, 
-	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	PRIMARY KEY(sportid, userid)
+	PRIMARY KEY(userid, sportid)
 	);
 
-
-CREATE TABLE Teams(
-	id SERIAL PRIMARY KEY, 
-	name VARCHAR(255) NOT NULL, 
-	numberOfPlayers INTEGER DEFAULT 0, 
-	gamesPlayed INTEGER DEFAULT 0, 
-	win INTEGER DEFAULT 0, 
-	lose INTEGER DEFAULT 0, 
-	createdAt TIMESTAMP, 
-	updatedAt TIMESTAMP DEFAULT now()
-	);
-
-
-CREATE TABLE Players(
-	teamid INTEGER REFERENCES Teams(id) ON DELETE CASCADE,  
-	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	PRIMARY KEY(teamid, userid)
+CREATE TABLE Friends(
+	friend_one INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	friend_two INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	status INTEGER,
+	createdAt TIMESTAMP DEFAULT now(),
+	CONSTRAINT must_be_different CHECK(friend_one != friend_two),
+	PRIMARY KEY(friend_one, friend_two)
 );
 
 
-CREATE TABLE Sessions(
-	id SERIAL PRIMARY KEY, 
-	createdAt TIMESTAMP, 
-	expiresAt TIMESTAMP, 
-	installationId VARCHAR(255), 
+CREATE TABLE Friends_Status(
+	id serial PRIMARY KEY,
+	status_text VARCHAR(45)
+);
+
+CREATE TABLE Update_Friends(
+	id SERIAL PRIMARY KEY,
+	update_status VARCHAR(45),
 	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE
 	);
 
 
-CREATE TABLE TeamPosts(
-	id SERIAL, 
-	teamid INTEGER REFERENCES Teams(id) ON DELETE CASCADE, 
-	post VARCHAR(255), 
-	publishDate TIMESTAMP DEFAULT now(),
-	PRIMARY KEY(id, teamid)
+CREATE TABLE Conversation(
+	id serial PRIMARY KEY, 
+	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	to_user INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT now(),
+	status VARCHAR(50) NOT NULL
+);
+
+
+CREATE TABLE Conversation_Reply(
+	id serial PRIMARY KEY, 
+	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	reply_text text NOT NULL, 
+	sent TIMESTAMP DEFAULT now(), 
+	status VARCHAR(50) NOT NULL,
+	conversation_id INTEGER REFERENCES Conversation(id)
+);
+
+
+CREATE TABLE PlaySport(
+	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE, 
+	userid  INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	rating  DECIMAL,
+	PRIMARY KEY(sportid, userid)
 	);
+
+
+CREATE TABLE Event(
+	id SERIAL PRIMARY KEY, 
+	name VARCHAR(255) NOT NULL,
+	Location VARCHAR(255) NOT NULL,
+	max_Number_Of_Players INTEGER,
+	attending INTEGER,
+	time TIMESTAMP,
+	createdAt TIMESTAMP DEFAULT now(), 
+	updatedAt TIMESTAMP DEFAULT now(),
+	CONSTRAINT capacity_reached CHECK (max_Number_Of_Players - attending >= 0)
+	);
+
+--Matching 1 event to many people
+CREATE TABLE Events(
+	id INTEGER REFERENCES Event(id) ON DELETE CASCADE,  
+	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	PRIMARY KEY(id, userid)
+);
+
+--Matches 1 event to 1 conversation which 1 conversation matches many people
+CREATE TABLE Event_Conversation(
+	id INTEGER UNIQUE REFERENCES Event(id), 
+	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	to_user INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+	time TIMESTAMP DEFAULT now(),
+	status VARCHAR(50) NOT NULL
+);
+
+
+CREATE TABLE Event_Conversation_Reply(
+	id serial PRIMARY KEY, 
+	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE, 
+	reply_text text, 
+	sent TIMESTAMP DEFAULT now(), 
+	status VARCHAR(50) NOT NULL,
+	conversation_id INTEGER REFERENCES Event_Conversation(id)
+);
