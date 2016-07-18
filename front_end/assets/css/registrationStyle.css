@@ -361,6 +361,7 @@ form input:focus{
     border-radius: 4px;
     padding: 2px;
     font-size: 15px;
+	resize: none;
 }
 
 #aboutme textarea:focus{
