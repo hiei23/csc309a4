@@ -1,3 +1,5 @@
+SET search_path TO TSPORTS;
+----------------------------------------- Sports ------------------------------------------------------------
 INSERT INTO Sports (name) VALUES('Basketball');
 INSERT INTO Sports (name) VALUES('Boxing');
 INSERT INTO Sports (name) VALUES('Cycling');

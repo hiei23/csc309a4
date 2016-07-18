@@ -1,3 +1,5 @@
+SET search_path TO TSPORTS;
+----------------------------------------- Users ------------------------------------------------------------
 INSERT INTO Users (first_name, last_name, birthday, gender, height, weight, password, email, phone, createdAt, campus) 
 VALUES('Phyllis', 'Walker', '2000-03-08'::date, 'Female', 191, 48.15, 'pwalker0@homestead.com','qMo0KhvFc2', '488-73-2670', '2016-05-16'::timestamp, 'Scarborough');
 INSERT INTO Users (first_name, last_name, birthday, gender, height, weight, password, email, phone, createdAt, campus) 

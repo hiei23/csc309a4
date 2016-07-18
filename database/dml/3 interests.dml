@@ -1,3 +1,5 @@
+SET search_path TO TSPORTS;
+------------------------ Interest ------------------------
 INSERT INTO Interests (userid, sportid) 
 VALUES(1, 7);
 INSERT INTO Interests (userid, sportid) 
