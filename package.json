@@ -13,7 +13,10 @@
     "body-parser": "^1.15.2",
     "ejs": "2.4.1",
     "express": "4.13.3",
-    "pg": "^6.0.2"
+    "pg": "^6.0.2",
+    "passport" : "~0.1.17",         
+    "passport-local" : "~0.1.6",    
+    "passport-facebook" : "~1.0.2"
   },
   "repository": {
     "type": "git",
