@@ -7,7 +7,6 @@ var passport = require('passport');
 
 var Database = require('./modules/db'); //no need for .js
 
-
 //set the port #
 app.set('port', (process.env.PORT || 3000));  // 'postgres://tyvhgoqverwgjf:LbL8CWzLwoh_LoQUoOMMP7iNCV@ec2-54-243-42-108.compute-1.amazonaws.com:5432/dbgvkt98mobtuk'
 
@@ -37,6 +36,20 @@ require('./app/routes')(app,passport);
 app.get('/', function (req, res){
   res.sendfile(__dirname + '/front_end/index.html');
 });
+
+//just for change table schema on heroku
+
+var connectionString = process.env.DATABASE_URL || 'postgres://tyvhgoqverwgjf:LbL8CWzLwoh_LoQUoOMMP7iNCV@ec2-54-243-42-108.compute-1.amazonaws.com:5432/dbgvkt98mobtuk';
+pg.defaults.ssl = true;
+app.get('/update',function(req,res){
+  pg.connect(connectionString, function(err, client, done) {
+    var query = client.query("DELETE FROM tsports.users");
+    query.on('end',function(){
+     done(); 
+    }); 
+  });
+});
+
 
  
 //User Registration
