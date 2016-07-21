@@ -59,7 +59,7 @@ module.exports = function(passport){
 				});
 				query.on('end',function(){
 					doneDB();
-					return done(null,newUser);
+				    return done(null,newUser);
 				});
 			});
 		});

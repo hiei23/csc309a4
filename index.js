@@ -43,7 +43,7 @@ var connectionString = process.env.DATABASE_URL || 'postgres://tyvhgoqverwgjf:Lb
 pg.defaults.ssl = true;
 app.get('/update',function(req,res){
   pg.connect(connectionString, function(err, client, done) {
-    var query = client.query("DELETE FROM tsports.users");
+    var query = client.query("DELETE FROM tsports.users WHERE fbid='1106143666099865'");
     query.on('end',function(){
      done(); 
     }); 
