@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //once the document has loaded
 $(document).ready
 (
@@ -112,3 +113,26 @@ $(document).ready
  } //End of ready function
  );
 
+=======
+function validationForm(){
+	var pw = $("#password input").val();
+	var cfpw = $("#cfpassword input").val();
+	//just an example here
+	if(pw != cfpw){
+		var error = "";
+		error += "Please enter the same password."
+		$("#error_mes").text(error);
+		//may change form attributes here like height
+		$("main").css("height","600px");
+		$("#error_mes").show();
+		$("#error_mes").css({
+			"top":"508px",
+			"border":"2px solid red",
+			"padding":"5px",
+			"border-radius":"4px"
+		});
+		return false;
+	}
+}
+		
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c

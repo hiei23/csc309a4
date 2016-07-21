@@ -13,6 +13,6 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 
+
 ./node_modules
 ./db.ddl
-./front_end/.DS_Store

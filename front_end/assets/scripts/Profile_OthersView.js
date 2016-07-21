@@ -3,6 +3,7 @@ $(document).ready
 (
     function()
     {
+<<<<<<< HEAD
         //Get the logged-in user's basic info when they login: profile pic, name, UnreadNotifications icons
          $.ajax({
                 type: 'GET',
@@ -97,6 +98,8 @@ $(document).ready
                         }
                         );
 
+=======
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
  
  
  
@@ -306,8 +309,57 @@ $(document).ready
  
  
  
+<<<<<<< HEAD
  
          //DataForm = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "friendid":"2"}];
+=======
+        //Create a temporary variable to store all the user's friends as placeholder data
+         var FriendsImages = [
+                                  {
+                                    "url": "./assets/images/PM.jpg",
+                                    "name": "Piers Morgan"
+                                  },
+                              
+                                  {
+                                  "url": "./assets/images/MN.jpg",
+                                  "name": "Manuel Neur"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/EM.jpg",
+                                  "name": "Eminem"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/CH.jpg",
+                                  "name": "Calvin Harris"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/SC.jpg",
+                                  "name": "SC"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/JN.jpg",
+                                  "name": "John Newman"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/EC.jpg",
+                                  "name": "Emilia Clarke"
+                                  },
+                                  
+                                  {
+                                  "url": "./assets/images/Hector.jpg",
+                                  "name": "Jonas Hector"
+                                  },
+
+                            ];
+ 
+ 
+ 
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
          //When the user clicks on the "Friends" Tab, show all the Friends of the user
          $(document).on('click', '#UserFriends',
                         
@@ -324,6 +376,7 @@ $(document).ready
                                                     $('#AboutUser').remove();
                         
                         
+<<<<<<< HEAD
                                                     //Remove all other displayed information about "Friends" (if exists)
                                                     //CUZ Referesh List
                                                     $('#FriendsofUser').remove();
@@ -336,6 +389,12 @@ $(document).ready
                                                dataType: 'JSON',
                                                success: function (response)
                                                {
+=======
+                                                    //Only run function if friends information is not displayed
+                                                if( $('#FriendsofUser').length == 0 )
+                                                {
+                        
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
                         
                                                     //Create a section for the User's friends' images
                                                     var $FriendsSection = $('<section>',
@@ -349,7 +408,11 @@ $(document).ready
                         
                         
                                                     //Loop over all the Friend Images and append them
+<<<<<<< HEAD
                                                     $.each(response,
+=======
+                                                    $.each(FriendsImages,
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
                                                                             function(index, item)
                                                                            {
                                                            
@@ -375,6 +438,7 @@ $(document).ready
                                                                                                           }
                                                                                                   );
                                                            
+<<<<<<< HEAD
                                                                                //Attach a hidden input to the friend (His user ID)
                                                                                //So that upon click, we can send this info to the server
                                                                                var $FriendsID = $('<input>',
@@ -388,6 +452,10 @@ $(document).ready
                                                                                 $Friend.append($FriendImage);  //Append the Image
                                                                                 $Friend.append($FriendName);   //Append the name
                                                                                 $Friend.append($FriendsID);   //Append the hidden friend id
+=======
+                                                                                $Friend.append($FriendImage);  //Append the Image
+                                                                                $Friend.append($FriendName);   //Append the name
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
                                                            
                                                                                 $FriendsSection.append($Friend);
                                                                            }
@@ -404,16 +472,21 @@ $(document).ready
                         
                                                         //Append the button
                                                         $FriendsSection.append($ShowMoreFriends);
+<<<<<<< HEAD
                                                    
                                                }
                                                }); //End of AJAX
                         
+=======
+                                                }
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
                         
                                                 }
                         
                         
                         );
  
+<<<<<<< HEAD
              //When a user clicks on any of his friends, take them to their profile
              $(document).on('click', '.Friend ',
                                                 function()
@@ -431,6 +504,8 @@ $(document).ready
                             );
  
  
+=======
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
  
          //Create a temporary variable to store all the sports available in TSports
          //This will eventually come from the database
@@ -724,6 +799,7 @@ $(document).ready
 
  
  
+<<<<<<< HEAD
                  /***************************************************Paul******************************************************/
                  var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
                                    "tabletennis", "tennis", "volleyball",
@@ -834,6 +910,184 @@ $(document).ready
  
  //Your Code should end here
  /***************************************************Paul******************************************************/
+=======
+				//IMPORTANT!!: HERE is MOCK data: Delete for phase 2.
+				var sport_list = ["Hockey", "Soccer", "Archery", "Artistic Gymnastics", "Athletics", "Badminton", "Basketball", "Beach Volleyball", "Boxing", "Canoe Slalom", "Canoe Sprint", "Cycling BMX", "Cycling Mountain Bike", "Cycling Road", "Cycling Track", "Diving", "Equestrian", "Fencing", "Football", "Golf"];
+				
+				var detail = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+				var about_mockData = {"Campus": "St.George", "Given_Name": "Parham", "Family_Name": "Oghabi", 
+									"Phone_number": "(647)123-9999", "Email_Address": "parham@hotmail.com", 
+									"Birthday": "January 1, 1994", "Height": "180cm",
+									"Weight": "72kg", "Gender": "Male", "About_Me": detail, 
+									"Sports": sport_list};
+				var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address", "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
+ 
+ 
+                 //When the user clicks on the "About" Tab, show all info about the user
+                 $(document).on('click', '#UserAbout',
+                                
+                                                    function()
+                                                    {
+                                                    
+                                                            //Remove all other displayed information about "Friends" (if exists)
+                                                            $('#FriendsofUser').remove();
+                                                            
+                                                            //Remove all other displayed information about "Reviews" (if exists)
+                                                            $('#ReviewsofUser').remove();
+                                                            $('#SportingEventReview').remove();
+                                
+                                
+                                                            
+                                                            //Only run function if About information is not displayed
+                                                            if( $('#AboutUser').length == 0 ) 
+															{
+																
+																
+                                                            
+                                                                //Create a section to info about the user
+                                                                var $AboutSection = $('<section>',
+                                                                                                    {
+                                                                                                        id: 'AboutUser'  //Please don't change this ID
+                                                                                                    }
+                                                                                     );
+
+                                                                
+                                                                //insert $AboutSection after the #ProfileHeader
+                                                                $AboutSection.insertAfter('#ProfileHeader');
+																
+																
+																var $div_input = $('<div/>', {
+																	class: "info_input"  //group of infos in input style.
+																});
+                                
+                                                                //ADD CODE HERE
+																for (var i = 0; i < about_order.length - 1; i++) {
+																	var $div = $('<div/>', {
+																		class: "each_info"
+																	});
+																	
+																	var $label = $('<label/>', {
+																		class: about_order[i]
+																	});
+																	
+																	var $label_text = $('<span/>', {
+																		class: "label",
+																		text: about_order[i].replace("_", " ") + ":"
+																	});
+																	
+																	var $br = $('<br>');
+																	
+																	var $info;
+																	
+																	//Display About me section as <textarea>
+																	if (about_order[i] === "About_Me") {
+																		$info = $('<textarea>', {
+																			name: about_order[i],
+																			text: about_mockData[about_order[i]],
+																			rows: 6,
+																			cols: 35,
+																			disabled: "disabled"
+																		});
+																	//Display Sports section as <fieldset> and lists.
+																	} else {
+																		$info = $('<input>', {
+																			type: "text",
+																			name: about_order[i],
+																			value: about_mockData[about_order[i]],
+																			disabled: "disabled"
+																		});
+																	}
+																	
+																	
+																	
+																	$label.append($label_text);
+																	$label.append($br);
+																	$label.append($info);
+																	$div.append($label);
+																	
+																	$div_input.append($div);
+																	
+																}
+
+																
+																if (about_mockData[about_order[i]].length > 20) {
+																	$info = $('<fieldset/>', {
+																		class: "field_sports",
+																		width: "50%"
+																	});
+																} else {
+																	$info = $('<fieldset/>', {
+																		class: "field_sports"
+																	});
+																}
+                                
+																
+																
+																
+																$label_text = $('<legend/>', {
+																	class: "label",
+																	text: about_order[i].replace("_", " ") + ":"
+																});
+																
+																$info.append($label_text);
+																$info.append($br);
+																
+																var len = about_mockData[about_order[i]].length;
+																
+																//each column contains max. 20 elements.
+																var num_col = Math.ceil(len/20);
+																
+																for (var col = 0; col < num_col; col++) {
+																	var $article = $('<article/>', {
+																		class: "column"
+																	});
+																	
+																	var $ul = $('<ul/>');
+																	
+																	//number of elements in column excluding previous column.
+																	var num = len - col * 20;
+																	var j = 0;
+																	while (j < 20 && j < num) {
+																		var $li = $('<li/>');
+																		
+																		var $sport = $('<input>', {
+																			type: "checkbox",
+																			name: about_order[i],
+																			value: about_mockData[about_order[i]][j + col * 20],
+																			disabled: "disabled",
+																			checked: "checked"
+																		});
+																		
+																		var $text = $('<span/>', {
+																			text: about_mockData[about_order[i]][j + col * 20]
+																		});
+																		
+																		$li.append($sport);
+																		$li.append($text);
+																		
+																		$ul.append($li);
+																		
+																		j++;
+																	}
+																	
+																	$article.append($ul);
+																	$info.append($article);
+																	
+																}
+																
+																$AboutSection.append($div_input);
+																$AboutSection.append($info);
+                                
+                                
+                                
+                                                            }
+                                
+                                                    }
+                                
+                                
+                                );
+ 
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
  
  
  
