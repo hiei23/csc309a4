@@ -2737,10 +2737,6 @@ $(document).ready
              $.datetimepicker.setLocale('en');
 
  
- 
- 
- 
- 
  /*************************************************************Jing Search User Code Starts*************************************/
  
  
@@ -2748,14 +2744,14 @@ $(document).ready
  
  DATARECEIVED = [{ "name" : "Parham Oghabi",
                  "url" : "./assets/images/1.jpg",
-                 "friendid" : "67"
+                 "userid" : "67"
                  },
                  { "name" : "John doe",
                  "url" : "./assets/images/2.jpg",
                  "userid" : "68"
                  },
                  { "name" : "Alex doe",
-                 "url" : "./assets/images/3.jpg",
+                 "url" : "./assets/images/7.jpg",
                  "userid" : "69"
                  },
                  { "name" : "Maria doe",
@@ -2796,18 +2792,6 @@ $(document).ready
                 //insert $SearchUserPreviewBox after the search bar, but make it position absolute
                 $SearchUserPreviewBox.insertAfter('#SearchBar input');
                 
-                //The <ul> inside which we will place the matched users
-                var $UsersUL = $('<ul>',
-                                          {
-                                          id: 'SearchUsersUL'
-                                          }
-                                );
-                
-                //UL contains all the user previews
-                $SearchUserPreviewBox.append($UsersUL);
-                
-                
-                
                 
                 
                        //Loop over all the searched users and append them
@@ -2815,14 +2799,9 @@ $(document).ready
                               function(index, item)
                               {
                               
-                             
-                              var $Friend = $('<li>',
-                                                      {
-                                                        class: 'SearchedUser'
-                                                      }
-                                              );
+                      
                               
-                              var $FriendName = $('<p>',
+                              var $FriendName = $('<span>',
                                                       {
                                                         text:  item.name
                                                       }
@@ -2831,27 +2810,25 @@ $(document).ready
                               var $FriendImage = $('<img>',
                                                            {
                                                              src: item.url,
-                                                             width: '30px',
-                                                             height: '30px',
+                                                             width: '40px',
+                                                             height: '40px',
                                                              class:  'SearchedUserImage'
                                                            }
                                                    );
                               
                               //Attach a hidden input to the friend (His user ID)
                               //So that upon click, we can send this info to the server
-                              var $FriendsID = $('<input>',
+                              var $FriendsID = $('<a>',
                                                          {
-                                                           type: 'hidden',
-                                                           name: 'SearchedUserID',
-                                                           value: item.userid
+                                                           href: '/friendID/' + item.userid
                                                          }
                                                  );
                               
                               
-                              $UsersUL.append($FriendImage);  //Append the Image
-                              $UsersUL.append($FriendName);   //Append the name
-                              $UsersUL.append($FriendsID);   //Append the friend id
+                              $FriendsID.append($FriendImage);  //Append the Image
+                              $FriendsID.append($FriendName);   //Append the name
 
+                              $SearchUserPreviewBox.append($FriendsID);
                               }
                               
                               );
@@ -2865,6 +2842,8 @@ $(document).ready
                 
                 
                 );
+ 
+ 
 //
 // 
 // //When a user clicks on any of his friends, take them to their profile
@@ -2882,15 +2861,7 @@ $(document).ready
 
  
  /*************************************************************Jing Search User Code Ends*************************************/
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
  
  
     } //End of $(document).ready function
