@@ -2761,7 +2761,8 @@ $(document).ready
                  { "name" : "Maria doe",
                  "url" : "./assets/images/4.jpg",
                  "userid" : "70"
-                 }]
+                 }];
+ 
 // //When the user clicks on the "Friends" Tab, show all the Friends of the user
  $(document).on('input', '#header input',
                 

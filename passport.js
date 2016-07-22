@@ -22,7 +22,7 @@ module.exports = function(passport)
                               {
                                 clientID: '158282974577582',
                                 clientSecret: '07e16a0a1f9f0aa6f526659c6d9f9bb3',
-                                callbackURL: 'http://localhost:3000/auth/facebook/callback',
+                                callbackURL: '/auth/facebook/callback',
                                 profileFields: ['id', 'emails', 'gender', 'name']
                               },
                                 //facebook will send back the token and profile and then call our CB function done
