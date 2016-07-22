@@ -46,7 +46,7 @@ $(document).ready
                                         //Submit the form via AJAX
                                        $.ajax({
                                                   type: 'POST',
-                                                  url: "http://localhost:3000/WebSiteUserLogin",  //URL to send to send to the server
+                                                  url: "/WebSiteUserLogin",  //URL to send to send to the server
                                                   dataType: 'JSON',
                                                   data: FormData,
                                                   success: function (response)

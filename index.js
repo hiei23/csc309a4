@@ -931,6 +931,60 @@ function GetUserAboutInfoCB(err, result,res, req)
 
 
 
+/*****************************************SearchEventsByClick*****************************************************************/
+//User is searching for events
+//Send back data to show preview of events matching their search
+app.post('/SearchEventsByClick', function(req, res)
+                        {
+         
+                            //Select all events that match the sport selected and that ((numppl - attendance) > 0) [the event has open spots]
+                            //And subtract it from events in which you are already joined in
+                            var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
+
+                            Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
+         
+         
+
+
+                        }
+  
+        );
+
+
+function GetEventsSelectedSportSearchCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        console.log(result.rows);
+        var JSON2Send = [];
+
+        //Go through all the Events
+        for(var i = 0; i < result.rows.length; i++)
+        {
+
+            //Each object represents all the info needed for one event
+            var TheObject = {};
+            TheObject['EventName'] = result.rows[i].name;
+            TheObject['EventID'] = result.rows[i].eventid;
+            TheObject['EventType'] = result.rows[i].eventtype;
+            TheObject['EventDateTime'] = result.rows[i].eventdatetime;
+            TheObject['EventNumPpl'] = result.rows[i].numppl;
+            TheObject['EventNumSpotsLeft'] = result.rows[i].eventnumspotsleft;
+
+            JSON2Send.push(TheObject);
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+}
+/*****************************************END SearchEventsByClick*****************************************************************/
 
 
 
@@ -939,6 +993,65 @@ function GetUserAboutInfoCB(err, result,res, req)
 
 
 
+
+
+
+
+//app.get('/ViewEvents', function(req, res)
+//        {
+//        
+//        var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2);";
+//        
+//        //Use the cookies
+//        Database.query(sql, [req.cookies.UserID, req.cookies.UserEmail], SendUserEventsCB, res, req );
+//        
+//        }
+//        );
+//
+//
+//function SendUserEventsCB(err, result,res, req)
+//{
+//    
+//    if (err)
+//    {
+//        console.error(err);
+//        res.send("Error " + err);
+//    }
+//    
+//    //Send the Events as a JSON file
+//    else
+//    {
+//        //console.log(result.rows);
+//        
+//        var JSON2Send = [];
+//        
+//        //Go through all the Events
+//        for(var i = 0; i < result.rows.length; i++)
+//        {
+//            
+//            //Each object represents all the info needed for one event
+//            var TheObject = {};
+//            TheObject['EventName'] = result.rows[i].name; -------------------------
+//            TheObject['EventType'] = result.rows[i].eventtype; -------------------------
+//            TheObject['EventDateTime'] = result.rows[i].eventdatetime; ---------------------
+//            TheObject['Duration'] = result.rows[i].duration;
+//            TheObject['EventEndTime'] = result.rows[i].eventendtime;
+//            TheObject['EventLocation'] = result.rows[i].location;
+//            TheObject['EventDescription'] = result.rows[i].description;
+//            TheObject['EventNumPpl'] = result.rows[i].numppl; ------------------------
+//            TheObject['EventNumSpotsLeft'] = result.rows[i].eventnumspotsleft; ------------------
+//            TheObject['EventID'] = result.rows[i].eventid;
+//            TheObject['EventAdminPic'] = result.rows[i].eventadminpic;
+//            TheObject['EventAdminName'] = result.rows[i].eventadminname;
+//            
+//            JSON2Send.push(TheObject);
+//        }
+//        
+//        //Send it to AJAX
+//        res.end( JSON.stringify(JSON2Send) );
+//        
+//    }
+//}
 
 
 

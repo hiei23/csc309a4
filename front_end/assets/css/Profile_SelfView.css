@@ -901,6 +901,105 @@ input[type="datetime-local"]
 
 
 
+/*Searching for Events and the resulting events shown*/
+/*SearchEventsPreview*/
+
+#SearchEventsPreviewBox
+{
+    border-radius: 5px;
+    margin-top: 2px;
+    width: 60%;
+    background-color: rgb(237,238, 241);
+    position: absolute;
+    left: 20%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 200px;
+    border: 1px solid rgb(224, 224, 224);
+}
+
+/*Scroll in Y but hide the scrollbar*/
+/*Chrome Only*/
+::-webkit-scrollbar
+{
+    display: none;
+}
+
+#SearchEventsPreviewBox #SearchEventsUL
+{
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+}
+
+
+/*Add borders between individual events*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview
+{
+    padding: 5px 5px;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    cursor: pointer;
+}
+
+/*/*When hovering over event preview, change background color*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview:hover
+{
+    background-color: rgba(64, 128, 255, 0.3);
+}
+
+/*Make the Div Left Right and Middle inline-block*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview div
+{
+    display: inline-block;
+}
+
+
+/* Event DateTime*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview .IndividualEventDateTime
+{
+    color: rgba(0, 0, 0, 0.54);
+    float: left;
+    font-size: 11px;
+}
+
+
+/*Event Info*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview .IndividualEventInfo
+{
+    text-align: left;
+    width: 50%;
+}
+
+
+/*Event Name*/
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview .IndividualEventInfo h3
+{
+    color: rgba(0, 0, 0, 0.54);
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-bottom: 1px;
+}
+
+
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview .IndividualEventInfo .EventAttendance
+{
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 10px;
+}
+
+#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview .IndividualEventInfo .EventSpotsLeft
+{
+    font-weight: 600;
+    font-size: 9px;
+    margin: auto 0.5em;
+    color: #ed1c40;
+    letter-spacing: 0.01em;
+}
+
+
+
+
+
+
 
 /*Details for a specific Event*/
 /*Return2Events Button*/
