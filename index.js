@@ -36,11 +36,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
        );
 
 
-app.get('/', function (req, res)
-             {
-                res.sendfile(__dirname + '/front_end/index.html');
-             }
-       );
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/front_end/index.html');
+});
 
 
 
@@ -48,15 +46,13 @@ app.get('/', function (req, res)
 
 
 //User Registration
-app.post('/UserRegistration', function(req, res)
-                             {
-                                //console.log( req.body );
+app.post('/UserRegistration', function(req, res){
+    //console.log( req.body );
          
-                                //Server-Side Form Validation (Check if e-mail already exists)
-                                var sql = 'SELECT * FROM users where email = $1;';
-                                Database.query(sql, [req.body.email], NewUserCB, res, req );
-                             }
-        );
+    //Server-Side Form Validation (Check if e-mail already exists)
+    var sql = 'SELECT * FROM users where email = $1;';
+    Database.query(sql, [req.body.email], NewUserCB, res, req );
+});
 
 
 
@@ -85,11 +81,10 @@ function NewUserCB(err, result,res, req)
     {
         //New User
         //insert in the DB
-        var sql = 'INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) ' + "VALUES($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, now(), './assets/images/DefaultProfilePic.jpg');";
+        var sql =   'INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) ' +
+                    "VALUES($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, now(), './assets/images/DefaultProfilePic.jpg');";
         Database.query(sql, [req.body.firstname, req.body.lastname, req.body.birthday, req.body.gender, req.body.height, req.body.weight, req.body.email, req.body.phone, req.body.campus, req.body.password, req.body.aboutme ], GetUserIDCB, res, req );
-
     }
-    
 }
 
 
@@ -105,9 +100,8 @@ function GetUserIDCB(err, result,res, req)
     else
     {
         var sql = 'SELECT id FROM users where email = $1;';
-        Database.query(sql, [req.body.email], InsertUserSportPrefCB, res, req );
+        Database.query(sql, [req.body.email], InsertUserSportPrefCB, res, req);
     }
-    
 }
 
 
@@ -121,10 +115,8 @@ function InsertUserSportPrefCB(err, result,res, req)
     else
     {
        // console.log(result.rows[0].id);
-        
         //Get each sport submitted by form
         var SportsInterested=[];
-        
         
         if(req.body.hasOwnProperty('cycling'))
         {
@@ -195,11 +187,9 @@ function InsertUserSportPrefCB(err, result,res, req)
         var sql = 'INSERT INTO UnreadNotifications (userid, numfriendreqs, nummessages, numnotifications) ' + "VALUES($1, 0, 0, 0);";
         Database.query(sql, [result.rows[0].id], GenericCB, res, req );
 
-
         //Send it to AJAX
         res.send( "ok" );
     }
-    
 }
 
 
@@ -211,33 +201,27 @@ function InsertUserSportPrefCB(err, result,res, req)
 
 /*****************************************USER LOGIN*****************************************************************/
 //Website User Login
-app.post('/WebSiteUserLogin', function(req, res)
-                             {
-                                 //console.log( req.body );
+app.post('/WebSiteUserLogin', function(req, res){
+    //console.log( req.body );
          
-                                 //Server-Side Form Validation (Check if valid user login[email and password])
-                                 var sql = 'SELECT * FROM users where (email = $1 and password = $2);';
-                                 Database.query(sql, [req.body.email, req.body.password], UserLogin, res, req );
-                             }
-         );
-
+    //Server-Side Form Validation (Check if valid user login[email and password])
+    var sql = 'SELECT * FROM users where (email = $1 and password = $2);';
+    Database.query(sql, [req.body.email, req.body.password], UserLogin, res, req );
+});
 
 
 //Check if email already exists
 function UserLogin(err, result,res, req)
 {
-    
     //The object to contain the ResponseText
     var TheObject = {};
     var JSON2Send = [];
-    
-    
+
     if (err)
     {
         console.error(err);
         res.send("Error " + err);
     }
-    
     
     //Valid user login
     else if( result.rowCount == 1 )
@@ -258,8 +242,7 @@ function UserLogin(err, result,res, req)
         res.end( JSON.stringify(JSON2Send) );
         
     }
-    
-    
+
     //Invalid Login info
     else
     {
@@ -272,7 +255,6 @@ function UserLogin(err, result,res, req)
         //Send it to AJAX
         res.end( JSON.stringify(JSON2Send) );
     }
-    
 }
 
 /*****************************************END USER LOGIN*****************************************************************/
@@ -284,14 +266,11 @@ require('./passport')(passport);
 
 app.get('/auth/facebook',passport.authenticate('facebook', {scope: ['email']}));
 
-app.get('/auth/facebook/callback',
-        passport.authenticate('facebook'),  function(req,res)
-                                            {
-                                                //Check if user already has an account with this email
-                                                var sql = 'SELECT * FROM Users where (email = $1);';
-                                                Database.query(sql, [req.user[0].email], FBLoginCB, res, req );
-                                            }
-       );
+app.get('/auth/facebook/callback', passport.authenticate('facebook'), function(req,res){
+    //Check if user already has an account with this email
+    var sql = 'SELECT * FROM Users where (email = $1);';
+    Database.query(sql, [req.user[0].email], FBLoginCB, res, req );
+});
 
 
 //Check if user already has an account with the email retrieved from FB, Don't use the FB ID
@@ -304,8 +283,7 @@ function FBLoginCB(err, result,res, req)
         //error go to home page
         res.redirect('/');
     }
-    
-    
+
     //Row (Account) exists
     //Redirect to their profile
     else if( result.rowCount == 1 )
@@ -318,8 +296,7 @@ function FBLoginCB(err, result,res, req)
         
         res.redirect('/Profile_SelfView.html');
     }
-    
-    
+
     //User didn't login with FB before
     //Insert user info (+ email) in db
     else
@@ -328,9 +305,7 @@ function FBLoginCB(err, result,res, req)
         var sql = 'INSERT INTO users (first_name, last_name, gender, email, password, fbid, createdAt, ProfileImage) ' + "VALUES($1, $2, $3, $4, $5, $6, now(), './assets/images/DefaultProfilePic.jpg') RETURNING id;";
         //The password and fbid are the same
         Database.query(sql, [req.user[0].firstname, req.user[0].lastname, req.user[0].gender, req.user[0].email, req.user[0].fbid ,req.user[0].fbid], GoToHomePageCB, res, req );
-        
     }
-    
 }
 
 
@@ -343,7 +318,6 @@ function GoToHomePageCB(err, result,res, req)
     }
     else
     {
-        
         //Insert data into the UnreadNotifications table for the new user
         //Initially numfriendreqs, nummessages, numnotifications are all zero
         var sql = 'INSERT INTO UnreadNotifications (userid, numfriendreqs, nummessages, numnotifications) ' + "VALUES($1, 0, 0, 0);";
@@ -361,26 +335,22 @@ function GoToHomePageCB(err, result,res, req)
     
 }
 
-
-
 /*****************************************FB LOGIN | REGISTRATION*****************************************************************/
 
 
 
 
 /*****************************************Get Login User Info*****************************************************************/
-app.get('/GetLoginUserInfo', function(req, res)
-                             {
-                                    //Get all the info that should be displayed when the user logs in:
-                                    //Get the path of the user's profile picture in the server
-                                    //Get the user's full name profile picture in the server
-                                    //Get the UnreadNotifications (numfriendreqs, nummessages, numnotifications)
-                                    var sql = "SELECT ProfileImage, first_name||' '||last_name AS username, numfriendreqs, nummessages, numnotifications  FROM (users CROSS JOIN UnreadNotifications) where (id = $1 and password = $2 and users.id = UnreadNotifications.userid);";
+app.get('/GetLoginUserInfo', function(req, res){
+    //Get all the info that should be displayed when the user logs in:
+    //Get the path of the user's profile picture in the server
+    //Get the user's full name profile picture in the server
+    //Get the UnreadNotifications (numfriendreqs, nummessages, numnotifications)
+    var sql = "SELECT ProfileImage, first_name||' '||last_name AS username, numfriendreqs, nummessages, numnotifications  FROM (users CROSS JOIN UnreadNotifications) where (id = $1 and password = $2 and users.id = UnreadNotifications.userid);";
         
-                                    //Use the cookies
-                                    Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], GetLoginUserInfoCB, res, req );
-                             }
-         );
+    //Use the cookies
+    Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], GetLoginUserInfoCB, res, req );
+});
 
 
 
@@ -394,9 +364,7 @@ function GetLoginUserInfoCB(err, result,res, req)
     
     else
     {
-        
         var JSON2Send = [];
-
         var Object = {};
         Object['ProfileImage'] = result.rows[0].profileimage;
         Object['username'] = result.rows[0].username;
@@ -417,33 +385,27 @@ function GetLoginUserInfoCB(err, result,res, req)
 
 /*****************************************Get User's Friends | Event Users*****************************************************************/
 //The user wants a list of his/her friends
-app.get('/GetUserFriends', function(req, res)
-                             {
-                                //Extract list of user's friends from the DB with all their info
-                                //Status = 1 to make sure friends were approved
-                                var sql = "SELECT friend_two, first_name||' '||last_name AS username, ProfileImage  FROM users CROSS JOIN Friends where (friend_one = $1 and id = friend_two and status = 1);";
-                                Database.query(sql, [req.cookies.UserID], GetUserFriends_EventUsersCB, res, req );
-                             }
-         );
+app.get('/GetUserFriends', function(req, res){
+    //Extract list of user's friends from the DB with all their info
+    //Status = 1 to make sure friends were approved
+    var sql = "SELECT friend_two, first_name||' '||last_name AS username, ProfileImage  FROM users CROSS JOIN Friends where (friend_one = $1 and id = friend_two and status = 1);";
+    Database.query(sql, [req.cookies.UserID], GetUserFriends_EventUsersCB, res, req );
+});
 
 //The user wants a list of his/her friends
-app.get('/GetDisplayedProfileUserFriends', function(req, res)
-                                {
-                                //Extract list of user's friends from the DB with all their info
-                                //Status = 1 to make sure friends were approved
-                                var sql = "SELECT friend_two, first_name||' '||last_name AS username, ProfileImage  FROM users CROSS JOIN Friends where (friend_one = $1 and id = friend_two and status = 1);";
-                                Database.query(sql, [req.cookies.FriendIDClicked], GetUserFriends_EventUsersCB, res, req );
-                                }
-        );
+app.get('/GetDisplayedProfileUserFriends', function(req, res){
+    //Extract list of user's friends from the DB with all their info
+    //Status = 1 to make sure friends were approved
+    var sql = "SELECT friend_two, first_name||' '||last_name AS username, ProfileImage  FROM users CROSS JOIN Friends where (friend_one = $1 and id = friend_two and status = 1);";
+    Database.query(sql, [req.cookies.FriendIDClicked], GetUserFriends_EventUsersCB, res, req );
+});
 
 //Get all the users who are attending this event
-app.post('/GetEventUsers', function(req, res)
-                            {
-                            //Get list of the users in the Event and all their info
-                            var sql = "SELECT users.id as friend_two, first_name||' '||last_name AS username, ProfileImage FROM (users CROSS JOIN EventUsers) where (EventUsers.userid = Users.id and EventUsers.id = $1);";
-                            Database.query(sql, [req.body.eventID], GetUserFriends_EventUsersCB, res, req );
-                            }
-        );
+app.post('/GetEventUsers', function(req, res) {
+    //Get list of the users in the Event and all their info
+    var sql = "SELECT users.id as friend_two, first_name||' '||last_name AS username, ProfileImage FROM (users CROSS JOIN EventUsers) where (EventUsers.userid = Users.id and EventUsers.id = $1);";
+    Database.query(sql, [req.body.eventID], GetUserFriends_EventUsersCB, res, req );
+});
 
 
 function GetUserFriends_EventUsersCB(err, result,res, req)
@@ -456,7 +418,6 @@ function GetUserFriends_EventUsersCB(err, result,res, req)
     
     else
     {
- 
         //JSON to send back containing all the user's friends info
         var JSON2Send = [];
         
@@ -473,7 +434,6 @@ function GetUserFriends_EventUsersCB(err, result,res, req)
         
         //Send it to AJAX
         res.end( JSON.stringify(JSON2Send) );
-        
     }
 }
 
@@ -482,17 +442,15 @@ function GetUserFriends_EventUsersCB(err, result,res, req)
 
 
 /*****************************************Get displayed profile Info*****************************************************************/
-app.get('/GetDisplayedProfileInfo', function(req, res)
-                                    {
-                                        //Get all the info that should be displayed when a user visits someone elses profile:
-                                        //Get the name and path of the profile picture in the server
+app.get('/GetDisplayedProfileInfo', function(req, res) {
+    //Get all the info that should be displayed when a user visits someone elses profile:
+    //Get the name and path of the profile picture in the server
         
-                                        var sql = "SELECT ProfileImage, first_name||' '||last_name AS username  FROM users where id = $1;";
+    var sql = "SELECT ProfileImage, first_name||' '||last_name AS username  FROM users where id = $1;";
         
-                                        //Use the "FriendIDClicked" cookies
-                                        Database.query(sql, [req.cookies.FriendIDClicked], GetDisplayedProfileInfoCB, res, req );
-                                    }
-        );
+    //Use the "FriendIDClicked" cookies
+    Database.query(sql, [req.cookies.FriendIDClicked], GetDisplayedProfileInfoCB, res, req );
+});
 
 
 
@@ -508,7 +466,6 @@ function GetDisplayedProfileInfoCB(err, result,res, req)
     {
 //        res.clearCookie('FriendIDClicked'); //Clear the cookie
         var JSON2Send = [];
-        
         var Object = {};
         Object['ProfileImage'] = result.rows[0].profileimage;
         Object['username'] = result.rows[0].username;
@@ -523,47 +480,39 @@ function GetDisplayedProfileInfoCB(err, result,res, req)
 
 
 /*****************************************Upload Profile pic*****************************************************************/
-app.post('/UploadProfilePic', function(req,res)
-                            {
-         
-                               var fstream;
-                               req.pipe(req.busboy);
-                               req.busboy.on('file',   function (fieldname, file, filename, encoding, mimetype)
-                                                       {
-                                                            //console.log("Uploading: " + filename);
-                                                            //console.log('file type: ' + mimetype);
-                                             
-                                                             //Only accept jpg files, if not jpg don't upload
-                                                             if( mimetype != 'image/jpg' && mimetype != 'image/jpeg')
-                                                             {
-                                                                file.resume();
-                                                             }
-                                                             
-                                                             else
-                                                             {
-                                                                //Path where image will be uploaded
-                                                                //For the file name use the user's unique ID (So if re-uplooad, it'll overwrite the image)
-                                                               var UploadedImagePath = '/front_end/assets/images/' + req.cookies.UserID + ".jpg";
-                                             
-                                                               fstream = fs.createWriteStream(__dirname + UploadedImagePath);
-                                                               file.pipe(fstream);
-                                                               fstream.on('close', function ()
-                                                                                  {
-                                                                                    //Update the path of the user's profile pic in the database
-                                                                                    var sql = "UPDATE users SET ProfileImage = $1 WHERE id = $2;";
+app.post('/UploadProfilePic', function(req,res) {
 
-                                                                                    //Use the "UserID" cookies
-                                                                                    Database.query(sql, ['./assets/images/' + req.cookies.UserID + '.jpg' , req.cookies.UserID], RefreshPageCB, res, req );
-                                                                          
-                                                                                    //console.log("Upload Finished of " + filename);
-                                                                                  }
-                                                                        );
-                                                             }
-                                                       }
-                                           );
+    var fstream;
+    req.pipe(req.busboy);
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+        //console.log("Uploading: " + filename);
+        //console.log('file type: ' + mimetype);
 
-                            }
-        );
+        //Only accept jpg files, if not jpg don't upload
+        if (mimetype != 'image/jpg' && mimetype != 'image/jpeg')
+        {
+            file.resume();
+        }
+
+        else
+        {
+            //Path where image will be uploaded
+            //For the file name use the user's unique ID (So if re-uplooad, it'll overwrite the image)
+            var UploadedImagePath = '/front_end/assets/images/' + req.cookies.UserID + ".jpg";
+
+            fstream = fs.createWriteStream(__dirname + UploadedImagePath);
+            file.pipe(fstream);
+            fstream.on('close', function () {
+                //Update the path of the user's profile pic in the database
+                var sql = "UPDATE users SET ProfileImage = $1 WHERE id = $2;";
+
+                //Use the "UserID" cookies
+                Database.query(sql, ['./assets/images/' + req.cookies.UserID + '.jpg', req.cookies.UserID], RefreshPageCB, res, req);
+                //console.log("Upload Finished of " + filename);
+            });
+        }
+    });
+});
 
 
 function RefreshPageCB(err, result,res, req)
@@ -583,22 +532,18 @@ function RefreshPageCB(err, result,res, req)
 
 
 /*****************************************CREATE NEW EVENT*****************************************************************/
-app.post('/CreateNewEvent', function(req, res)
-                             {
-                                //console.log( req.body );
+app.post('/CreateNewEvent', function(req, res) {
+    //console.log( req.body );
 
-                                //First Find the sportid of this event
-                                var sql = 'SELECT sportid FROM Sports where (name = $1);';
-                                Database.query(sql, [req.body.EventType.toLowerCase()], GetSportIDCB, res, req );
-
-                             }
-         );
+    //First Find the sportid of this event
+    var sql = 'SELECT sportid FROM Sports where (name = $1);';
+    Database.query(sql, [req.body.EventType.toLowerCase()], GetSportIDCB, res, req );
+});
 
 
 //Find the sportid of this event
 function GetSportIDCB(err, result,res, req)
 {
-    
     if (err)
     {
         console.error(err);
@@ -615,19 +560,16 @@ function GetSportIDCB(err, result,res, req)
         var sql = 'INSERT INTO Event (name, location, numppl, attendance, DateTime, EndTime, Description, EventType, EventTypeID, EventAdminID) ' + "VALUES($1, $2, $3, 1, $4, $5, $6, $7, $8, $9) RETURNING Eventid;";
         Database.query(sql, [req.body.EventName, req.body.EventLocation, req.body.EventNumppl, req.body.EventDateTime, req.body.EventEndTime, req.body.EventDescription, req.body.EventType.toLowerCase(), result.rows[0].sportid, req.cookies.UserID], CreateEventCB, res, req );
     }
-    
 }
 
 
 function CreateEventCB(err, result,res, req)
 {
-    
     if (err)
     {
         console.error(err);
         res.send("Error " + err);
     }
-    
 
     //Now insert this user (The admin) as a person who is attending the event
     else
@@ -636,14 +578,12 @@ function CreateEventCB(err, result,res, req)
         var sql = 'INSERT INTO EventUsers (id, userid) ' + "VALUES($1, $2);";
         Database.query(sql, [result.rows[0].eventid, req.cookies.UserID], EventCreatedCB, res, req );
     }
-    
 }
 
 
 
 function EventCreatedCB(err, result,res, req)
 {
-    
     if (err)
     {
         console.error(err);
@@ -663,21 +603,18 @@ function EventCreatedCB(err, result,res, req)
 
 
 /*****************************************View Events*****************************************************************/
-app.get('/ViewEvents', function(req, res)
-                     {
+app.get('/ViewEvents', function(req, res) {
     
-                        var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2);";
+    var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2);";
                         
-                        //Use the cookies
-                        Database.query(sql, [req.cookies.UserID, req.cookies.UserEmail], SendUserEventsCB, res, req );
+    //Use the cookies
+    Database.query(sql, [req.cookies.UserID, req.cookies.UserEmail], SendUserEventsCB, res, req );
     
-                     }
-         );
+});
 
 
 function SendUserEventsCB(err, result,res, req)
 {
-    
     if (err)
     {
         console.error(err);
@@ -688,13 +625,11 @@ function SendUserEventsCB(err, result,res, req)
     else
     {
         //console.log(result.rows);
-        
         var JSON2Send = [];
         
         //Go through all the Events
         for(var i = 0; i < result.rows.length; i++)
         {
-            
             //Each object represents all the info needed for one event
             var TheObject = {};
             TheObject['EventName'] = result.rows[i].name;
@@ -715,7 +650,6 @@ function SendUserEventsCB(err, result,res, req)
         
         //Send it to AJAX
         res.end( JSON.stringify(JSON2Send) );
-
     }
 }
 
@@ -723,18 +657,14 @@ function SendUserEventsCB(err, result,res, req)
 
 
 /*****************************************Leave Event*****************************************************************/
-app.post('/LeaveEvent', function(req, res)
-                        {
-                            //Sent by AJAX as a JSON File
-                            //console.log(req.body.eventID);
+app.post('/LeaveEvent', function(req, res) {
+    //Sent by AJAX as a JSON File
+    //console.log(req.body.eventID);
                         
-                            //Check if this user(who is leaving) was the admin of the event
-         
-                            var sql = "SELECT * FROM Event where (Eventid = $1 and EventAdminID=$2);";
-                            Database.query(sql, [req.body.eventID, req.cookies.UserID], IsAdminLeaveEventCB, res, req );
-
-                        }
-        );
+    //Check if this user(who is leaving) was the admin of the event
+    var sql = "SELECT * FROM Event where (Eventid = $1 and EventAdminID=$2);";
+    Database.query(sql, [req.body.eventID, req.cookies.UserID], IsAdminLeaveEventCB, res, req );
+});
 
 
 
@@ -780,13 +710,11 @@ function IsAdminLeaveEventCB(err, result,res, req)
 
 
 /*****************************************GetEventMessages*****************************************************************/
-app.post('/GetEventMessages', function(req, res)
-                             {
-                                //Get all the messages in the group chat for that event
-                                var sql = "SELECT sentById, ProfileImage, chatmessage FROM (EventGroupChat CROSS JOIN users) where (sentById = Users.id and eventid = $1) order by MessageTime ASC;";
-                                Database.query(sql, [req.body.eventID], GetEventMessagesCB, res, req );
-                             }
-         );
+app.post('/GetEventMessages', function(req, res) {
+    //Get all the messages in the group chat for that event
+    var sql = "SELECT sentById, ProfileImage, chatmessage FROM (EventGroupChat CROSS JOIN users) where (sentById = Users.id and eventid = $1) order by MessageTime ASC;";
+    Database.query(sql, [req.body.eventID], GetEventMessagesCB, res, req );
+});
 
 
 function GetEventMessagesCB(err, result,res, req)
@@ -811,12 +739,10 @@ function GetEventMessagesCB(err, result,res, req)
             TheObject['ProfileImage'] = result.rows[i].profileimage;
             TheObject['chatmessage'] = result.rows[i].chatmessage;
             JSON2Send.push(TheObject);
-            
         }
         
         //Send it to AJAX
         res.end( JSON.stringify(JSON2Send) );
-        
     }
 }
 /*****************************************END GetEventMessages*****************************************************************/
@@ -825,18 +751,16 @@ function GetEventMessagesCB(err, result,res, req)
 
 
 /*****************************************GetAboutUserInfo*****************************************************************/
-app.get('/GetUserAboutInfo', function(req, res)
-                            {
-                            //Get all the info that should be displayed when the user logs in:
-                            //Get the path of the user's profile picture in the server
-                            //Get the user's full name profile picture in the server
-                            //Get the UnreadNotifications (numfriendreqs, nummessages, numnotifications)
-                            var sql = "SELECT campus, first_name, last_name, phone, email, to_char(birthday, 'DD Mon YYYY') AS Birthday, height, weight, gender, about, Sports.name  FROM (users CROSS JOIN Interests CROSS JOIN Sports) where (Interests.sportid = Sports.sportid and id=$1 and password=$2 and id = Interests.userid);";
+app.get('/GetUserAboutInfo', function(req, res) {
+    //Get all the info that should be displayed when the user logs in:
+    //Get the path of the user's profile picture in the server
+    //Get the user's full name profile picture in the server
+    //Get the UnreadNotifications (numfriendreqs, nummessages, numnotifications)
+    var sql = "SELECT campus, first_name, last_name, phone, email, to_char(birthday, 'DD Mon YYYY') AS Birthday, height, weight, gender, about, Sports.name  FROM (users CROSS JOIN Interests CROSS JOIN Sports) where (Interests.sportid = Sports.sportid and id=$1 and password=$2 and id = Interests.userid);";
                             
-                            //Use the cookies
-                            Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], GetUserAboutInfoCB, res, req );
-                            }
-        );
+    //Use the cookies
+    Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], GetUserAboutInfoCB, res, req );
+});
 
 
 function GetUserAboutInfoCB(err, result,res, req)
@@ -864,7 +788,6 @@ function GetUserAboutInfoCB(err, result,res, req)
         Object['Weight'] = result.rows[0].weight;
         Object['Gender'] = result.rows[0].gender;
         Object['About_Me'] = result.rows[0].about;
-        
 
         //List of user's sports interest they chose
         var SportsInterested = [];
@@ -878,7 +801,6 @@ function GetUserAboutInfoCB(err, result,res, req)
         Object['SportsInterested'] = SportsInterested;
         JSON2Send.push(Object);
 
-        
         //Send it to AJAX
         res.end( JSON.stringify(JSON2Send) );
     }
@@ -934,21 +856,14 @@ function GetUserAboutInfoCB(err, result,res, req)
 /*****************************************SearchEventsByClick*****************************************************************/
 //User is searching for events
 //Send back data to show preview of events matching their search
-app.post('/SearchEventsByClick', function(req, res)
-                        {
+app.post('/SearchEventsByClick', function(req, res) {
          
-                            //Select all events that match the sport selected and that ((numppl - attendance) > 0) [the event has open spots]
-                            //And subtract it from events in which you are already joined in
-                            var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
+    //Select all events that match the sport selected and that ((numppl - attendance) > 0) [the event has open spots]
+    //And subtract it from events in which you are already joined in
+    var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
 
-                            Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
-         
-         
-
-
-                        }
-  
-        );
+    Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
+});
 
 
 function GetEventsSelectedSportSearchCB(err, result,res, req)
@@ -967,7 +882,6 @@ function GetEventsSelectedSportSearchCB(err, result,res, req)
         //Go through all the Events
         for(var i = 0; i < result.rows.length; i++)
         {
-
             //Each object represents all the info needed for one event
             var TheObject = {};
             TheObject['EventName'] = result.rows[i].name;
@@ -1103,11 +1017,9 @@ function GenericCB(err, result,res, req)
 }
 
 
-app.listen(app.get('port'), function()
-                           {
-                              console.log('Node app is running on port', app.get('port'));
-                           }
-          );
+app.listen(app.get('port'), function() {
+    console.log('Node app is running on port', app.get('port'));
+});
 
 
 
