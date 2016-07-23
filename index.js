@@ -64,8 +64,7 @@ function NewUserCB(err, result,res, req)
         console.error(err);
         res.send("Error " + err);
     }
-    
-    
+
     //Row (Email) already exists
     //Send an error message to AJAX
     else if( result.rowCount == 1 )
@@ -74,7 +73,6 @@ function NewUserCB(err, result,res, req)
         res.send( "emailexists" );
     }
 
-    
     //Email doesn't exist
     //Insert user info in database
     else
@@ -83,7 +81,22 @@ function NewUserCB(err, result,res, req)
         //insert in the DB
         var sql =   'INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) ' +
                     "VALUES($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, now(), './assets/images/DefaultProfilePic.jpg');";
-        Database.query(sql, [req.body.firstname, req.body.lastname, req.body.birthday, req.body.gender, req.body.height, req.body.weight, req.body.email, req.body.phone, req.body.campus, req.body.password, req.body.aboutme ], GetUserIDCB, res, req );
+
+        var values = [];
+
+        values.push(req.body.firstname);
+        values.push(req.body.lastname);
+        values.push(req.body.birthday);
+        values.push(req.body.gender);
+        values.push(req.body.height);
+        values.push(req.body.weight);
+        values.push(req.body.email);
+        values.push(req.body.phone);
+        values.push(req.body.campus);
+        values.push(req.body.password);
+        values.push(req.body.aboutme);
+
+        Database.query(sql, values, GetUserIDCB, res, req );
     }
 }
 
@@ -95,8 +108,8 @@ function GetUserIDCB(err, result,res, req)
     {
         console.error(err);
         res.send("Error " + err);
-        
     }
+
     else
     {
         var sql = 'SELECT id FROM users where email = $1;';
@@ -177,7 +190,6 @@ function InsertUserSportPrefCB(err, result,res, req)
         //Insert all the preferred sports
         for(var i=0; i<SportsInterested.length; i++)
         {
-            
             var sql = 'INSERT INTO Interests (userid, sportid) ' + "VALUES($1, $2);";
             Database.query(sql, [result.rows[0].id, SportsInterested[i]], GenericCB, res, req );
         }
@@ -253,7 +265,7 @@ function UserLogin(err, result,res, req)
         
         res.setHeader('Access-Control-Allow-Origin', '*');
         //Send it to AJAX
-        res.end( JSON.stringify(JSON2Send) );
+        res.end(JSON.stringify(JSON2Send));
     }
 }
 
@@ -293,7 +305,6 @@ function FBLoginCB(err, result,res, req)
         res.cookie( 'UserID' , result.rows[0].id);
         res.cookie( 'UserEmail' , result.rows[0].email);
         res.cookie( 'UserPass' , result.rows[0].password);
-        
         res.redirect('/Profile_SelfView.html');
     }
 
@@ -332,7 +343,6 @@ function GoToHomePageCB(err, result,res, req)
         //Redirect to their new profile
         res.redirect('/Profile_SelfView.html');
     }
-    
 }
 
 /*****************************************FB LOGIN | REGISTRATION*****************************************************************/
@@ -581,7 +591,6 @@ function CreateEventCB(err, result,res, req)
 }
 
 
-
 function EventCreatedCB(err, result,res, req)
 {
     if (err)
@@ -596,7 +605,6 @@ function EventCreatedCB(err, result,res, req)
         //To show the calendar SVG with a tick sign
         res.redirect('/Profile_SelfView.html?EventSuccess=yes');
     }
-    
 }
 /*****************************************END CREATE NEW EVENT*****************************************************************/
 
@@ -727,7 +735,6 @@ function GetEventMessagesCB(err, result,res, req)
     
     else
     {
-        
         //JSON to send back containing the event messages
         var JSON2Send = [];
         
@@ -1013,11 +1020,11 @@ function GenericCB(err, result,res, req)
        //Success
        //Do nothing
     }
-    
 }
 
 
 app.listen(app.get('port'), function() {
+
     console.log('Node app is running on port', app.get('port'));
 });
 
