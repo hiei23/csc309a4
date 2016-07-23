@@ -33,7 +33,7 @@ CREATE TABLE Users
 	campus VARCHAR(15),
 	password text NOT NULL,
 	about text,
-	fbID VARCHAR(20)
+	fbID VARCHAR(20),
 	createdAt TIMESTAMP DEFAULT now(),
 	updatedAt TIMESTAMP DEFAULT now()
 );
@@ -98,7 +98,7 @@ CREATE TABLE Conversation(
 	id serial PRIMARY KEY,
 	from_user INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	to_user INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	time TIMESTAMP DEFAULT now(),
+	time TIMESTAMP DEFAULT now()
 );
 
 /*
