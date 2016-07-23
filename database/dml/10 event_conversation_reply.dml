@@ -1,19 +1,19 @@
 SET search_path TO TSPORTS;
 ------------------------------ Event Conversation Reply ------------------------------
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(2, 'who wants to be the goal keeper','unread',);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(2, 'who wants to be the goal keeper', 1);
 
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(4, 'i can be the goal keeper','unread',1);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(4, 'i can be the goal keeper', 1);
 
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(2, 'what other position do you guys want to play?','unread',);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(2, 'what other position do you guys want to play?', 1);
 
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(5, 'i want to play midfield','unread',1);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(5, 'i want to play midfield', 1);
 
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(10, 'i want to be on defence','unread',1);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(10, 'i want to be on defence', 1);
 
-INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, status, conversation_id)
-VALUES(2, 'great lets wait for more people to fill in the remaining positions','unread',1);
+INSERT INTO Event_CONVERSATION_REPLY(sentBy, reply_text, conversation_id)
+VALUES(2, 'great lets wait for more people to fill in the remaining positions', 1);
