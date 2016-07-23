@@ -1,4 +1,4 @@
-Users(id, username, email (unique), password, birthday, height, weight, rating, createdAt, updatedAt)
+Users(id, username, email (unique), password, birthday, height, weight, rating, fbID, createdAt, updatedAt)
 
 Friends(userid, friendId)
 
