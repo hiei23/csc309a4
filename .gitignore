@@ -13,5 +13,6 @@ npm-debug.log
 Dockerfile
 docker-compose.yml
 
+
 ./node_modules
-./package.json
+./db.ddl

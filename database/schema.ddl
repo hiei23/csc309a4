@@ -24,16 +24,29 @@ CREATE TABLE Users
 	id SERIAL PRIMARY KEY,
 	first_name VARCHAR(40) NOT NULL,
 	last_name VARCHAR(40) NOT NULL,
+<<<<<<< HEAD
+	birthday DATE NOT NULL,
+=======
 	birthday DATE,
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
 	gender VARCHAR(6) ,
 	height INTEGER,
 	weight DECIMAL,
 	email VARCHAR(255) UNIQUE NOT NULL,
+<<<<<<< HEAD
+	phone VARCHAR(15) NOT NULL,
+	campus VARCHAR(15)NOT NULL,
+	password text NOT NULL,
+	about text,
+	createdAt TIMESTAMP DEFAULT now(),
+	updatedAt TIMESTAMP DEFAULT now()
+=======
 	phone VARCHAR(15),
 	campus VARCHAR(15),
 	password text NOT NULL,
 	about text,
 	fbID VARCHAR(20)
+>>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
 );
 
 CREATE TABLE Location(

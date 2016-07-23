@@ -4,14 +4,123 @@ $(document).ready
     function()
     {
  
+         //Get the user's basic info when they login: profile pic, name, UnreadNotifications icons
+         $.ajax({
+                type: 'GET',
+                url: "/GetLoginUserInfo",  //URL to send to send to the server
+                dataType: 'JSON',
+                //Receives the path of the user's profile picture in the server
+                success: function (response)
+                {
+                    //console.log(response);
+                
+                    //Change the src of the profile picture to the profile pic stored on the server
+                    $( "#ProfilePic" ).attr('src', response[0].ProfileImage );
+                
+                    //Display the user's correct name
+                    $( "#Profile_UserName" ).text(response[0].username);
+                
+                
+                    //Now display the correct icon notification numbers
+                    //If its zero, never display the red icon
+                    if(response[0].numfriendreqs == 0)
+                    {
+                        $('#FB_Friend_SVG p').hide(); //hide it
+                    }
+                
+                    else
+                    {
+                         $('#FB_Friend_SVG p').show();
+                         $('#FB_Friend_SVG p').text( response[0].numfriendreqs );
+                    }
+                
+                
+                    if(response[0].nummessages == 0)
+                    {
+                        $('#FB_Message_SVG p').hide(); //hide it
+                    }
+                    
+                    else
+                    {
+                        $('#FB_Message_SVG p').show();
+                        $('#FB_Message_SVG p').text( response[0].nummessages );
+                    }
+                
+                
+                    if(response[0].numnotifications == 0)
+                    {
+                        $('#FB_Notification_SVG p').hide(); //hide it
+                    }
+                    
+                    else
+                    {
+                        $('#FB_Notification_SVG p').show();
+                        $('#FB_Notification_SVG p').text( response[0].numnotifications );
+                    }
+                
+                }
+                }); //End of AJAX
  
+ 
+            //If we got re-directed here after successfuly creating an event
+            //Check if the URL is /Profile_SelfView.html?EventSuccess=yes
+            if (window.location.href.indexOf("?EventSuccess=yes") > -1)
+            {
+                //Show the approved calendar
+                $('#EventSuccessful').show();
+                 //Change the window url so it doesn't show again
+                 window.history.pushState('CalendarRemoved', "CalendarRemoved", '/Profile_SelfView.html');
+            }
+ 
+            else
+            {
+                //Hide it
+                $('#EventSuccessful').hide();
+ 
+            }
+
+ 
+ 
+ 
+ 
+ 
+         //Clicking on the sign out button, send a request to the server
+         $(document).on('click', '#SignOut_Button',
+                        
+                                            function()
+                                            {
+                        
+                                            $.ajax({
+                                                   type: 'GET',
+                                                   url: "/SignOut",  //URL to send to send to the server
+                                                   dataType: 'text',
+                                                   //Receives the path of the user's profile picture in the server
+                                                   success: function (response)
+                                                   {
+                                                        //Go back to home page
+                                                        window.location.replace("/");
+                                                   }
+                                                   }); //End of AJAX
+
+                                            
+                                            }
+                        );
+ 
+ 
+         //User can upload file without using submit button
+         $('#file-input').change(function()
+                                 {
+                                    $('#UploadProfilePic').submit();
+                                 }
+                                );
+ 
+
  
          //Clicking on the bodynav (About, Friends, Reviews) highlights it and underlines it
          $(document).on('click', '#BodyNav ul li',
                 
                                         function()
                                         {
-                        
                                             //Clear the background-color and border-bottom for the previously clicked item (if any)
                                             $('.BodyNavClicked').removeClass('BodyNavClicked');
                         
@@ -203,53 +312,8 @@ $(document).ready
  
  
  
- 
-        //Create a temporary variable to store all the user's friends as placeholder data
-         var FriendsImages = [
-                                  {
-                                    "url": "./assets/images/PM.jpg",
-                                    "name": "Piers Morgan"
-                                  },
-                              
-                                  {
-                                  "url": "./assets/images/MN.jpg",
-                                  "name": "Manuel Neur"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/EM.jpg",
-                                  "name": "Eminem"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/CH.jpg",
-                                  "name": "Calvin Harris"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/SC.jpg",
-                                  "name": "SC"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/JN.jpg",
-                                  "name": "John Newman"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/EC.jpg",
-                                  "name": "Emilia Clarke"
-                                  },
-                                  
-                                  {
-                                  "url": "./assets/images/Hector.jpg",
-                                  "name": "Jonas Hector"
-                                  },
+         //DataForm = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "friendid":"2"}];
 
-                            ];
- 
- 
- 
          //When the user clicks on the "Friends" Tab, show all the Friends of the user
          $(document).on('click', '#UserFriends',
                         
@@ -273,79 +337,117 @@ $(document).ready
                                                     
                                                     //Remove all other displayed information about "Creating Events" (if exists)
                                                     $('#CreateEventSection').remove();
+                                                    //Remove the datepicker
+                                                    $('.xdsoft_datetimepicker').remove();
                                                     //unwrap div with the class for blurring the background from #ProfileHeader
                                                     $('#ProfileHeader').unwrap();
                         
                         
+                                                    //Remove all other displayed information about "Friends" (if exists)
+                                                    //CUZ Referesh List
+                                                    $('#FriendsofUser').remove();
                         
+                                                    $('#EventSuccessful').hide();
                         
-                                                    //Only run function if friends information is not displayed
-                                                if( $('#FriendsofUser').length == 0 )
-                                                {
-                        
-                        
-                                                    //Create a section for the User's friends' images
-                                                    var $FriendsSection = $('<section>',
-                                                                                         {
-                                                                                            id: 'FriendsofUser'
-                                                                                         }
-                                                                         );
+                                                //Trigger AJAX and get friends info
+                                                $.ajax({
+                                                       type: 'GET',
+                                                       url: "/GetUserFriends",  //URL to send to send to the server
+                                                       dataType: 'JSON',
+                                                       success: function (response)
+                                                       {
 
-                                                    //insert $FriendsSection after the #ProfileHeader
-                                                    $FriendsSection.insertAfter('#ProfileHeader');
-                        
-                        
-                                                    //Loop over all the Friend Images and append them
-                                                    $.each(FriendsImages,
-                                                                            function(index, item)
-                                                                           {
-                                                           
-                                                                                //$Friend has the image and the friend name
-                                                                               var $Friend = $('<div>',
-                                                                                                        {
-                                                                                                          class: 'Friend'
-                                                                                                        }
-                                                                                                    );
-                                                           
-                                                                               var $FriendName = $('<p>',
-                                                                                                           {
-                                                                                                             text:  item.name
-                                                                                                           }
-                                                                                                  );
-                                                           
-                                                                               var $FriendImage = $('<img>',
-                                                                                                          {
-                                                                                                          src: item.url,
-                                                                                                          width: '100px',
-                                                                                                          height: '100px',
-                                                                                                          class:  'FriendImage'
-                                                                                                          }
-                                                                                                  );
-                                                           
-                                                                                $Friend.append($FriendImage);  //Append the Image
-                                                                                $Friend.append($FriendName);   //Append the name
-                                                           
-                                                                                $FriendsSection.append($Friend);
-                                                                           }
-                                                          );
-                        
-                        
-                                                        //Show a "See More" button in the end
-                                                        var $ShowMoreFriends = $('<p>',
-                                                                                {
-                                                                                  text: 'Show more',
-                                                                                  id: 'MoreFriendsButton'
-                                                                                }
-                                                                        );
-                        
-                                                        //Append the button
-                                                        $FriendsSection.append($ShowMoreFriends);
-                                                }
+                                                                //Create a section for the User's friends' images
+                                                                var $FriendsSection = $('<section>',
+                                                                                                     {
+                                                                                                        id: 'FriendsofUser'
+                                                                                                     }
+                                                                                     );
+
+                                                                //insert $FriendsSection after the #ProfileHeader
+                                                                $FriendsSection.insertAfter('#ProfileHeader');
+                                    
+                                    
+                                                                //Loop over all the Friend Images and append them
+                                                                $.each(response,
+                                                                                        function(index, item)
+                                                                                       {
+                                                                       
+                                                                                            //$Friend has the image and the friend name
+                                                                                           var $Friend = $('<div>',
+                                                                                                                    {
+                                                                                                                      class: 'Friend'
+                                                                                                                    }
+                                                                                                                );
+                                                                       
+                                                                                           var $FriendName = $('<p>',
+                                                                                                                       {
+                                                                                                                         text:  item.name
+                                                                                                                       }
+                                                                                                              );
+                                                                       
+                                                                                           var $FriendImage = $('<img>',
+                                                                                                                      {
+                                                                                                                      src: item.url,
+                                                                                                                      width: '100px',
+                                                                                                                      height: '100px',
+                                                                                                                      class:  'FriendImage'
+                                                                                                                      }
+                                                                                                              );
+                                                                       
+                                                                                            //Attach a hidden input to the friend (His user ID)
+                                                                                            //So that upon click, we can send this info to the server
+                                                                                           var $FriendsID = $('<input>',
+                                                                                                                        {
+                                                                                                                            type: 'hidden',
+                                                                                                                            name: 'FriendID',
+                                                                                                                            value: item.friendid
+                                                                                                                        }
+                                                                                                                );
+                                                                       
+                                                                       
+                                                                                            $Friend.append($FriendImage);  //Append the Image
+                                                                                            $Friend.append($FriendName);   //Append the name
+                                                                                            $Friend.append($FriendsID);   //Append the friend id
+                                                                       
+                                                                                            $FriendsSection.append($Friend);
+                                                                                       }
+                                                                      );
+                                    
+                                    
+                                                                    //Show a "See More" button in the end
+                                                                    var $ShowMoreFriends = $('<p>',
+                                                                                            {
+                                                                                              text: 'Show more',
+                                                                                              id: 'MoreFriendsButton'
+                                                                                            }
+                                                                                    );
+                                    
+                                                                    //Append the button
+                                                                    $FriendsSection.append($ShowMoreFriends);
+                           
+                                                       }
+                                                       }); //End of AJAX
                         
                                                 }
                         
                         
                         );
+ 
+ 
+         //When a user clicks on any of his friends, take them to their profile
+         $(document).on('click', '.Friend ',
+                        
+                                                    function()
+                                                    {
+                                                          //Store the clicked friend's ID in a cookie to be accessed by Profile_OthersView.js
+                                                        $.cookie("FriendIDClicked", $(this).children('input').val());
+                                                        
+                                                        //Go back to your friend's page
+                                                        window.location.replace("/Profile_OthersView.html");
+                                                    }
+                        );
+ 
  
  
          //Create a temporary variable to store all the sports available in TSports
@@ -431,8 +533,12 @@ $(document).ready
                                                         
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
+                                                        //Remove the datepicker
+                                                        $('.xdsoft_datetimepicker').remove();
                                                         //unwrap div with the class for blurring the background from #ProfileHeader
                                                         $('#ProfileHeader').unwrap();
+                            
+                                                        $('#EventSuccessful').hide();
                             
                             
                                                         //Only run function if Reviews information is not displayed
@@ -658,34 +764,35 @@ $(document).ready
  
  
  
- 
+ /***************************************************Paul******************************************************/
                  var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
                                    "tabletennis", "tennis", "volleyball",
                                    "football", "swimming"];
  
- 
-                 var about_mockData = {
-                                        "Campus": "St.George",
-                                        "Given_Name": "Parham",
-                                        "Family_Name": "Oghabi",
-                                        "Phone_number": "(647)123-9999",
-                                        "Email_Address": "parham@hotmail.com",
-                                        "Birthday": "January 1, 1994",
-                                        "Height": "180cm",
-                                        "Weight": "72kg",
-                                        "Gender": "Male",
-                                        "About_Me": "",
-                                        "Sports": sport_list
-                                      };
+                 var response = [
+                                 {
+                                    "Campus": "St.George",
+                                    "Given_Name": "Parham",
+                                    "Family_Name": "Oghabi",
+                                    "Phone_number": "(647)123-9999",
+                                    "Email_Address": "parham@hotmail.com",
+                                    "Birthday": "January 1, 1994",
+                                    "Height": "180",
+                                    "Weight": "72",
+                                    "Gender": "Male",
+                                    "About_Me": "",
+                                    "SportsInterested": ["cycling", "squash", "basketball"]
+                                }
+                                 ];
  
                  var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address",
                                     "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
  
                  //When the user clicks on the "About" Tab, show all info about the user
-                $(document).on('click', '#UserAbout', userAboutClickFcn);
+                $(document).on('click', '#UserAbout', DisplayUserInfo);
  
-                function userAboutClickFcn()
+                function DisplayUserInfo()
                 {
                   //Remove all other displayed information about "Friends" (if exists)
                   $('#FriendsofUser').remove();
@@ -704,12 +811,28 @@ $(document).ready
 
                   //Remove all other displayed information about "Creating Events" (if exists)
                   $('#CreateEventSection').remove();
+                 //Remove the datepicker
+                 $('.xdsoft_datetimepicker').remove();
                   //unwrap div with the class for blurring the background from #ProfileHeader
                   $('#ProfileHeader').unwrap();
+ 
+                 //Remove all other displayed information about "About" (if exists)
+                 //Refresh, get new data from the server
+                 $('#AboutUser').remove();
+                 
+ 
+                  $('#EventSuccessful').hide();
+ 
+ 
 
-                  //Only run function if About information is not displayed
-                  if( $('#AboutUser').length == 0 )
-                  {  
+             //Get info about the user from the server
+//             $.ajax({
+//                    type: 'GET',
+//                    url: "/GetUserAboutInfo",  //URL to send to send to the server
+//                    dataType: 'JSON',
+//                    //Receives the path of the user's profile picture in the server
+//                    success: function (response)
+//                    {
                       //Create a section to info about the user
                       var $AboutSection = $('<section>',
                                                           {
@@ -717,287 +840,44 @@ $(document).ready
                                                           }
                                            );
 
-                      
                       //insert $AboutSection after the #ProfileHeader
                       $AboutSection.insertAfter('#ProfileHeader');
 
 
-                      //ADD CODE HERE
-                      $div_input = $('<div/>',
-                                             {
-                                                class: "info_input"
-                                             }
-                                     );
-
-                      for (var i = 0; i < about_order.length - 1; i++)
-                      {
-                              var $div = $('<div/>',
-                                                   {
-                                                      class: "each_info"
-                                                   }
-                                           );
-                              
-                              var $label = $('<label/>',
-                                                         {
-                                                           class: about_order[i]
-                                                         }
-                                             );
-                              
-                              var $label_text = $('<span/>',
-                                                              {
-                                                                class: "label",
-                                                                text: about_order[i].replace("_", " ") + ":"
-                                                              }
-                                                  );
-                              
-                              var $br = $('<br>');
-                              
-                              var $info;
-                              
-                              //Display About me section as <textarea>
-                              if (about_order[i] === "About_Me")
-                              {
-                                  $info = $('<textarea>',
-                                                        {
-                                                            name: about_order[i],
-                                                            placeholder: "Brief Personal Description",
-                                                            class: about_order[i],
-                                                            text: about_mockData[about_order[i]],
-                                                            rows: 6,
-                                                            cols: 35,
-                                                            disabled: "disabled"
-                                                        }
-                                            );
-                                  //Display Sports section as <fieldset> and lists.
-                              }
-
-                              else
-                              {
-                                  $info = $('<input>',
-                                                        {
-                                                            type: "text",
-                                                            name: about_order[i],
-                                                            class: about_order[i],
-                                                            value: about_mockData[about_order[i]],
-                                                            disabled: "disabled"
-                                                        }
-                                            );
-                              }
-                              
-                              
-                              
-                              $label.append($label_text);
-                              $label.append($br);
-                              $label.append($info);
-                              $div.append($label);
-                              
-                              $div_input.append($div);
-                      
-                      }
-                      
-                      
-  
-                      $info = $('<section/>', {
-                                id: "sports"
-                      });
-                      
-
-                      var $p_text = $('<p/>', {
-                                text: "Sports:"
-                      });
-
-                      var $div_collection = $('<div/>',{
-                                id:"ck-collection"
-                      })
-
-                                        
-                      var len = sport_list.length;
-
-                      for(var i = 0;i < len;i++){
-                        var $div_ckbtn = $('<div/>',{
-                          class:"ck-button"
-                        });
-
-                        var $input_ckb = $('<input>',{
-                          type:"checkbox",
-                          id:sport_list[i],
-                          name:sport_list[i],
-                          value:sport_list[i],
-                          disabled: "disabled",
-                          checked: "checked"
-                        });
-
-                        var $label_sport = $('<label/>',{
-                          for:sport_list[i]
-                        });
-
-                        var $img = $('<img>',{
-                          width:"20",
-                          height:"20",
-                          src:"assets/images/" + sport_list[i] + ".svg"
-                        });
-
-                        $label_sport.append($img);
-                        $label_sport.append(sport_list[i]);
-
-                        $div_ckbtn.append($input_ckb);
-                        $div_ckbtn.append($label_sport);
-
-                        $div_collection.append($div_ckbtn);
-                      }
-
-                      $info.append($p_text);
-                      $info.append($div_collection);
-                      
-                      
-                      
-                      var $edit = $('<button/>', {
-                                    class: "edit_button",
-                                    text: "Edit"
-                                    });
-                      
-                      $AboutSection.append($div_input);
-                      $AboutSection.append($info);
-                      $AboutSection.append($edit);
-                  }
+                    
+                    
+//                        console.log(response[0].Campus);  //Gives St.George
+//                        console.log(response[0].Height);  //Gives 180
+//     
+//                        var SportsInterested = response[0].SportsInterested;  //SportsInterested is an array
+//                        
+//                        for(var i=0; i<SportsInterested.length; i++)
+//                        console.log(SportsInterested[i]) //Prints cycling , squash, basketball
+                    
+                    
+                    //Paul ADD CODE HERE
+ 
+                    
+                    
+//                    }
+//                    }); //End of AJAX
+ 
+ 
+ 
+ 
 
                 }
 
  
  
-                 $(document).on('click', '.edit_button',
-                                                        function()
-                                                        {
-                                                            $(".each_info input").removeAttr("disabled");
-                                                            $(".each_info textarea").removeAttr("disabled");
-                                                            
-                                                            $(".edit_button").remove();
-                                                            
-                                                            var $div = $('<div/>',
-                                                                                 {
-                                                                                  class: "submitAndCancel"
-                                                                                 }
-                                                                         );
-                                                            
-                                                            
-                                                            var $submit = $('<button/>',
-                                                                                        {
-                                                                                          class: "submit_button",
-                                                                                          text: "Submit"
-                                                                                        }
-                                                                            );
-                                                            
-                                                            var $cancel = $('<button/>',
-                                                                                        {
-                                                                                          class: "cancel_button",
-                                                                                          text: "Cancel"
-                                                                                        }
-                                                                            );
-                                                            
-                                                            $div.append($submit);
-                                                            $div.append($cancel);
-                                                            
-                                                            $div.insertAfter("#sports");
-                                                        }
-                                );
- 
-                 
-                 $(document).on('click', '.cancel_button',
-                                                        function()
-                                                        {
-                                                            $('#AboutUser').remove();
-                                                            userAboutClickFcn();
-                                                        }
-                             );
-                 
- 
-                 
-				$(document).on('click', '.submit_button', 
-													function()
-													{
-						
-														
-														for (var i = 0; i < about_order.length - 2; i++) {
-															about_mockData[about_order[i]] = $("input." + about_order[i]).val();
-														}
-														
-														about_mockData[about_order[i]] = $("textarea." + about_order[i]).val();
-											
-														
-														$('#AboutUser').remove();
-														userAboutClickFcn();
-														
-													}
-								);
  
  
- 
- 
-             //List of upcoming events the user has joined
-             var UserEvents = [
-                                   {
-                                       "EventName" : "Indoor Soccer",
-                                       "EventType": "football",
-                                       "EventDateTime": "Jul 26 2016 10:00 PM",
-                                       "Duration": "1 Hour",
-                                       "EventEndTime": "11:00 PM",
-                                       "EventLocation": "AC Field 2",
-                                       "EventDescription": "We are playing 5 vs 5. Loser's team has to pay for the field!! That's how it is ;)",
-                                       "EventNumPpl": "10",
-                                       "EventNumSpotsLeft": "2",
-                                       "EventID" : "1",
-                                       "EventAdminPic" : "./assets/images/Hector.jpg",
-                                       "EventAdminName" : "Jonas Hector"
-                                   },
-                                   
-                                   {
-                                       "EventName" : "Water Polo Champs",
-                                       "EventType": "waterpolo",
-                                       "EventDateTime": "Jul 28 2016 08:00 PM",
-                                       "Duration": "3 Hours",
-                                       "EventEndTime": "11:00 PM",
-                                       "EventLocation": "AC Benson Pool",
-                                       "EventDescription": "Serious game. Please only attend if you are competitive and played in varsity.",
-                                       "EventNumPpl": "20",
-                                       "EventNumSpotsLeft": "8",
-                                        "EventID" : "2",
-                                       "EventAdminPic" : "./assets/images/SC.jpg",
-                               "EventAdminName" : "SC"
-                                   },
-                                   
-                                   {
-                                       "EventName" : "Outdoor Soccer",
-                                       "EventType": "football",
-                                       "EventDateTime": "Jul 30 2016 10:00 PM",
-                                       "Duration": "1 Hour",
-                                       "EventEndTime": "11:00 PM",
-                                       "EventLocation": "AC Soccer Field",
-                                       "EventDescription": "We are playing 5 vs 5 half-court. Bring $10 for the field",
-                                       "EventNumPpl": "10",
-                                       "EventNumSpotsLeft": "5",
-                                        "EventID" : "3",
-                                       "EventAdminPic" : "./assets/images/MN.jpg",
-                               "EventAdminName" : "Manuel Neur"
-                                   },
-                                   
-                                   {
-                                       "EventName" : "Lets Squash!",
-                                       "EventType": "squash",
-                                       "EventDateTime": "Aug 5 2016 03:00 PM",
-                                       "Duration": "1 Hour",
-                                       "EventEndTime": "04:00 PM",
-                                       "EventLocation": "Harthouse Squart Courts",
-                                       "EventDescription": "We are doubles 2 vs 2. Join us, just for fun! :)",
-                                       "EventNumPpl": "4",
-                                       "EventNumSpotsLeft": "2",
-                                       "EventID" : "4",
-                                       "EventAdminPic" : "./assets/images/CH.jpg",
-                               "EventAdminName" : "Calvin Harris"
-                                   }
-                             ];
+                        //Your Code should end here
+ /***************************************************Paul******************************************************/
 
  
- 
+                  //Create a global variable to store the list of user's events
+                  window.UserEventsList = [];
  
                  //When the user clicks on the "Events" tab, display the list of upcoming events the user has joined in
                  $(document).on('click', '#UserEvents',
@@ -1020,15 +900,33 @@ $(document).ready
                                 
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
+                                                        //Remove the datepicker
+                                                        $('.xdsoft_datetimepicker').remove();
                                                         //unwrap div with the class for blurring the background from #ProfileHeader
                                                         $('#ProfileHeader').unwrap();
                                 
                                 
-                                                        //Only run function if EventsofUser information is not displayed
-                                                        if( $('#EventsofUser').length == 0 )
-                                                        {
-                                                        
-                                                        
+                                                        //Remove all other displayed information about "Events" (if exists)
+                                                        //CUZ Referesh List
+                                                        $('#EventsofUser').remove();
+                                                        //Remove all info about the selected event
+                                                        $('#SelectedEvent').remove();
+                                
+                                                        $('#EventSuccessful').hide();
+                                
+                                
+                                                    //Trigger AJAX and get events
+                                                    $.ajax({
+                                                           type: 'GET',
+                                                           url: "/ViewEvents",
+                                                           dataType: 'JSON',
+                                                           success: function (response)
+                                                           {
+                                                           
+                                                             //console.log(response);
+                                                             //Store the JSON File containing all the events
+                                                             window.UserEventsList = response;
+                                       
                                                             //Create a section to show list of upcoming events the user has joined
                                                             var $EventsofUser = $('<section>',
                                                                                              {
@@ -1055,7 +953,7 @@ $(document).ready
                                 
                                                             //Add the upcoming events the user has joined
                                                             //Loop over the events
-                                                            $.each(UserEvents,
+                                                            $.each(response,
                                                                            function(index, item)
                                                                            {
                                                                            
@@ -1204,11 +1102,9 @@ $(document).ready
                                                                            }
                                                                    );
 
-                                
-                                
-                                
                                                         }
-                                                    
+                                                        }); //End of AJAX
+ 
                                                     }
                                 
                                 
@@ -1250,18 +1146,28 @@ $(document).ready
                                                         $SelectedEvent.append($Return2Events);
                                 
                                 
-                                                        //Use the submitted form's hidden input to see the Event ID and send it to the server
-                                                        var $EventID = $(this).children('input[name=EventID]').attr('value');
-                                                        //console.log( $EventID );
+                                                        //Find out which Event was clicked using the submitted form's hidden input to see the Event ID
+                                                        var EventID = $(this).children('input[name=EventID]').attr('value');
                                 
-                                                        //Send this Event ID with AJAX to the server to retrieve more Info about the Event (such as the admin user)
-                                                        //The web server will send back a JSON object for this event ID
                                 
-                              
+                                                        //NO NEED to send this Event ID with AJAX to the server to get the Event Info (cuz HTTP Req|Res is slow)
+                                                        //We already saved all the User's attending Events info in a global variable
                                 
-                                                        //Right not just use a temporary hack (pretend we got the JSON)
-                                                        var JSONEvent = UserEvents[$EventID - 1];
                                 
+                                                        //Loop over and find the clicked event
+                                                        var JSONEvent = [];
+                                                        $.each(UserEventsList,
+                                                                               function(index, item)
+                                                                               {
+                                                                                    //we found that object
+                                                                                    if(item.EventID == EventID)
+                                                                                    {
+                                                                                        JSONEvent = item;
+                                                                                        return false; //We found it, break
+                                                                                    }
+                                                                               }
+                                                               );
+
                                 
                                 
                                                         var $EventName= $('<h3>',
@@ -1278,7 +1184,7 @@ $(document).ready
                                                         //$BasicEventInfo_Wrapper wraps "EventSportName", "EventDateTime", "EventDuration", "EventLocation", "EventAttendance"
                                                         var $BasicEventInfo_Wrapper= $('<div>',
                                                                                               {
-                                                                                              class: 'BasicEventInfo_Wrapper'
+                                                                                                class: 'BasicEventInfo_Wrapper'
                                                                                               }
                                                                                        );
                                 
@@ -1482,26 +1388,34 @@ $(document).ready
                                                                       );
                                 
                                 
-                                
+                                    //Trigger AJAX
+                                    //Send the EventID and get List of all the users in that event
+                                    $.ajax({
+                                           type: 'POST',
+                                           url: "/GetEventUsers",  //URL to send to send to the server
+                                           dataType: 'JSON',
+                                           //Send the EventID of the event (hidden input Event ID) as a JSON File
+                                           data: { eventID: EventID },
+                                           success: function (response)
+                                           {
                                                     //Loop over all the users in this event and append them
-                                                    //Right now, assume all Friends are joined in the event
-                                                    $.each(FriendsImages,
+                                                    $.each(response,
                                                                            function(index, item)
                                                                            {
-                                                                           
+                                                           
                                                            
                                                                                var $User = $('<div>',
                                                                                                        {
-                                                                                             
+                                                                                                            class: 'EventUser'
                                                                                                        }
                                                                                                );
-                                                                               
+                                                           
                                                                                var $UserName = $('<p>',
                                                                                                        {
                                                                                                         text:  item.name
                                                                                                        }
                                                                                                    );
-                                                                               
+                                                           
                                                                                var $UserImage = $('<img>',
                                                                                                          {
                                                                                                            src: item.url,
@@ -1510,9 +1424,21 @@ $(document).ready
                                                                                                            class:  'UserImages'
                                                                                                         }
                                                                                                 );
-                                                                               
+                                                           
+                                                                               //Attach a hidden input to the User ID
+                                                                               //So that upon click, we can send this info to the server
+                                                                               var $UserID = $('<input>',
+                                                                                                              {
+                                                                                                                type: 'hidden',
+                                                                                                                name: 'FriendID',
+                                                                                                                value: item.friendid
+                                                                                                              }
+                                                                                                  );
+                                                           
                                                                                $User.append($UserImage);  //Append the Image
                                                                                $User.append($UserName);   //Append the name
+                                                                               $User.append($UserID);   //Append the user id
+                                                           
                                                                                
                                                                                $EventUsers.append($User);
                                                                            }
@@ -1521,104 +1447,200 @@ $(document).ready
                                 
                                                     //Append all the event users
                                                     $SelectedEvent.append($EventUsers);
-                                
-                                
-                                
-                                
- 
-                                
-                                                    //Now add the group chat for users in this event
-                                                    var $EventGroupChat = $('<div>',
-                                                                                    {
-                                                                                      id: 'EventGroupChat'
-                                                                                    }
-                                                                           );
-                                
-                                
-                                                    //Append all $EventGroupChat to the <section>
-                                                    $SelectedEvent.append($EventGroupChat);
-                                
-                                
-                                
-                                
-                                                    //Get Message Data from the web server, and append list of previous messages with the user
-                                                    
-                                                    var  $GroupChatContent = $('<div>',
-                                                                                      {
-                                                                                       id: 'GroupChatContent'
-                                                                                      }
-                                                                             );
-                                
-                                                    for(var i=0; i< 50; i++)
-                                                    {
-                                                        var  $p = $('<p>',
-                                                                        {
-                                                                        text: 'Hey bro! How have you been recently? Havent seen you!',
-                                                                        class: 'ChatContentDatas'
-                                                                        }
-                                                                    );
-                                                        
-                                                        $GroupChatContent.append($p);
-                                                    
-                                                    }
-                                
-                                                    //Append $GroupChatContent to the $EventGroupChat
-                                                    $EventGroupChat.append($GroupChatContent);
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                                    //Create a form input for all the users to be able to type
-                                                    var $GroupChatForm = $('<form>',
-                                                                                     {
-                                                                                        id: 'GroupChatForm'
-                                                                                     }
-                                                                          );
-                                                    
-                                                    
-                                                    //Create a textarea element
-                                                    var $GroupChatFormTextarea = $('<textarea>',
-                                                                                             {
-                                                                                               placeholder: 'Type a message...',
-                                                                                               width:  $EventGroupChat.width() - 10
-                                                                                             }
-                                                                                  );
-                                                    
-                                                    //Append the textarea to the form
-                                                    $GroupChatForm.append($GroupChatFormTextarea);
-                                                    
-                                                    //Append the form to the ChatBox
-                                                    $EventGroupChat.append($GroupChatForm);
-                                
-                                
-                                
-                                
-                                
-                                
+                                           
+                                           
+                                                   //Now make an AJAX call to the server to get the group chat messages in the event
+                                                   $.ajax({
+                                                          type: 'POST',
+                                                          url: "/GetEventMessages",  //URL to send to send to the server
+                                                          dataType: 'JSON',
+                                                          //Send the EventID of the event (hidden input Event ID) as a JSON File
+                                                          data: { eventID: EventID },
+                                                          success: function (response)
+                                                          {
+   
+                                                              //Now add the group chat for users in this event
+                                                              var $EventGroupChat = $('<div>',
+                                                                                              {
+                                                                                                id: 'EventGroupChat'
+                                                                                              }
+                                                                                      );
+                                                              
+                                                              //Append all $EventGroupChat to the <section>
+                                                              $SelectedEvent.append($EventGroupChat);
+                                                              
+                                                              
+                                                              //Get Message Data from the web server, and append list of previous messages with the user
+                                                              var  $GroupChatContent = $('<div>',
+                                                                                                 {
+                                                                                                   id: 'GroupChatContent'
+                                                                                                 }
+                                                                                         );
+                                                          
+                                                          
+                                                          
+                                                          
+                                                              //Loop over all the messages and append them
+                                                              $.each(response,
+                                                                             function(index, item)
+                                                                             {
+                                                                     
+                                                                                //$EventChatMessage has the message and the image of the person who sent it
+                                                                                var $EventChatMessage = $('<div>',
+                                                                                                                 {
+                                                                                                                    class: 'ChatContentDatas',
+                                                                                                                 }
+                                                                                                        );
+                                                                     
+                                                                     
+                                                                     
+                                                                                //Make an img tag for the profile pic of the person who sent it
+                                                                                //Then append it to $EventChatMessage
+                                                                                 var $SentByProfilePic = $('<img>',
+                                                                                                                   {
+                                                                                                                       src: item.ProfileImage,
+                                                                                                                       width: '25px',
+                                                                                                                       height: '25px',
+                                                                                                                       class: 'EventMessageDisplayPic'
+                                                                                                                   }
+                                                                                                           );
+                                                                     
+                                                                                $EventChatMessage.append($SentByProfilePic);
+                                                                     
+                                                                     
+                                                                                //Message was sent by me
+                                                                                if(item.sentById == $.cookie("UserID"))
+                                                                                {
+                                                                     
+                                                                                     var  $p = $('<p>',
+                                                                                                         {
+                                                                                                           text: item.chatmessage
+                                                                                                         }
+                                                                                                 );
+                                                                     
+                                                                                    //Add a class so it floats to the left
+                                                                                    $EventChatMessage.addClass('MessageByMe');
+                                                                     
+                                                                                    $EventChatMessage.append($p);
+                                                                                }
+                                                                     
+                                                                                 //Message was sent by other users
+                                                                                 else
+                                                                                 {
+                                                                     
+                                                                                     var  $p = $('<p>',
+                                                                                                      {
+                                                                                                       text: item.chatmessage
+                                                                                                 
+                                                                                                      }
+                                                                                                 );
+                                                                     
+                                                                                     //Add a class so it floats to the right
+                                                                                     $EventChatMessage.addClass('MessageNotByMe');
+                                                                     
+                                                                                     $EventChatMessage.append($p);
+                                                                                 }
+                                             
+                                                                     
+                                                                                    $GroupChatContent.append($EventChatMessage);
+                                                 
+                                                                             }
+                                                                     );
 
+                                                          
+                                                              
+                                                              //Append $GroupChatContent to the $EventGroupChat
+                                                              $EventGroupChat.append($GroupChatContent);
+                                                              
+                                    
+                                                              //Create a form input for all the users to be able to type
+                                                              var $GroupChatForm = $('<form>',
+                                                                                             {
+                                                                                               id: 'GroupChatForm'
+                                                                                             }
+                                                                                     );
+                                                              
+                                                              
+                                                              //Create a textarea element
+                                                              var $GroupChatFormTextarea = $('<textarea>',
+                                                                                                         {
+                                                                                                           placeholder: 'Type a message...',
+                                                                                                           width:  $EventGroupChat.width() - 10
+                                                                                                         }
+                                                                                             );
+                                                              
+                                                              //Append the textarea to the form
+                                                              $GroupChatForm.append($GroupChatFormTextarea);
+                                                              
+                                                              //Append the form to the ChatBox
+                                                              $EventGroupChat.append($GroupChatForm);
+                                                   
+                                                          }
+                                                          }); //End of AJAX 2 (Get Event Messages)
                                 
+                                            }
+                                            }); //End of AJAX 1 (Get Event Users)
+ 
+
                                                     }
                                 
                                 );
  
  
  
-                 //When the user clicks on the "x" (Leave Event) SVG next to each event, delete that <li> Event
+                 //When a user clicks on any of his friends|users, take them to their profile
+                 $(document).on('click', '.EventUser ',
+                                
+                                                    function()
+                                                    {
+                                
+                                                        //The cookie is called FriendIDClicked because I am utilizing one handler for efficiency
+                                                        //Clicking on your friends pictures or a picture of a user attending the same event produces same results
+                                                        
+                                                        //Only display that user's profile if it isn't yourself
+                                                        if( $(this).children('input').val() !=  $.cookie("UserID") )
+                                                        {
+                                                            //Store the clicked friend's ID in a cookie to be accessed by Profile_OthersView.js
+                                                            $.cookie("FriendIDClicked", $(this).children('input').val());
+                                                            
+                                                            //Go back to your friend's page
+                                                            window.location.replace("/Profile_OthersView.html");
+                                                        }
+                                                    }
+                                );
+ 
+ 
+ 
+ 
+                 //When the user clicks on the "x" (Leave Event) SVG next to each event, delete that <li> Event and inform the server
                  $(document).on('click', '#EventsofUser #EventsofUserUL .IndividualEvent .IndividualEventMoreDetail img',
                 
                                                                         function()
                                                                         {
-                                                                            //Remove that event <li>
+                                
+                                                                            var hiddeneventID = $(this).siblings('form').children("input[name='EventID']").val();
                                                                             $(this).parent().parent().remove();
-                                
-                                
-                                                                            //Using this element's sibling (the hidden input Event ID)
-                                                                            //We can tell the DB that this user left this event, to remove it from the DB
-                                
+                                    
+                                                                            //Inform the server that the user is leaving this specific event
+                                                                            $.ajax({
+                                                                                   type: 'POST',
+                                                                                   url: "/LeaveEvent",
+                                                                                   dataType: 'text',
+                                                                                   //Send the EventID of the event (hidden input Event ID) as a JSON File
+                                                                                   data: { eventID: hiddeneventID },
+                                                                                   
+                                                                                   //If an admin leaves his own event, the whole event is cancelled
+                                                                                   success: function (response)
+                                                                                   {
+                                                                                        //console.log(response);
+                                                                                   
+                                                                                           //Inform the user that since he was the admin, the whole event got cancelled
+                                                                                           if(response == "UserWasAdmin")
+                                                                                           alert("You were the Admin! You cancelled the Event!");
+                                                        
+                                                                                   }
+                                                                                   }); //End of AJAX
+
                                                                         }
                                                                         
                                 
@@ -1668,8 +1690,13 @@ $(document).ready
                                 
                                                         //Remove all other displayed information about "Creating Events" (if exists)
                                                         $('#CreateEventSection').remove();
+                                                        //Remove the datepicker
+                                                        $('.xdsoft_datetimepicker').remove();
                                                         //unwrap div with the class for blurring the background from #ProfileHeader
                                                         $('#ProfileHeader').unwrap();
+                                
+                                
+                                                        $('#EventSuccessful').hide();
                                 
                                 
                                 
@@ -1789,7 +1816,7 @@ $(document).ready
                                 );
  
  
-             /*****************************Using the DropDown menu to search for events*******************************/
+             /*****************************************Using the DropDown menu to search for events********************************************/
  
              //Clicking on the #SearchEventSection form input, opens the sport picker and clicking again toggles/closes it
              $(document).on('click', '#SearchEventSection #SearchForEvents',
@@ -1820,11 +1847,351 @@ $(document).ready
                             
                                                                     //hide the sport picker after clicking
                                                                     $('#SearchEventSection #AvailableEventTypes').toggleClass( 'HideAvailableEventTypes' );
+                            
+                            
+                                                                    //We chose a new sport, remove the previous search's preview events shown
+                                                                    $('#SearchEventsPreviewBox').remove();
+                            
+                            
+                                                                    var SelectedEventSport = $(this).children('p').text().toLowerCase();
+                            
+                                                                    //Send an AJAX to the server to get back events matching the clicked sport
+                                                                    $.ajax({
+                                                                           type: 'POST',
+                                                                           url: "/SearchEventsByClick",
+                                                                           dataType: 'JSON',
+                                                                           //Send selected sport to server as JSON
+                                                                           data: { "EventSportClicked": SelectedEventSport },
+                                                                           //Receives all the matching events
+                                                                           success: function (response)
+                                                                           {
+                                                               
+                                                                            //Only process if matched events were found
+                                                                            if(response.length > 0)
+                                                                            {
+                                                                           
+                                                                               //The box that contains all matched events
+                                                                               var $SearchEventPreviewBox = $('<section>',
+                                                                                                                          {
+                                                                                                                            id: 'SearchEventsPreviewBox'
+                                                                                                                          }
+                                                                                                            );
+                                                                               
+                                                                               //insert $SearchEventPreviewBox after the #SearchEventForm
+                                                                               $SearchEventPreviewBox.insertAfter('#SearchEventForm');
+                                                                               
+                                                                               //The <ul> inside which we will place the matched events
+                                                                               var $EventsUL = $('<ul>',
+                                                                                                         {
+                                                                                                            id: 'SearchEventsUL'
+                                                                                                         }
+                                                                                                 );
+                                                                               
+                                                                               //UL contains all the event previews
+                                                                               $SearchEventPreviewBox.append($EventsUL);
+                                                                           
+                                                                           
+                                                                              //Loop over the matched events
+                                                                              $.each(response,
+                                                                                         function(index, item)
+                                                                                         {
+                                                                                         
+                                                                                         //$IndividualEvent is each of the individual event preview
+                                                                                         var $IndividualEvent = $('<li>',
+                                                                                                                        {
+                                                                                                                         class: 'IndividualEventPreview'
+                                                                                                                        }
+                                                                                                                  );
+                                                                                         
+                                                                                         var $EventIDHidden= $('<input>',
+                                                                                                                       {
+                                                                                                                       type: 'hidden',
+                                                                                                                       name: 'EventID',
+                                                                                                                       value: item.EventID
+                                                                                                                       }
+                                                                                                               
+                                                                                                               );
+                                                                                     
+                                              
+                                                                                         //$divLeft contains the event Date and Time
+                                                                                         var $divLeft = $('<div>',
+                                                                                                                  {
+                                                                                                                   class: 'IndividualEventDateTime'
+                                                                                                                  }
+                                                                                                          );
+                                                                                         
+                                                                                         //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
+                                                                                         var $divMiddle = $('<div>',
+                                                                                                                    {
+                                                                                                                      class: 'IndividualEventInfo'
+                                                                                                                    }
+                                                                                                            );
+                                                                                     
+                                                                                         
+                                                                                         //Append the $IndividualEvent to the EventsUL
+                                                                                         $EventsUL.append($IndividualEvent);
+                                                                                         
+                                                                                         
+                                                                                         //Append the Middle, and Right Divs to the $IndividualEvent
+                                                                                         $IndividualEvent.append($divLeft);
+                                                                                         $IndividualEvent.append($divMiddle);
+                                                                                         
+                                                                                         
+                                                                                         //Add the Event DateTime to $divLeft
+                                                                                         $divLeft.append(
+                                                                                                         $('<p>',
+                                                                                                                   {
+                                                                                                                     text: item.EventDateTime
+                                                                                                                   }
+                                                                                                           )
+                                                                                                         );
+                                                                                         
+                                                                                  
+                                                                                         var $EventName= $('<h3>',
+                                                                                                                   {
+                                                                                                                     text: item.EventName
+                                                                                                                   }
+                                                                                                           );
+                                                                                         
+                                                                                         var $EventSVG= $('<img>',
+                                                                                                                  {
+                                                                                                                    src: './assets/images/' + item.EventType + '.svg',
+                                                                                                                    width: '13px'
+                                                                                                                  }
+                                                                                                          );
+                                                                                         
+                                                                                         
+                                                                                         var $EventAttendance= $('<p>',
+                                                                                                                         {
+                                                                                                                          //Calculate #ppl attending
+                                                                                                                          text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
+                                                                                                                          class: 'EventAttendance'
+                                                                                                                         }
+                                                                                                                 );
+                                                                                         
+                                                                                         
+                                                                                         //Append the number of available spots
+                                                                                         $EventAttendance.append(
+                                                                                                                 $('<span>',
+                                                                                                                           {
+                                                                                                                             text: item.EventNumSpotsLeft  + " Spots left!",
+                                                                                                                             class: 'EventSpotsLeft'
+                                                                                                                           }
+                                                                                                                   )
+                                                                                                                 );
+                                                                                         
+                                                                                         
+                                                                                         $divMiddle.append($EventName);
+                                                                                         $divMiddle.append($EventSVG);
+                                                                                         $divMiddle.append($EventAttendance);
+                                                                                         
+                                                                   
+                                                                                          $IndividualEvent.append($EventIDHidden);
+                                                                                         
+                                                                                         }
+                                                                                     );
+                                                                                  
+                                                                                
+                                                                            }//Only run if response included matched events
+                                                                           
+                                                                           }
+                                                                          }); //End of AJAX
+                  
+                            
+                            
+                            
                                                                 }
                             );
  
  
-         /*****************************Using manual typing to search for events*******************************/
+ 
+
+
+ 
+ //
+// hide whole "SearchEventSection", no + SVG sign anymore
+ //
+ 
+ //Display full data of event, NOTE!!
+ //DISPLAY everything EXCEPT THE GROUP CHAT! no need to process that, YOU ONLY DISPLAY THE GROUP CHAT IN YOUR OWN Event tab
+ //
+ 
+ //Add a return SVG on top, if click on the return SVG, delete the SHOWN full event detail, and return to displaying the pre-shown mini-preview events
+ //ie. upon clicking the return button
+ 
+ 
+ //Also add a Lime Green "JOIN" Button. When clicked, on the server DB add the user to this event in
+ //EventUsers
+ 
+ //And then response okay, and show a tick sign, event added and resume showing the mini-previews?
+ 
+ //For .On #input or typing, do ajax live and keep getting back results and displying, don't remove the outher section though,
+ //Do something smarter! #Remove All children of the <ul>  , all the <li's> make them removed
+ 
+            //When the user clicks on any of the preview events matching their search
+//             $(document).on('click', '#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview',
+//                                                            function()
+//                                                            {
+//                            
+//                                                            //Hide the #SearchEventSection
+//                                                            $('#SearchEventSection').hide();
+//                            
+//                            
+//                                                            var SelectedEventID = $(this).children('input[name=EventID]').val();
+//                            
+//                                                            //Send an AJAX to the server to get back events matching the clicked sport
+//                                                            $.ajax({
+//                                                                   type: 'POST',
+//                                                                   url: "/SearchEventsByClick",
+//                                                                   dataType: 'JSON',
+//                                                                   //Send selected sport to server as JSON
+//                                                                   data: { "EventSportClicked": SelectedEventSport },
+//                                                                   //Receives all the matching events
+//                                                                   success: function (response)
+//                                                                   {
+//                                                                   
+//                                                                   //Only process if matched events were found
+//                                                                   if(response.length > 0)
+//                                                                   {
+//                                                                   
+//                                                                   //The box that contains all matched events
+//                                                                   var $SearchEventPreviewBox = $('<section>',
+//                                                                                                  {
+//                                                                                                  id: 'SearchEventsPreviewBox'
+//                                                                                                  }
+//                                                                                                  );
+//                                                                   
+//                                                                   //insert $SearchEventPreviewBox after the #SearchEventForm
+//                                                                   $SearchEventPreviewBox.insertAfter('#SearchEventForm');
+//                                                                   
+//                                                                   //The <ul> inside which we will place the matched events
+//                                                                   var $EventsUL = $('<ul>',
+//                                                                                     {
+//                                                                                     id: 'SearchEventsUL'
+//                                                                                     }
+//                                                                                     );
+//                                                                   
+//                                                                   //UL contains all the event previews
+//                                                                   $SearchEventPreviewBox.append($EventsUL);
+//                                                                   
+//                                                                   
+//                                                                   //Loop over the matched events
+//                                                                   $.each(response,
+//                                                                          function(index, item)
+//                                                                          {
+//                                                                          
+//                                                                          //$IndividualEvent is each of the individual event preview
+//                                                                          var $IndividualEvent = $('<li>',
+//                                                                                                   {
+//                                                                                                   class: 'IndividualEventPreview'
+//                                                                                                   }
+//                                                                                                   );
+//                                                                          
+//                                                                          var $EventIDHidden= $('<input>',
+//                                                                                                {
+//                                                                                                type: 'hidden',
+//                                                                                                name: 'EventID',
+//                                                                                                value: item.EventID
+//                                                                                                }
+//                                                                                                
+//                                                                                                );
+//                                                                          
+//                                                                          
+//                                                                          //$divLeft contains the event Date and Time
+//                                                                          var $divLeft = $('<div>',
+//                                                                                           {
+//                                                                                           class: 'IndividualEventDateTime'
+//                                                                                           }
+//                                                                                           );
+//                                                                          
+//                                                                          //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
+//                                                                          var $divMiddle = $('<div>',
+//                                                                                             {
+//                                                                                             class: 'IndividualEventInfo'
+//                                                                                             }
+//                                                                                             );
+//                                                                          
+//                                                                          
+//                                                                          //Append the $IndividualEvent to the EventsUL
+//                                                                          $EventsUL.append($IndividualEvent);
+//                                                                          
+//                                                                          
+//                                                                          //Append the Middle, and Right Divs to the $IndividualEvent
+//                                                                          $IndividualEvent.append($divLeft);
+//                                                                          $IndividualEvent.append($divMiddle);
+//                                                                          
+//                                                                          
+//                                                                          //Add the Event DateTime to $divLeft
+//                                                                          $divLeft.append(
+//                                                                                          $('<p>',
+//                                                                                            {
+//                                                                                            text: item.EventDateTime
+//                                                                                            }
+//                                                                                            )
+//                                                                                          );
+//                                                                          
+//                                                                          
+//                                                                          var $EventName= $('<h3>',
+//                                                                                            {
+//                                                                                            text: item.EventName
+//                                                                                            }
+//                                                                                            );
+//                                                                          
+//                                                                          var $EventSVG= $('<img>',
+//                                                                                           {
+//                                                                                           src: './assets/images/' + item.EventType + '.svg',
+//                                                                                           width: '13px'
+//                                                                                           }
+//                                                                                           );
+//                                                                          
+//                                                                          
+//                                                                          var $EventAttendance= $('<p>',
+//                                                                                                  {
+//                                                                                                  //Calculate #ppl attending
+//                                                                                                  text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
+//                                                                                                  class: 'EventAttendance'
+//                                                                                                  }
+//                                                                                                  );
+//                                                                          
+//                                                                          
+//                                                                          //Append the number of available spots
+//                                                                          $EventAttendance.append(
+//                                                                                                  $('<span>',
+//                                                                                                    {
+//                                                                                                    text: item.EventNumSpotsLeft  + " Spots left!",
+//                                                                                                    class: 'EventSpotsLeft'
+//                                                                                                    }
+//                                                                                                    )
+//                                                                                                  );
+//                                                                          
+//                                                                          
+//                                                                          $divMiddle.append($EventName);
+//                                                                          $divMiddle.append($EventSVG);
+//                                                                          $divMiddle.append($EventAttendance);
+//                                                                          
+//                                                                          
+//                                                                          $IndividualEvent.append($EventIDHidden);
+//                                                                          
+//                                                                          }
+//                                                                          );
+//                                                                   
+//                                                                   
+//                                                                   }//Only run if response included matched events
+//                                                                   
+//                                                                   }
+//                                                                   }); //End of AJAX
+//                                                            
+//                                                            
+//                                                            
+//                                                            
+//                                                            }
+//                            );
+
+
+ 
+ 
+ 
+         /******************************************Using manual typing to search for events********************************************/
  
          //When the user types an event sport name, dynamically update DOM as soon as we find a match
          //(Ex: "Soc" matches "soccer" and we load all the soccer events
@@ -1835,8 +2202,13 @@ $(document).ready
                                                                 //because if the user used the dropdown menu prior, the sport SVG will stay there
                                                                 $('#SearchEventSection input').css('background-image', 'none');
                         
+                        
+                                                                //Send an AJAX request to the server to get
+                        
+                        
                                                                 //Make it all lower-case
                                                                 var $UserInput = event.target.value.toLowerCase();
+                        
                         
                         
                                                                 //Write a switch statement
@@ -1865,6 +2237,7 @@ $(document).ready
                         
 
                       
+                        
                                                             }
                         
                         
@@ -1905,13 +2278,15 @@ $(document).ready
                                                     //Remove all other displayed information about "SearchEvent" (if exists)
                                                     $('#SearchEventSection').remove();
                             
+                                                    $('#EventSuccessful').hide();
+                            
                             
                             
                                                     //Only run function if CreateEventSection information is not displayed
                                                     if( $('#CreateEventSection').length == 0 )
                                                     {
-                                                    
-                                                    
+                            
+                            
                                                         //Create a section to show the add event form
                                                         var $CreateEvent = $('<section>',
                                                                                          {
@@ -1927,19 +2302,21 @@ $(document).ready
                                                         //insert $CreateEvent after the #ProfileHeader
                                                         //Update: insert $CreateEvent after the Blurred Background
                                                         $CreateEvent.insertAfter('.blur-all');
-                                                        
-                                                        
-                                                        
+                            
+                            
+                            
                                                         //Create a form for the user to be able to create events
                                                         var $CreateEventForm = $('<form>',
                                                                                          {
-                                                                                            id: 'CreateEventForm'
+                                                                                            id: 'CreateEventForm',
+                                                                                            action: '/CreateNewEvent',
+                                                                                            method: 'POST'
                                                                                          }
                                                                                  );
-                                                        
+                            
                                                         //Append it to the CreateEvent
                                                         $CreateEvent.append($CreateEventForm);
-                                                        
+                            
                             
                             
                             
@@ -1962,7 +2339,9 @@ $(document).ready
                                                                                         ).append(
                                                                                                  $('<input>',     //Input for the EventName
                                                                                                            {
-                                                                                                              type: 'text'
+                                                                                                              type: 'text',
+                                                                                                              name: 'EventName',
+                                                                                                               required: "true"
                                                                                                            }
                                                                                                   )
                                                                                                 );
@@ -1988,17 +2367,29 @@ $(document).ready
                                                                                          ).append(
                                                                                                   $('<input>',     //Input for the EventType
                                                                                                             {
-                                                                                                              type: 'text'
+                                                                                                              type: 'text',
+                                                                                                              name: 'EventType',
+                                                                                                              required: "true"
                                                                                                             }
                                                                                                     )
                                                                                                   );
-
+                            
+                            
                                                         //Append it to the CreateEventForm
                                                         $CreateEventForm.append($EventTypeLabel);
                             
                             
                                                     //Make the EventType input form readonly so the user can't type invalid sports
                                                     $('#EventTypeLabel input').prop("readonly", true);
+                            
+                            
+                                                    //Default value for the sport picker is Football
+                                                    //So the user, doesn't leave it emopty
+                                                    $('#EventTypeLabel input').val( 'Football');
+                                                    $('#EventTypeLabel input').css( 'background-image', 'url("./assets/images/football.svg")');
+                                                    $('#EventTypeLabel input').css( 'background-repeat' , 'no-repeat');
+                                                    $('#EventTypeLabel input').css( 'background-size', '14px');
+                                                    $('#EventTypeLabel input').css('background-position', '3px 5px');
                             
 
                             
@@ -2081,7 +2472,9 @@ $(document).ready
                                                                                          ).append(
                                                                                                   $('<input>',     //Input for the EventName
                                                                                                               {
-                                                                                                                type: 'number'
+                                                                                                                type: 'number',
+                                                                                                                name: 'EventNumppl',
+                                                                                                                required: "true"
                                                                                                               }
                                                                                                     )
                                                                                                   );
@@ -2109,7 +2502,9 @@ $(document).ready
                                                                                                                 {
                                                                                                                //   type: 'datetime-local',
                                                                                                                     type: 'text',
-                                                                                                                    class:'DateTimePicker_Event'
+                                                                                                                    class:'DateTimePicker_Event',
+                                                                                                                    name: 'EventDateTime',
+                                                                                                                    required: "true"
                                                                                                                 }
                                                                                                       )
                                                                                                     );
@@ -2145,7 +2540,9 @@ $(document).ready
                                                                                                       $('<input>',     //Input for the Event EndTime
                                                                                                                     {
                                                                                                                       type: 'text',
-                                                                                                                      class:'TimePicker_Event'
+                                                                                                                      class:'TimePicker_Event',
+                                                                                                                      name: 'EventEndTime',
+                                                                                                                      required: "true"
                                                                                                                     }
                                                                                                         )
                                                                                                       );
@@ -2184,7 +2581,9 @@ $(document).ready
                                                                                                      $('<input>',     //Input for the Event Location
                                                                                                                    {
                                                                                                                     type: 'text',
-                                                                                                                    class:'TimePicker_Event'
+                                                                                                                    class:'TimePicker_Event',
+                                                                                                                    name: 'EventLocation',
+                                                                                                                    required: "true"
                                                                                                                    }
                                                                                                        )
                                                                                                      );
@@ -2211,7 +2610,9 @@ $(document).ready
                                                                                                                     {
                                                                                                                       placeholder: 'Brief Description of event',
                                                                                                                       rows: 4,
-                                                                                                                      maxlength: 400
+                                                                                                                      maxlength: 400,
+                                                                                                                      name: 'EventDescription',
+                                                                                                                      required: "true"
                                                                                                                     }
                                                                                                         )
                                                                                                       );
@@ -2271,10 +2672,12 @@ $(document).ready
                             
                                                         function()
                                                         {
-                                                        
+                            
+                                                            //Remove the datepicker
+                                                            $('.xdsoft_datetimepicker').remove();
                                                             //Remove the event creation section
                                                             $('#CreateEventSection').remove();
-                         
+             
                                                             //unwrap div with the class for blurring the background from #ProfileHeader
                                                             $('#ProfileHeader').unwrap();
 
@@ -2334,12 +2737,131 @@ $(document).ready
              $.datetimepicker.setLocale('en');
 
  
+ /*************************************************************Jing Search User Code Starts*************************************/
  
  
+//DataForm I will send from server = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "userid":"2"}];
+ 
+ DATARECEIVED = [{ "name" : "Parham Oghabi",
+                 "url" : "./assets/images/1.jpg",
+                 "userid" : "67"
+                 },
+                 { "name" : "John doe",
+                 "url" : "./assets/images/2.jpg",
+                 "userid" : "68"
+                 },
+                 { "name" : "Alex doe",
+                 "url" : "./assets/images/7.jpg",
+                 "userid" : "69"
+                 },
+                 { "name" : "Maria doe",
+                 "url" : "./assets/images/4.jpg",
+                 "userid" : "70"
+                 }];
+ 
+// //When the user clicks on the "Friends" Tab, show all the Friends of the user
+ $(document).on('input', '#header input',
+                
+                function(event)
+                {
+
+//                var TypedInput = event.target.value.toLowerCase();
+   
+
+//                //Trigger AJAX and get friends info
+//                $.ajax({
+//                       type: 'GET',
+//                       url: "/SearchUsers",  //URL to send to send to the server
+//                       dataType: 'JSON',
+//                       data: ,     //JSON File
+//                       success: function (response)
+//                       {
+                
+                //Only process if matched users were found
+                if(DATARECEIVED.length > 0)
+                {
+                
+                //The box that contains all matched events
+                //Make it scrollable
+                var $SearchUserPreviewBox = $('<section>',
+                                                           {
+                                                                id: 'SearchUserPreviewBox'
+                                                           }
+                                             );
+                
+                //insert $SearchUserPreviewBox after the search bar, but make it position absolute
+                $SearchUserPreviewBox.insertAfter('#SearchBar input');
+                
+                
+                
+                       //Loop over all the searched users and append them
+                       $.each(DATARECEIVED,
+                              function(index, item)
+                              {
+                              
+                      
+                              
+                              var $FriendName = $('<span>',
+                                                      {
+                                                        text:  item.name
+                                                      }
+                                                  );
+                              
+                              var $FriendImage = $('<img>',
+                                                           {
+                                                             src: item.url,
+                                                             width: '40px',
+                                                             height: '40px',
+                                                             class:  'SearchedUserImage'
+                                                           }
+                                                   );
+                              
+                              //Attach a hidden input to the friend (His user ID)
+                              //So that upon click, we can send this info to the server
+                              var $FriendsID = $('<a>',
+                                                         {
+                                                           href: '/friendID/' + item.userid
+                                                         }
+                                                 );
+                              
+                              
+                              $FriendsID.append($FriendImage);  //Append the Image
+                              $FriendsID.append($FriendName);   //Append the name
+
+                              $SearchUserPreviewBox.append($FriendsID);
+                              }
+                              
+                              );
+                 }
+            
+                       
+//                       }
+//                       }); //End of AJAX
+                
+                }
+                
+                
+                );
  
  
+//
+// 
+// //When a user clicks on any of his friends, take them to their profile
+// $(document).on('click', '.SearchedUser ',
+//                
+//                function()
+//                {
+//                //Store the clicked friend's ID in a cookie to be accessed by Profile_OthersView.js
+//                $.cookie("FriendIDClicked", $(this).children('input').val());
+//                
+//                //Go back to your friend's page
+//                window.location.replace("/Profile_OthersView.html");
+//                }
+//                );
+
  
- 
+ /*************************************************************Jing Search User Code Ends*************************************/
+
  
  
     } //End of $(document).ready function

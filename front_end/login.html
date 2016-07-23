@@ -4,7 +4,9 @@
 	<title>Login Page</title>
 	<link rel="stylesheet" type="text/css" href="assets/css/login.css">
 	<!-- Google Rokkitt Font-->
-	<link href="http://fonts.googleapis.com/css?family=Rokkitt" rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt" rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="assets/scripts/jquery-2.2.4.min.js" defer></script>
+        <script type="text/javascript" src="assets/scripts/login.js" defer></script>
 </head>
 <body>
 	<header id="header"> 
@@ -31,7 +33,7 @@
 	<main>
 		<section class="login_form">
 			<h1>Sign in</h1>
-			<form action="" method="" autocomplete="off">
+			<form action="/WebSiteUserLogin" method="POST" autocomplete="off" id="UserLoginForm">
 		            <input type="email" class="input_email" name="email" placeholder="Email address" required />
 		            <!--<span class="form_hint">Enter a valid email</span> -->
 		            <input type="password" pattern=".{6,}" required title="Minimum 6 characters required"class="input_password" name="password" placeholder="Password" required/>
@@ -43,10 +45,13 @@
 
 		<section class="other_accounts">
 			<h1>Sign in using other methods</h1>
-			<button class="facebook" onclick="location.href='/auth/facebook'"><img src="assets/images/facebook.png" width="17" height="17">
+<!--			<button class="facebook">-->
+<button class="facebook" onclick="location.href='/auth/facebook'">
+            <img src="assets/images/facebook.png" width="17" height="17">
 			<span>Login with Facebook</span></button>
 		</section>
 		
 	</main>
+    <div id="error_mes"></div>
 </body>
 </html>
