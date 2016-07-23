@@ -141,5 +141,5 @@ CREATE TABLE Event_Conversation_Reply(
 	reply_text text,
 	sent TIMESTAMP DEFAULT now(),
 	status VARCHAR(50) NOT NULL,
-	conversation_id INTEGER REFERENCES Event(id)
+	conversation_id INTEGER REFERENCES Event(id) NOT NULL
 );
