@@ -2,11 +2,11 @@
  * Configuration for the Postgres database in Heroku
  */
 
-var user = 'tyvhgoqverwgjf',
-    database = 'dbgvkt98mobtuk',
-    password = 'LbL8CWzLwoh_LoQUoOMMP7iNCV',
+var user = 'wielrhuhgaumwo',
+    database = 'dpnm78ei6assj',
+    password = 'vS5efDv-xOGL5XxcckpMqR2pqT',
     port = 5432,
-    host = 'ec2-54-243-42-108.compute-1.amazonaws.com';
+    host = 'ec2-54-225-244-221.compute-1.amazonaws.com';
 
 /*
  * Extended String functionality to support place holders
