@@ -3,6 +3,7 @@ $(document).ready
 (
     function()
     {
+ 
         //Get the logged-in user's basic info when they login: profile pic, name, UnreadNotifications icons
          $.ajax({
                 type: 'GET',
@@ -52,24 +53,62 @@ $(document).ready
                     
                 }
                 }); //End of AJAX
-         
+ 
+ 
+ 
+ 
  
          //Get the information for the profile being viewed using "FriendIDClicked" cookie:
          //The name and the path of the profile picture in the server
           $.ajax({
                 type: 'GET',
                 url: "/GetDisplayedProfileInfo",
-                data: $.cookie("FriendIDClicked"), //Send the ID of the user we want to see
+               // data: $.cookie("FriendIDClicked"), //Send the ID of the user we want to see
                 dataType: 'JSON', //DataType being received
                 success: function (response)
                 {
-                    console.log(response);
+                    //console.log(response);
                     
                  //Change the src of the profile picture to the profile pic stored on the server
                  $( "#ProfilePic" ).attr('src', response[0].ProfileImage );
                  
                  //Display the user's correct name
                  $( "#Profile_UserName" ).text(response[0].username);
+                 
+                     //See if this user is our friend or not
+                     $.ajax({
+                            type: 'GET',
+                            url: "/GetIsFriendorNot",
+                            dataType: 'text', //DataType being received
+                            success: function (response)
+                            {
+                                //hide the "Add Friend" button
+                                if(response == "yesfriend")
+                                {
+                                    $('#AddFriend').hide();
+                                }
+                            
+                                //We added the profile we are viewing
+                                else if(response == "pendingfriend")
+                                {
+                                    $('#AddFriend p').text('Friend Requested');
+                                }
+                            
+                                //notfriend
+                                //Show the "Add Friend" Button
+                                else if(response == "notfriend")
+                                {
+                                    $('#AddFriend').show();
+                                }
+                            
+                                //This user added us
+                                else if(response == "ThisUserAddedYou")
+                                {
+                                    $('#AddFriend p').text('User Requested to be Friends');
+                                }
+                            
+                            }
+                            }); //End of AJAX
                  
                 }
                 }); //End of AJAX
@@ -119,192 +158,32 @@ $(document).ready
  
  
  
-         //When user clicks "Add Friend", change it to friend-requested
+         /****************************************WebSockets***********************************/
+         var NotificationSocket = io('/Notifications');
+         /************************************************************************************/
+
+         //Add a friend
          $(document).on('click', '#AddFriend',
                         
                                     function()
                                     {
-                                        $('#AddFriend p').text('Friend Requested');
+                                        var buttonValue = $('#AddFriend p').text();
+                        
+                                        //Only proceed if we haven't already added the user
+                                        if(buttonValue == "Add Friend")
+                                        {
+                                            //Send our userid and the friendid (person we want to add) to the server
+                                            //using websockets
+                                            NotificationSocket.emit('/AddAsFriend', {userid:  $.cookie("UserID"), friendid: $.cookie("FriendIDClicked") });
+                                            $('#AddFriend p').text('Friend Requested');
+                                        }
                                     }
-                                    
-                        
                         );
+ 
+ 
 
- 
-         //Get the window height for the chat box
-         $Window_Height = $(window).height();
-         $Window_Width = $(window).width();
- 
- 
-        //Update window_height if browser is resized
-         $(window).resize
-         (
-              function()
-              {
-                  //Update Window_Height and Window_Width
-                  $Window_Height = $(window).height();
-                  $Window_Width = $(window).width();
-          
-          
-                  //If the chatbox exists, reposition it when window is resized
-                  if( $('#ChatBox').length > 0 )
-                  {
-                      $('#ChatBox').css('top', $Window_Height -  $('#ChatBox').height() );
-                      $('#ChatBox').css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
-          
-                       $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
-                  }
-          
-          
-          }
-     );
- 
-        //When the user clicks "Message", make a ChatBox pop up at the bottom of the screen like facebook
-        $(document).on('click', '#MessageUser',
-            
-                                function()
-                                {
-                       
-                                //If a ChatBox exists, don't make a new one
-                                if( $('#ChatBox').length == 0 )
-                                {
-                       
-                                   $Window_Height = $(window).height();
-                                   $Window_Width = $(window).width();
 
-                       
-                                    //Create a dynamic div for the chatbox header
-                                    var $ChatBoxHeader = $('<div>',
-                                                                    {
-                                                                      id: 'ChatBoxHeader'
-                                                                    }
-                                                          );
-                       
-                                    //Name of the user we want to message to
-                                    var $UserName =  $('<p>',
-                                                              {
-                                                                text: 'Mesut Ozil',
-                                                                class: 'ChatBoxUserName'
-                                                              }
-                                                      );
-                       
-                                   //"X" svg to close the chat
-                                   var $CloseChat = $('<img>',
-                                                              {
-                                                                src: './assets/images/Close_Message.svg',
-                                                                width: '12px',
-                                                                id: 'ChatBoxClose'
-                                                              }
-                                                     );
-                       
-                       
-                                    //Append the $UserName and $CloseChat to the $ChatBoxHeader
-                                    $ChatBoxHeader.append($UserName);
-                                    $ChatBoxHeader.append($CloseChat);
-                       
-                       
-                                   //Create a new div for the chat box
-                                   //Chatbox is global now
-                                      var  $ChatBox = $('<section>',
-                                                                     {
-                                                                        id: 'ChatBox'
-                                                                     }
-                                                      );
-                       
-                                    //Append the $ChatBox to the page first
-                                    $('body').append($ChatBox);
-                       
-                       
-                                    //$ChatBox should be fixed on the bottom of the page
-                                    //Position should be "Height of window" - "Height of chatbox"
-                                   $ChatBox.css('top', $Window_Height - $ChatBox.height() );
-                                   $ChatBox.css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
-                       
-                       
-                                    $ChatBox.append($ChatBoxHeader);
-                       
-                       
-                       
-                                    //Get Message Data from the web server, and append list of previous messages with the user
-                       
-                                    var  $ChatContent = $('<div>',
-                                                                   {
-                                                                      id: 'ChatContent'
-                                                                   }
-                                                         );
-                       
-                       
-                                       //Add an initial <br/> to prevent overlapping of chatheader and chatcontent
-                                       $ChatContent.append(
-                                                             $('<br/>', {})
-                                                          );
-                       
-                       
-                                   for(var i=0; i< 50; i++)
-                                   {
-                                       var  $p = $('<p>',
-                                                         {
-                                                            text: 'Hey bro! How have you been recently? Havent seen you!',
-                                                            class: 'ChatContentDatas'
-                                                         }
-                                                  );
-                                       
-                                       $ChatContent.append($p);
 
-                                   }
-                       
-                                    //Append $ChatContent to the $ChatBox
-                                    $ChatBox.append($ChatContent);
-                       
-                       
-                                   //Create a form input for the user to be able to type
-                                   var $ChatBoxForm = $('<form>',
-                                                                  {
-                                                                    id: 'ChatBoxForm'
-                                                                  }
-                                                      );
-                       
-                    
-                                   //Create a textarea element
-                                   var $ChatBoxFormTextarea = $('<textarea>',
-                                                                        {
-                                                                             placeholder: 'Type a message...',
-                                                                             width:  $ChatBox.width() - 5   //Width of the chatbox -3px
-                                                                        }
-                                                             );
-                       
-                                    //Append the textarea to the form
-                                    $ChatBoxForm.append($ChatBoxFormTextarea);
-                       
-                                    //Append the form to the ChatBox
-                                    $ChatBox.append($ChatBoxForm);
-                       
-                                    //position the form at the bottom of the ChatBox
-                                    $ChatBoxForm.css('top', $Window_Height -  $ChatBoxForm.height() );
-                       
-                              }
-                                }
-                       
-            
-            
-            );
- 
- 
- 
-        //When the user presses the "X" button on the chat, close it
-         $(document).on('click', '#ChatBoxClose',
-                        
-                                            function()
-                                            {
-                                                //Remove the ChatBox from the page and all the contents inside it
-                                                $('#ChatBox').remove();
-                                            }
-                        
-                        
-                      );
- 
- 
- 
  
  
          //DataForm = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "friendid":"2"}];
@@ -641,11 +520,11 @@ $(document).ready
                             
                                                        //Create a star SVG four times
                                                        var $star = $('<img>',
-                                                                                   {
-                                                                                       src: './assets/images/rating_star.svg',
-                                                                                       width: '15px'
-                                                                                   }
-                                                                           );
+                                                                               {
+                                                                                   src: './assets/images/rating_star.svg',
+                                                                                   width: '15px'
+                                                                               }
+                                                                    );
                             
                                                         //Append it to StarRatings
                                                         $StarRatings.append($star);
@@ -835,9 +714,7 @@ $(document).ready
  //Your Code should end here
  /***************************************************Paul******************************************************/
  
- 
- 
- 
+
  
  
     } //End of $(document).ready function

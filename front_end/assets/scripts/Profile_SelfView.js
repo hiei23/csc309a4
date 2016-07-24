@@ -132,184 +132,6 @@ $(document).ready
                 
                 );
  
-
- 
-        //Get the window height for the chat box
-        $Window_Height = $(window).height();
-         $Window_Width = $(window).width();
- 
- 
-        //Update window_height if browser is resized
-         $(window).resize
-         (
-              function()
-              {
-                  //Update Window_Height and Window_Width
-                  $Window_Height = $(window).height();
-                  $Window_Width = $(window).width();
-          
-          
-                  //If the chatbox exists, reposition it when window is resized
-                  if( $('#ChatBox').length > 0 )
-                  {
-                       $('#ChatBox').css('top', $Window_Height -  $('#ChatBox').height() );
-                       $('#ChatBox').css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
-          
-                        $('#ChatBoxForm').css('top', $Window_Height -  $('#ChatBoxForm').height() );
-          
-                  }
-              }
-     );
- 
-        //Now When the user clicks on the "FB_Message_SVG" on the top right corner
-        //make a ChatBox pop up at the bottom of the screen like facebook
-        $(document).on('click', '#FB_Message_SVG',
-            
-                                function()
-                                {
-                       
-//                               //Remove all other displayed information about "Creating Events" (if exists)
-//                               $('#CreateEventSection').remove();
-//                               //unwrap div with the class for blurring the background from #ProfileHeader
-//                               $('#ProfileHeader').unwrap();
-                       
-                                //If a ChatBox exists, don't make a new one
-                                if( $('#ChatBox').length == 0 )
-                                {
-                       
-                                   $Window_Height = $(window).height();
-                                   $Window_Width = $(window).width();
-
-                       
-                                    //Create a dynamic div for the chatbox header
-                                    var $ChatBoxHeader = $('<div>',
-                                                                    {
-                                                                      id: 'ChatBoxHeader'
-                                                                    }
-                                                          );
-                       
-                                    //Name of the user we want to message to
-                                    var $UserName =  $('<p>',
-                                                              {
-                                                                text: 'Manuel Neur',
-                                                                class: 'ChatBoxUserName'
-                                                              }
-                                                      );
-                       
-                                   //"X" svg to close the chat
-                                   var $CloseChat = $('<img>',
-                                                              {
-                                                                src: './assets/images/Close_Message.svg',
-                                                                width: '12px',
-                                                                id: 'ChatBoxClose'
-                                                              }
-                                                     );
-                       
-                       
-                                    //Append the $UserName and $CloseChat to the $ChatBoxHeader
-                                    $ChatBoxHeader.append($UserName);
-                                    $ChatBoxHeader.append($CloseChat);
-                       
-                       
-                                   //Create a new div for the chat box
-                                   //Chatbox is global now
-                                      var  $ChatBox = $('<section>',
-                                                                     {
-                                                                        id: 'ChatBox'
-                                                                     }
-                                                      );
-                       
-                                    //Append the $ChatBox to the page first
-                                    $('body').append($ChatBox);
-                       
-                       
-                                    $ChatBox.append($ChatBoxHeader);
-                       
-                                   //$ChatBox should be fixed on the bottom of the page
-                                   //Position should be "Height of window" - "Height of chatbox"
-                                   $ChatBox.css('top', $Window_Height - $ChatBox.height() );
-                                   $ChatBox.css('left',  $Window_Width - ( $('#ChatBox').width() + ( 0.03 * $Window_Width ) ) );
-                                   
-                       
-                                    //Get Message Data from the web server, and append list of previous messages with the user
-                       
-                                    var  $ChatContent = $('<div>',
-                                                                   {
-                                                                      id: 'ChatContent'
-                                                                   }
-                                                         );
-                       
-                       
-                                       //Add an initial <br/> to prevent overlapping of chatheader and chatcontent
-                                       $ChatContent.append(
-                                                             $('<br/>', {})
-                                                          );
-                       
-                       
-                                   for(var i=0; i< 50; i++)
-                                   {
-                                       var  $p = $('<p>',
-                                                         {
-                                                            text: 'Hey bro! How have you been recently? Havent seen you!',
-                                                            class: 'ChatContentDatas'
-                                                         }
-                                                  );
-                                       
-                                       $ChatContent.append($p);
-
-                                   }
-                       
-                                    //Append $ChatContent to the $ChatBox
-                                    $ChatBox.append($ChatContent);
-                       
-                       
-                                   //Create a form input for the user to be able to type
-                                   var $ChatBoxForm = $('<form>',
-                                                                  {
-                                                                    id: 'ChatBoxForm'
-                                                                  }
-                                                      );
-                       
-                    
-                                   //Create a textarea element
-                                   var $ChatBoxFormTextarea = $('<textarea>',
-                                                                        {
-                                                                             placeholder: 'Type a message...',
-                                                                             width:  $ChatBox.width() - 5   //Width of the chatbox -3px
-                                                                        }
-                                                             );
-                       
-                                    //Append the textarea to the form
-                                    $ChatBoxForm.append($ChatBoxFormTextarea);
-                       
-                                    //Append the form to the ChatBox
-                                    $ChatBox.append($ChatBoxForm);
-                       
-                                    //position the form at the bottom of the ChatBox
-                                    $ChatBoxForm.css('top', $Window_Height -  $ChatBoxForm.height() );
-                   
-                       
-                              }
-                                }
-                       
-            
-            
-            );
- 
- 
- 
-        //When the user presses the "X" button on the chat, close it
-         $(document).on('click', '#ChatBoxClose',
-                        
-                                            function()
-                                            {
-                                                //Remove the ChatBox from the page and all the contents inside it
-                                                $('#ChatBox').remove();
-                                            }
-                        
-                        
-                      );
- 
  
  
          //DataForm = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "friendid":"2"}];
@@ -1728,7 +1550,7 @@ $(document).ready
                                                                                                              type: 'text',
                                                                                                              id: 'SearchForEvents',
                                                                                                              placeholder: 'Search for events by using dropdown menu or typing',
-                                                                                                             maxlength: 12
+                                                                                                             maxlength: 30
                                                                                                             //Give the user the ability to both type and click from dropdown menu
                                                                                                             // readonly: ""
                                                                                                            }
@@ -1855,6 +1677,7 @@ $(document).ready
                             
                                                                     var SelectedEventSport = $(this).children('p').text().toLowerCase();
                             
+                            
                                                                     //Send an AJAX to the server to get back events matching the clicked sport
                                                                     $.ajax({
                                                                            type: 'POST',
@@ -1865,135 +1688,7 @@ $(document).ready
                                                                            //Receives all the matching events
                                                                            success: function (response)
                                                                            {
-                                                               
-                                                                            //Only process if matched events were found
-                                                                            if(response.length > 0)
-                                                                            {
-                                                                           
-                                                                               //The box that contains all matched events
-                                                                               var $SearchEventPreviewBox = $('<section>',
-                                                                                                                          {
-                                                                                                                            id: 'SearchEventsPreviewBox'
-                                                                                                                          }
-                                                                                                            );
-                                                                               
-                                                                               //insert $SearchEventPreviewBox after the #SearchEventForm
-                                                                               $SearchEventPreviewBox.insertAfter('#SearchEventForm');
-                                                                               
-                                                                               //The <ul> inside which we will place the matched events
-                                                                               var $EventsUL = $('<ul>',
-                                                                                                         {
-                                                                                                            id: 'SearchEventsUL'
-                                                                                                         }
-                                                                                                 );
-                                                                               
-                                                                               //UL contains all the event previews
-                                                                               $SearchEventPreviewBox.append($EventsUL);
-                                                                           
-                                                                           
-                                                                              //Loop over the matched events
-                                                                              $.each(response,
-                                                                                         function(index, item)
-                                                                                         {
-                                                                                         
-                                                                                         //$IndividualEvent is each of the individual event preview
-                                                                                         var $IndividualEvent = $('<li>',
-                                                                                                                        {
-                                                                                                                         class: 'IndividualEventPreview'
-                                                                                                                        }
-                                                                                                                  );
-                                                                                         
-                                                                                         var $EventIDHidden= $('<input>',
-                                                                                                                       {
-                                                                                                                       type: 'hidden',
-                                                                                                                       name: 'EventID',
-                                                                                                                       value: item.EventID
-                                                                                                                       }
-                                                                                                               
-                                                                                                               );
-                                                                                     
-                                              
-                                                                                         //$divLeft contains the event Date and Time
-                                                                                         var $divLeft = $('<div>',
-                                                                                                                  {
-                                                                                                                   class: 'IndividualEventDateTime'
-                                                                                                                  }
-                                                                                                          );
-                                                                                         
-                                                                                         //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
-                                                                                         var $divMiddle = $('<div>',
-                                                                                                                    {
-                                                                                                                      class: 'IndividualEventInfo'
-                                                                                                                    }
-                                                                                                            );
-                                                                                     
-                                                                                         
-                                                                                         //Append the $IndividualEvent to the EventsUL
-                                                                                         $EventsUL.append($IndividualEvent);
-                                                                                         
-                                                                                         
-                                                                                         //Append the Middle, and Right Divs to the $IndividualEvent
-                                                                                         $IndividualEvent.append($divLeft);
-                                                                                         $IndividualEvent.append($divMiddle);
-                                                                                         
-                                                                                         
-                                                                                         //Add the Event DateTime to $divLeft
-                                                                                         $divLeft.append(
-                                                                                                         $('<p>',
-                                                                                                                   {
-                                                                                                                     text: item.EventDateTime
-                                                                                                                   }
-                                                                                                           )
-                                                                                                         );
-                                                                                         
-                                                                                  
-                                                                                         var $EventName= $('<h3>',
-                                                                                                                   {
-                                                                                                                     text: item.EventName
-                                                                                                                   }
-                                                                                                           );
-                                                                                         
-                                                                                         var $EventSVG= $('<img>',
-                                                                                                                  {
-                                                                                                                    src: './assets/images/' + item.EventType + '.svg',
-                                                                                                                    width: '13px'
-                                                                                                                  }
-                                                                                                          );
-                                                                                         
-                                                                                         
-                                                                                         var $EventAttendance= $('<p>',
-                                                                                                                         {
-                                                                                                                          //Calculate #ppl attending
-                                                                                                                          text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
-                                                                                                                          class: 'EventAttendance'
-                                                                                                                         }
-                                                                                                                 );
-                                                                                         
-                                                                                         
-                                                                                         //Append the number of available spots
-                                                                                         $EventAttendance.append(
-                                                                                                                 $('<span>',
-                                                                                                                           {
-                                                                                                                             text: item.EventNumSpotsLeft  + " Spots left!",
-                                                                                                                             class: 'EventSpotsLeft'
-                                                                                                                           }
-                                                                                                                   )
-                                                                                                                 );
-                                                                                         
-                                                                                         
-                                                                                         $divMiddle.append($EventName);
-                                                                                         $divMiddle.append($EventSVG);
-                                                                                         $divMiddle.append($EventAttendance);
-                                                                                         
-                                                                   
-                                                                                          $IndividualEvent.append($EventIDHidden);
-                                                                                         
-                                                                                         }
-                                                                                     );
-                                                                                  
-                                                                                
-                                                                            }//Only run if response included matched events
-                                                                           
+                                                                                SearchEventsDropDownResults(response);
                                                                            }
                                                                           }); //End of AJAX
                   
@@ -2005,192 +1700,421 @@ $(document).ready
  
  
  
+ 
+ 
+            //When the user clicks on any of the preview events shown to get more details about that event
+             $(document).on('click', '#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview',
+                                                            function()
+                                                            {
+                            
+                                                            //Get the selected event ID from the hidden input
+                                                            var SelectedEventID = $(this).children('input[name=EventID]').val();
+                            
+                            
+                                                            //Send an AJAX to the server to get more details about selected event
+                                                            $.ajax({
+                                                                   type: 'POST',
+                                                                   url: "/SearchEventsMoreDetail",
+                                                                   dataType: 'JSON',
+                                                                   //Send selected sport to server as JSON
+                                                                   data: { "EventClicked": SelectedEventID },
+                                                                   //Receives more details about the event
+                                                                   success: function (response)
+                                                                   {
+                                                                
+                                                                       //console.log(response[0]);
+                                                                   
+                                                                   //Hide all displayed information about "SearchEventSection" first
+                                                                   //Don't remove it, it will be bad efficiency
+                                                                   $('#SearchEventSection').hide();
+                                                          
+                                                                   
+                                                                   //Create a section to show the specific event
+                                                                   var $SelectedEvent = $('<section>',
+                                                                                                      {
+                                                                                                        id: 'SelectedEvent'
+                                                                                                      }
+                                                                                          )
+                                                                   
+                                                                   //Show a back SVG on the top of the page
+                                                                   var $Return2Events =  $('<img>',
+                                                                                                   {
+                                                                                                     src: './assets/images/return-button.svg',
+                                                                                                     class: 'Return2EventSearch',
+                                                                                                     width: '30px'
+                                                                                                    }
+                                                                                           );
+                                                                   
+                                                                   $Return2Events.css( 'cursor', 'pointer' );
+                                                                   $Return2Events.css( 'margin-bottom', '20px' );
+                                                                   
+                                                                   //insert $SelectedEvent after the #ProfileHeader
+                                                                   $SelectedEvent.insertAfter('#ProfileHeader');
+                                                                   $SelectedEvent.append($Return2Events);
+                                                                   
+                                                                   
+                                                                   //Show a Join Event Button on the top of the page
+                                                                   var $JoinEvent =  $('<p>',
+                                                                                               {
+                                                                                                 text: 'Join Event',
+                                                                                                 class: 'JoinEvent'
+                                                                                               }
+                                                                                           );
+                                                                   
+                                                                   
+                                                                   //Attach a hidden input containing the event ID
+                                                                   //In the case of the user clicking "JoinEvent"
+                                                                   var $eventid = $('<input>',
+                                                                                           {
+                                                                                             type: 'hidden',
+                                                                                             name: 'TheEventID',
+                                                                                             value: SelectedEventID
+                                                                                           }
+                                                                                   );
+                                                                 
+                                                                   $JoinEvent.append($eventid);
+                                                                   $SelectedEvent.append($JoinEvent);
+                                                                   
+                                                                   
+                                                                   
+                                                          
+                                                                   
+                                                                   var $EventName= $('<h3>',
+                                                                                             {
+                                                                                              text: response[0].EventName,
+                                                                                              class: 'EventName'
+                                                                                             }
+                                                                                     );
+                                                                   
+                                                                   //Append the $EventName
+                                                                   $SelectedEvent.append($EventName);
+                                                                   
+                                                                   
+                                                                   //$BasicEventInfo_Wrapper wraps "EventSportName", "EventDateTime", "EventDuration", "EventLocation", "EventAttendance"
+                                                                   var $BasicEventInfo_Wrapper= $('<div>',
+                                                                                                          {
+                                                                                                            class: 'BasicEventInfo_Wrapper'
+                                                                                                          }
+                                                                                                  );
+                                                                   
+                                                                   
+                                                                   //$EventType is the Event SVG + Sport name
+                                                                   var $EventType= $('<div>',
+                                                                                             {
+                                                                                               class: 'EventSportName'
+                                                                                             }
+                                                                                     );
+                                                                   
+                                                                   
+                                                                   var $EventSVG= $('<img>',
+                                                                                            {
+                                                                                             src: './assets/images/' + response[0].EventType + '.svg',
+                                                                                             width: '20px'
+                                                                                            }
+                                                                                    );
+                                                                   
+                                                                   
+                                                                   var $EventSportName= $('<p>',
+                                                                                                  {
+                                                                                                   text: response[0].EventType
+                                                                                                  }
+                                                                                          );
+                                                                   
+                                                                   
+                                                                   $EventType.append($EventSVG);
+                                                                   $EventType.append($EventSportName);
+                                                                   
+                                                                   
+                                                                   //Append the $EventName
+                                                                   $BasicEventInfo_Wrapper.append($EventType);
+                                                                   
+                                                                   
+                                                                   var $EventDateTime= $('<div>',
+                                                                                                 {
+                                                                                                   class: 'EventDateTime'
+                                                                                                 }
+                                                                                         );
+                                                                   
+                                                                   
+                                                                   var $EventCalendarSVG= $('<img>',
+                                                                                                    {
+                                                                                                    src: './assets/images/calendar.svg',
+                                                                                                    width: '18px'
+                                                                                                    }
+                                                                                            );
+                                                                   
+                                                                   var $EventDate= $('<p>',
+                                                                                             {
+                                                                                             text: response[0].EventDateTime
+                                                                                             }
+                                                                                     );
+                                                                   
+                                                
+                                                                   $EventDateTime.append($EventCalendarSVG);
+                                                                   $EventDateTime.append($EventDate);
+                                                                   
+                                                                   //Append the $EventDateTime
+                                                                   $BasicEventInfo_Wrapper.append($EventDateTime);
+                                                                   
+                                                                   
+                                                                   //The Event Duration is calculated from the Event DateTime and Event EndTime and sent back in the JSON
+                                                                   //Calculate this on Node.js server for efficiency
+                                                                   var $EventDuration= $('<div>',
+                                                                                                 {
+                                                                                                 class: 'EventDuration'
+                                                                                                 }
+                                                                                         ).append(
+                                                                                                  $('<img>',
+                                                                                                            {
+                                                                                                            src: './assets/images/clock.svg',
+                                                                                                            width: '18px'
+                                                                                                            }
+                                                                                                    )
+                                                                                                  ).append(
+                                                                                                           $('<p>',
+                                                                                                                 {
+                                                                                                                 text: response[0].Duration
+                                                                                                                 }
+                                                                                                             )
+                                                                                                           );
+                                                                   
+                                                                   
+                                                                   //Append the $EventDuration
+                                                                   $BasicEventInfo_Wrapper.append($EventDuration);
+                                                                   
+                                                                   var $EventLocation= $('<div>',
+                                                                                                 {
+                                                                                                   class: 'EventLocation'
+                                                                                                 }
+                                                                                         ).append(
+                                                                                                  $('<img>',
+                                                                                                            {
+                                                                                                              src: './assets/images/location.svg',
+                                                                                                              width: '15px'
+                                                                                                            }
+                                                                                                    )
+                                                                                                  ).append(
+                                                                                                           $('<p>',
+                                                                                                                 {
+                                                                                                                   text: response[0].EventLocation
+                                                                                                                 }
+                                                                                                             )
+                                                                                                           );
+                                                                   
+                                                                   
+                                                                   //Append the $EventLocation
+                                                                   $BasicEventInfo_Wrapper.append($EventLocation);
+                                                                   
+                                                                   
+                                                                   var $EventAttendance= $('<p>',
+                                                                                               {
+                                                                                               //Calculate #ppl attending
+                                                                                               text: (response[0].EventNumPpl - response[0].EventNumSpotsLeft)  + " People Attending ",
+                                                                                               class: 'EventAttendance'
+                                                                                               }
+                                                                                           );
+                                                                   
+                                                                   
+                                                                   //Append the number of available spots
+                                                                   $EventAttendance.append(
+                                                                                           $('<span>',
+                                                                                                     {
+                                                                                                     text: response[0].EventNumSpotsLeft  + " Spots left!",
+                                                                                                     class: 'EventSpotsLeft'
+                                                                                                     }
+                                                                                             )
+                                                                                           );
+                                                                   
+                                                                   
+                                                                   $BasicEventInfo_Wrapper.append($EventAttendance);
+                                                                   
+                                                                   
+                                                                   
+                                                                   
+                                                                   $SelectedEvent.append($BasicEventInfo_Wrapper);
+                                                                   
+                                                                   
+                                                                   var $EventDescription= $('<p>',
+                                                                                                {
+                                                                                                text: response[0].EventDescription,
+                                                                                                class: 'EventDescription'
+                                                                                                }
+                                                                                            );
+                                                                   
+                                                                   
+                                                                   //Append the $EventDescription
+                                                                   $SelectedEvent.append($EventDescription);
+                                                                   
+                                                                   
+                                                                   //Add picture of the Event admin
+                                                                   var $EventAdmin = $('<div>',
+                                                                                               {
+                                                                                               id: 'EventAdmin'
+                                                                                               }
+                                                                                       );
+                                                                   
+                                                                   //Add picture of the Event admin
+                                                                   var $EventAdminPic = $('<img>',
+                                                                                                  {
+                                                                                                  src: response[0].EventAdminPic,
+                                                                                                  width: '100px',
+                                                                                                  height: '100px',
+                                                                                                  class:  'UserImages'
+                                                                                                  }
+                                                                                          );
+                                                                   
+                                                                   
+                                                                   var $EventAdminName = $('<p>',
+                                                                                                   {
+                                                                                                   text:  response[0].EventAdminName
+                                                                                                   }
+                                                                                           );
+                                                                   
+                                                                   $EventAdmin.append($EventAdminPic);
+                                                                   $EventAdmin.append($EventAdminName);
+                                                                   
+                                                                   
+                                                                   $SelectedEvent.append($EventAdmin);
+                                                                   
+                                                                   
+                                                                   
+                                                                   
+                                                                   //All the users who joined this event
+                                                                   var $EventUsers = $('<div>',
+                                                                                               {
+                                                                                                 id: 'EventUsers'
+                                                                                               }
+                                                                                       );
+                                                                   
+                                                                   
+                                                                   //Trigger AJAX
+                                                                   //Send the EventID and get List of all the users in that event
+                                                                   $.ajax({
+                                                                          type: 'POST',
+                                                                          url: "/GetEventUsers",
+                                                                          dataType: 'JSON',
+                                                                          //Send the EventID of the event (hidden input Event ID) as a JSON File
+                                                                          data: { eventID: SelectedEventID },
+                                                                          success: function (response)
+                                                                          {
+                                                                          //Loop over all the users in this event and append them
+                                                                          $.each(response,
+                                                                                 function(index, item)
+                                                                                 {
+                                                                                 
+                                                                                 
+                                                                                 var $User = $('<div>',
+                                                                                                       {
+                                                                                                         class: 'EventUser'
+                                                                                                       }
+                                                                                               );
+                                                                                 
+                                                                                 var $UserName = $('<p>',
+                                                                                                           {
+                                                                                                             text:  item.name
+                                                                                                           }
+                                                                                                   );
+                                                                                 
+                                                                                 var $UserImage = $('<img>',
+                                                                                                            {
+                                                                                                              src: item.url,
+                                                                                                              width: '80px',
+                                                                                                              height: '80px',
+                                                                                                              class:  'UserImages'
+                                                                                                            }
+                                                                                                    );
+                                                                                 
+                                                                                 //Attach a hidden input to the User ID
+                                                                                 //So that upon click, we can send this info to the server
+                                                                                 var $UserID = $('<input>',
+                                                                                                             {
+                                                                                                             type: 'hidden',
+                                                                                                             name: 'FriendID',
+                                                                                                             value: item.friendid
+                                                                                                             }
+                                                                                                 );
+                                                                                 
+                                                                                 $User.append($UserImage);  //Append the Image
+                                                                                 $User.append($UserName);   //Append the name
+                                                                                 $User.append($UserID);   //Append the user id
+                                                                                 
+                                                                                 
+                                                                                 $EventUsers.append($User);
+                                                                                 }
+                                                                                 );
+                                                                          
+                                                                          
+                                                                          //Append all the event users
+                                                                          $SelectedEvent.append($EventUsers);
+                                                             
+                                                                        
+                                                                          
+                                                                          }
+                                                                          }); //End of AJAX 1 (Get Event Users)
+                                                                   
+
+                                                                        //No need to get the group chat messages because the user hasn't joined this event yet
+                                                                        //so he/she can't view the group messages
+                                                                
+                                                                   
+                                                                   }
+                                                                   }); //End of AJAX
+                            
+                                                            
+                                                            
+                                                            
+                                                            }
+                            );
+ 
+ 
+ 
+ 
+             //When the user clicks on the return SVG, return to continue searching events
+             $(document).on('click', '#SelectedEvent .Return2EventSearch',
+                                                                            function()
+                                                                            {
+                                                                                //Remove all info about the selected event
+                                                                                $('#SelectedEvent').remove();
+                                                                                
+                                                                                //Show the search section
+                                                                                $('#SearchEventSection').show();
+                                                                            }
+                            );
+ 
+
+             //When the user clicks on the "Join Event Button"
+             $(document).on('click', '.JoinEvent',
+                                                    function()
+                                                    {
+                            
+                            
+                                                    var EventToJoin = $(this).children('input').val();
+ 
+                                                    //Change Join Event to Joined
+                                                    $(this).text('Joined! View the event in your Events Tab!');
+                                                    $(this).css('width','200px');
+                            
+                                                    //Send an AJAX to the server that the user joined this event
+                                                    $.ajax({
+                                                           type: 'POST',
+                                                           url: "/JoinEvent",  //URL to send to send to the server
+                                                           dataType: 'text',
+                                                           data: { "EventToJoin": EventToJoin },
+                                                           //Receives the path of the user's profile picture in the server
+                                                           success: function (response)
+                                                           {
+                                                           
+                                                           }
+                                                           }); //End of AJAX
+                                                    }
+                            );
 
 
  
- //
-// hide whole "SearchEventSection", no + SVG sign anymore
- //
- 
- //Display full data of event, NOTE!!
- //DISPLAY everything EXCEPT THE GROUP CHAT! no need to process that, YOU ONLY DISPLAY THE GROUP CHAT IN YOUR OWN Event tab
- //
- 
- //Add a return SVG on top, if click on the return SVG, delete the SHOWN full event detail, and return to displaying the pre-shown mini-preview events
- //ie. upon clicking the return button
  
  
- //Also add a Lime Green "JOIN" Button. When clicked, on the server DB add the user to this event in
- //EventUsers
- 
- //And then response okay, and show a tick sign, event added and resume showing the mini-previews?
- 
- //For .On #input or typing, do ajax live and keep getting back results and displying, don't remove the outher section though,
- //Do something smarter! #Remove All children of the <ul>  , all the <li's> make them removed
- 
-            //When the user clicks on any of the preview events matching their search
-//             $(document).on('click', '#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview',
-//                                                            function()
-//                                                            {
-//                            
-//                                                            //Hide the #SearchEventSection
-//                                                            $('#SearchEventSection').hide();
-//                            
-//                            
-//                                                            var SelectedEventID = $(this).children('input[name=EventID]').val();
-//                            
-//                                                            //Send an AJAX to the server to get back events matching the clicked sport
-//                                                            $.ajax({
-//                                                                   type: 'POST',
-//                                                                   url: "/SearchEventsByClick",
-//                                                                   dataType: 'JSON',
-//                                                                   //Send selected sport to server as JSON
-//                                                                   data: { "EventSportClicked": SelectedEventSport },
-//                                                                   //Receives all the matching events
-//                                                                   success: function (response)
-//                                                                   {
-//                                                                   
-//                                                                   //Only process if matched events were found
-//                                                                   if(response.length > 0)
-//                                                                   {
-//                                                                   
-//                                                                   //The box that contains all matched events
-//                                                                   var $SearchEventPreviewBox = $('<section>',
-//                                                                                                  {
-//                                                                                                  id: 'SearchEventsPreviewBox'
-//                                                                                                  }
-//                                                                                                  );
-//                                                                   
-//                                                                   //insert $SearchEventPreviewBox after the #SearchEventForm
-//                                                                   $SearchEventPreviewBox.insertAfter('#SearchEventForm');
-//                                                                   
-//                                                                   //The <ul> inside which we will place the matched events
-//                                                                   var $EventsUL = $('<ul>',
-//                                                                                     {
-//                                                                                     id: 'SearchEventsUL'
-//                                                                                     }
-//                                                                                     );
-//                                                                   
-//                                                                   //UL contains all the event previews
-//                                                                   $SearchEventPreviewBox.append($EventsUL);
-//                                                                   
-//                                                                   
-//                                                                   //Loop over the matched events
-//                                                                   $.each(response,
-//                                                                          function(index, item)
-//                                                                          {
-//                                                                          
-//                                                                          //$IndividualEvent is each of the individual event preview
-//                                                                          var $IndividualEvent = $('<li>',
-//                                                                                                   {
-//                                                                                                   class: 'IndividualEventPreview'
-//                                                                                                   }
-//                                                                                                   );
-//                                                                          
-//                                                                          var $EventIDHidden= $('<input>',
-//                                                                                                {
-//                                                                                                type: 'hidden',
-//                                                                                                name: 'EventID',
-//                                                                                                value: item.EventID
-//                                                                                                }
-//                                                                                                
-//                                                                                                );
-//                                                                          
-//                                                                          
-//                                                                          //$divLeft contains the event Date and Time
-//                                                                          var $divLeft = $('<div>',
-//                                                                                           {
-//                                                                                           class: 'IndividualEventDateTime'
-//                                                                                           }
-//                                                                                           );
-//                                                                          
-//                                                                          //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
-//                                                                          var $divMiddle = $('<div>',
-//                                                                                             {
-//                                                                                             class: 'IndividualEventInfo'
-//                                                                                             }
-//                                                                                             );
-//                                                                          
-//                                                                          
-//                                                                          //Append the $IndividualEvent to the EventsUL
-//                                                                          $EventsUL.append($IndividualEvent);
-//                                                                          
-//                                                                          
-//                                                                          //Append the Middle, and Right Divs to the $IndividualEvent
-//                                                                          $IndividualEvent.append($divLeft);
-//                                                                          $IndividualEvent.append($divMiddle);
-//                                                                          
-//                                                                          
-//                                                                          //Add the Event DateTime to $divLeft
-//                                                                          $divLeft.append(
-//                                                                                          $('<p>',
-//                                                                                            {
-//                                                                                            text: item.EventDateTime
-//                                                                                            }
-//                                                                                            )
-//                                                                                          );
-//                                                                          
-//                                                                          
-//                                                                          var $EventName= $('<h3>',
-//                                                                                            {
-//                                                                                            text: item.EventName
-//                                                                                            }
-//                                                                                            );
-//                                                                          
-//                                                                          var $EventSVG= $('<img>',
-//                                                                                           {
-//                                                                                           src: './assets/images/' + item.EventType + '.svg',
-//                                                                                           width: '13px'
-//                                                                                           }
-//                                                                                           );
-//                                                                          
-//                                                                          
-//                                                                          var $EventAttendance= $('<p>',
-//                                                                                                  {
-//                                                                                                  //Calculate #ppl attending
-//                                                                                                  text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
-//                                                                                                  class: 'EventAttendance'
-//                                                                                                  }
-//                                                                                                  );
-//                                                                          
-//                                                                          
-//                                                                          //Append the number of available spots
-//                                                                          $EventAttendance.append(
-//                                                                                                  $('<span>',
-//                                                                                                    {
-//                                                                                                    text: item.EventNumSpotsLeft  + " Spots left!",
-//                                                                                                    class: 'EventSpotsLeft'
-//                                                                                                    }
-//                                                                                                    )
-//                                                                                                  );
-//                                                                          
-//                                                                          
-//                                                                          $divMiddle.append($EventName);
-//                                                                          $divMiddle.append($EventSVG);
-//                                                                          $divMiddle.append($EventAttendance);
-//                                                                          
-//                                                                          
-//                                                                          $IndividualEvent.append($EventIDHidden);
-//                                                                          
-//                                                                          }
-//                                                                          );
-//                                                                   
-//                                                                   
-//                                                                   }//Only run if response included matched events
-//                                                                   
-//                                                                   }
-//                                                                   }); //End of AJAX
-//                                                            
-//                                                            
-//                                                            
-//                                                            
-//                                                            }
-//                            );
 
 
- 
- 
- 
          /******************************************Using manual typing to search for events********************************************/
  
          //When the user types an event sport name, dynamically update DOM as soon as we find a match
@@ -2202,53 +2126,169 @@ $(document).ready
                                                                 //because if the user used the dropdown menu prior, the sport SVG will stay there
                                                                 $('#SearchEventSection input').css('background-image', 'none');
                         
+                                                                //hide the sport picker when typing
+                                                                $('#SearchEventSection #AvailableEventTypes').addClass( 'HideAvailableEventTypes' );
                         
-                                                                //Send an AJAX request to the server to get
-                        
+                                                                //We are searching for a new sport, remove the previous search's preview events shown
+                                                                $('#SearchEventsPreviewBox').remove();
                         
                                                                 //Make it all lower-case
-                                                                var $UserInput = event.target.value.toLowerCase();
+                                                                var UserInput = event.target.value.toLowerCase();
                         
-                        
-                        
-                                                                //Write a switch statement
-                                                                switch( true)
+                                                                //Start Querying when the user starts typing
+                                                                if(UserInput.length != 0)
                                                                 {
-                                                                    //This means $UserInput contains the word "socc"
-                                                                    case ($UserInput.indexOf("socc") > -1):
-                                                                                                            console.log('soccer');
-                                                                                                            break;
-                        
-                                                                    case ($UserInput.indexOf("basket") > -1):
-                                                                                                            console.log('basketball');
-                                                                                                            break;
-                        
-                                                                    case ($UserInput.indexOf("volley") > -1):
-                                                                                                            console.log('volleyball');
-                                                                                                            break;
-                        
-                                                                    case ($UserInput.indexOf("swimm") > -1):
-                                                                                                            console.log('swimming');
-                                                                                                            break;
-                        
-                                                                    default: console.log('failed');
-                        
+                                                                        $.ajax({
+                                                                               type: 'POST',
+                                                                               url: "/SearchEventsByTyping",
+                                                                               dataType: 'JSON',
+                                                                               //Send selected sport to server as JSON
+                                                                               data: { "SearchString": UserInput },
+                                                                               //Receives all the matching events
+                                                                               success: function (response)
+                                                                               {
+                                                                                    SearchEventsDropDownResults(response);
+                                                                               }
+                                                                               }); //End of AJAX
                                                                 }
                         
-
-                      
-                        
+      
                                                             }
                         
                         
                         );
  
- 
- 
- 
- 
- 
- 
+
+             function SearchEventsDropDownResults(response)
+             {
+                    //Only process if matched events were found
+                     if(response.length > 0)
+                     {
+                     
+                     //The box that contains all matched events
+                     var $SearchEventPreviewBox = $('<section>',
+                                                    {
+                                                    id: 'SearchEventsPreviewBox'
+                                                    }
+                                                    );
+                     
+                     //insert $SearchEventPreviewBox after the #SearchEventForm
+                     $SearchEventPreviewBox.insertAfter('#SearchEventForm');
+                     
+                     //The <ul> inside which we will place the matched events
+                     var $EventsUL = $('<ul>',
+                                       {
+                                       id: 'SearchEventsUL'
+                                       }
+                                       );
+                     
+                     //UL contains all the event previews
+                     $SearchEventPreviewBox.append($EventsUL);
+                     
+                     
+                     //Loop over the matched events
+                     $.each(response,
+                            function(index, item)
+                            {
+                            
+                            //$IndividualEvent is each of the individual event preview
+                            var $IndividualEvent = $('<li>',
+                                                     {
+                                                     class: 'IndividualEventPreview'
+                                                     }
+                                                     );
+                            
+                            var $EventIDHidden= $('<input>',
+                                                  {
+                                                  type: 'hidden',
+                                                  name: 'EventID',
+                                                  value: item.EventID
+                                                  }
+                                                  
+                                                  );
+                            
+                            
+                            //$divLeft contains the event Date and Time
+                            var $divLeft = $('<div>',
+                                             {
+                                             class: 'IndividualEventDateTime'
+                                             }
+                                             );
+                            
+                            //$divMiddle contains event Info (Event name, sport type, #ppl attending, #open spots)
+                            var $divMiddle = $('<div>',
+                                               {
+                                               class: 'IndividualEventInfo'
+                                               }
+                                               );
+                            
+                            
+                            //Append the $IndividualEvent to the EventsUL
+                            $EventsUL.append($IndividualEvent);
+                            
+                            
+                            //Append the Middle, and Right Divs to the $IndividualEvent
+                            $IndividualEvent.append($divLeft);
+                            $IndividualEvent.append($divMiddle);
+                            
+                            
+                            //Add the Event DateTime to $divLeft
+                            $divLeft.append(
+                                            $('<p>',
+                                              {
+                                              text: item.EventDateTime
+                                              }
+                                              )
+                                            );
+                            
+                            
+                            var $EventName= $('<h3>',
+                                              {
+                                              text: item.EventName
+                                              }
+                                              );
+                            
+                            var $EventSVG= $('<img>',
+                                             {
+                                             src: './assets/images/' + item.EventType + '.svg',
+                                             width: '13px'
+                                             }
+                                             );
+                            
+                            
+                            var $EventAttendance= $('<p>',
+                                                    {
+                                                    //Calculate #ppl attending
+                                                    text: (item.EventNumPpl - item.EventNumSpotsLeft)  + " People Attending ",
+                                                    class: 'EventAttendance'
+                                                    }
+                                                    );
+                            
+                            
+                            //Append the number of available spots
+                            $EventAttendance.append(
+                                                    $('<span>',
+                                                      {
+                                                      text: item.EventNumSpotsLeft  + " Spots left!",
+                                                      class: 'EventSpotsLeft'
+                                                      }
+                                                      )
+                                                    );
+                            
+                            
+                            $divMiddle.append($EventName);
+                            $divMiddle.append($EventSVG);
+                            $divMiddle.append($EventAttendance);
+                            
+                            
+                            $IndividualEvent.append($EventIDHidden);
+                            
+                            }
+                            );
+                     
+                     
+                     }//Only run if response included matched events
+             }
  
  
  
@@ -2346,7 +2386,7 @@ $(document).ready
                                                                                                   )
                                                                                                 );
                             
-                                                        
+                            
                                                         //Append it to the CreateEventForm
                                                         $CreateEventForm.append($EventNameLabel);
                             
@@ -2738,158 +2778,86 @@ $(document).ready
 
  
  
- 
- 
- 
- /*************************************************************Jing Search User Code Starts*************************************/
- 
- 
-//DataForm I will send from server = [{"url": "./assets/images/PM.jpg","name": "Piers Morgan", "userid":"2"}];
- 
- DATARECEIVED = [{ "name" : "Parham Oghabi",
-                 "url" : "./assets/images/1.jpg",
-                 "friendid" : "67"
-                 },
-                 { "name" : "John doe",
-                 "url" : "./assets/images/2.jpg",
-                 "userid" : "68"
-                 },
-                 { "name" : "Alex doe",
-                 "url" : "./assets/images/3.jpg",
-                 "userid" : "69"
-                 },
-                 { "name" : "Maria doe",
-                 "url" : "./assets/images/4.jpg",
-                 "userid" : "70"
-                 }];
- 
-// //When the user clicks on the "Friends" Tab, show all the Friends of the user
- $(document).on('input', '#header input',
-                
-                function(event)
-                {
 
-//                var TypedInput = event.target.value.toLowerCase();
-   
-
-//                //Trigger AJAX and get friends info
-//                $.ajax({
-//                       type: 'GET',
-//                       url: "/SearchUsers",  //URL to send to send to the server
-//                       dataType: 'JSON',
-//                       data: ,     //JSON File
-//                       success: function (response)
-//                       {
-                
-                //Only process if matched users were found
-                if(DATARECEIVED.length > 0)
-                {
-                
-                //The box that contains all matched events
-                //Make it scrollable
-                var $SearchUserPreviewBox = $('<section>',
-                                                           {
-                                                                id: 'SearchUserPreviewBox'
-                                                           }
-                                             );
-                
-                //insert $SearchUserPreviewBox after the search bar, but make it position absolute
-                $SearchUserPreviewBox.insertAfter('#SearchBar input');
-                
-                //The <ul> inside which we will place the matched users
-                var $UsersUL = $('<ul>',
-                                          {
-                                          id: 'SearchUsersUL'
-                                          }
-                                );
-                
-                //UL contains all the user previews
-                $SearchUserPreviewBox.append($UsersUL);
-                
-                
-                
-                
-                
-                       //Loop over all the searched users and append them
-                       $.each(DATARECEIVED,
-                              function(index, item)
-                              {
-                              
-                             
-                              var $Friend = $('<li>',
-                                                      {
-                                                        class: 'SearchedUser'
-                                                      }
-                                              );
-                              
-                              var $FriendName = $('<p>',
-                                                      {
-                                                        text:  item.name
-                                                      }
-                                                  );
-                              
-                              var $FriendImage = $('<img>',
-                                                           {
-                                                             src: item.url,
-                                                             width: '30px',
-                                                             height: '30px',
-                                                             class:  'SearchedUserImage'
-                                                           }
-                                                   );
-                              
-                              //Attach a hidden input to the friend (His user ID)
-                              //So that upon click, we can send this info to the server
-                              var $FriendsID = $('<input>',
-                                                         {
-                                                           type: 'hidden',
-                                                           name: 'SearchedUserID',
-                                                           value: item.userid
-                                                         }
-                                                 );
-                              
-                              
-                              $UsersUL.append($FriendImage);  //Append the Image
-                              $UsersUL.append($FriendName);   //Append the name
-                              $UsersUL.append($FriendsID);   //Append the friend id
-
-                              }
-                              
-                              );
-                 }
-            
-                       
-//                       }
-//                       }); //End of AJAX
-                
-                }
-                
-                
-                );
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+             var socket = io();  //Connects to the root socket namespace
 //
-// 
-// //When a user clicks on any of his friends, take them to their profile
-// $(document).on('click', '.SearchedUser ',
-//                
-//                function()
-//                {
-//                //Store the clicked friend's ID in a cookie to be accessed by Profile_OthersView.js
-//                $.cookie("FriendIDClicked", $(this).children('input').val());
-//                
-//                //Go back to your friend's page
-//                window.location.replace("/Profile_OthersView.html");
-//                }
-//                );
+//             $('#Babz').submit(function()
+//                              {
+//                                  //Push the message into the socket, can also use AJAX to inform the database!
+//                                  socket.emit('chat message', $('#m').val());
+//                                  $('#m').val(''); //Clear the chat box
+//                                  return false;  //Dont submit anymore, we already submitted
+//                              }
+//                             );
+//
+//             $('#SearchBar').submit(function()
+//                                   {
+//                                   //Push the message into the socket, can also use AJAX to inform the database!
+//                                   socket2.emit('Yo socket 2, this is the search bar', $('#SearchBarInput').val());
+//                                   $('#SearchBarInput').val(''); //Clear the search bar
+//                                   return false;
+//                                   }
+//                                    );
+ 
+//                 socket2.on('connect', function () {
+//                               chat.emit('hi!');
+//                         });
+ 
+ 
+            var GroupChatEventsSocket = io('/GroupChatEvents');
+ 
+             GroupChatEventsSocket.on('connect', function ()
+                                                {
+                                                 // alert('Connected to groupchatevents multiplex socket');
+                                                }
+                                      );
+ 
+             $('#SearchBar').submit(function()
+                                   {
+                                   //Push the message into the socket, can also use AJAX to inform the database!
+//                                   GroupChatEventsSocket.emit('GroupChatMessage', $('#SearchBarInput').val()); //only this namespace socket gets it, lik multiplex
+//
+//                                    socket.emit('GroupChatMessage', $('#SearchBarInput').val());  //Only socket namespace / gets the message
+//                                   socket.broadcast.emit('GroupChatMessage', $('#SearchBarInput').val());
+                                    GroupChatEventsSocket.emit('GroupChatMessage', {myID:  $.cookie("UserID"), friendid: $.cookie("FriendIDClicked") });
+                                   $('#SearchBarInput').val(''); //Clear the search bar
+                                   return false;
+                                   }
+                                    );
 
  
- /*************************************************************Jing Search User Code Ends*************************************/
  
  
+     $('#Babz').submit(function()
+                                 {
+                               GroupChatEventsSocket.disconnect();
+                       
+//                       GroupChatEventsSocket.socket.reconnect();
+                       console.log('Client DCed client side from groupchatsocket');
+                           return false;
+                                 }
+                                );
  
+ $('#ProfilePic').click(function()
+                   {
+//                   GroupChatEventsSocket.disconnect();
+                   
+                                          GroupChatEventsSocket.connect();
+                   console.log('client reconnected!');
+                   return false;
+                   }
+                   );
  
- 
- 
- 
- 
+
  
  
  
@@ -2899,31 +2867,6 @@ $(document).ready
 
 
 );
-
-
-
-function formatAMPM(date)
-{
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

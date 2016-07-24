@@ -27,163 +27,9 @@ li
     list-style: none;
 }
 
-/* header: top menu */
-#header
-{
-    background-color: rgba(0,0,0,0.8);
-    width: 100%;
-    height: 55px;
-    z-index: 1000;  /*To prevent images from overlapping the fixed header*/
-    position: fixed;
-}
-
-
-#SiteLogo img
-{
-    margin-left: 4px;
-    margin-top: 6px;
-	height: 42px;
-    width: 150px;
-    float: left;
-}
-
-#Site_Nav
-{
-    padding-top: 10px;
-}
-
-#Site_Nav a
-{
-	color: #74AD1B;
-}
-
-#Main_Nav li
-{
-    display: inline-block;
-    margin: 7px 7px;
-    vertical-align: middle;
-    cursor: pointer;
-}
 
 
 
-#HomeButton a
-{
-	padding-top:23px;
-    padding-bottom:14px;
-    padding-left: 9px;
-    padding-right: 9px;
-    color: #74AD1B;
-    font-size: 14px;
-}
-
-/*Make the links bold on hover*/
-#Main_Nav #HomeButton a:hover
-{
-    color: #A0F6F6;
-	transition: all ease-in-out 0.3s;
-	background-color: #111111;
-}
-
-/*Add a border to the SignOut_Button button*/
-#SignOut_Button
-{
-    transition: all ease-in-out 0.3s;
-    border: 2px solid #74AD1B;
-    border-radius: 20px;
-    padding: 5px 10px;
-    font-size: 14px;
-    color: #74AD1B;
-}
-
-
-/*Make the links bold on hover*/
-#SignOut_Button:hover
-{
-   color: #A0F6F6;
-}
-
-
-#SearchBar
-{
-    float: left;
-    margin-left: 58px;
-}
-
-#SearchBar input
-{
-    line-height: 2.3em;
-    padding-left: 10px;
-    border-radius: 3px;
-    border: 1px solid black;
-}
-
-#RightNav
-{
-    float: right;
-    padding-right: 10px;
-}
-
-
-#FB_Friend_SVG
-{
-    position: relative;
-}
-
-/*If its zero (ie. no requests), we will hide the p tag*/
-#FB_Friend_SVG p
-{
-    position: absolute;
-    padding: 2px 2px;
-    border-radius: 3px;
-    background-color: red;
-    font-size: 10px;
-    color: white;
-    left: 15px;
-    top: -11%;
-    opacity: 0.9;
-}
-
-
-#FB_Message_SVG
-{
-    position: relative;
-}
-
-/*If its zero (ie. no requests), we will hide the p tag*/
-#FB_Message_SVG p
-{
-    position: absolute;
-    padding: 2px 2px;
-    border-radius: 3px;
-    background-color: red;
-    font-size: 10px;
-    color: white;
-    left: 15px;
-    top: -11%;
-    opacity: 0.9;
-}
-
-
-#FB_Notification_SVG
-{
-    position: relative;
-}
-
-
-/*If its zero (ie. no notifications), we will hide the p tag*/
-#FB_Notification_SVG p
-{
-    position: absolute;
-    padding: 2px 2px;
-    border-radius: 3px;
-    background-color: red;
-    font-size: 10px;
-    color: white;
-    left: 15px;
-    top: -11%;
-    opacity: 0.9;
-}
 
 
 
@@ -300,117 +146,6 @@ li
     visibility: visible;
 }
 
-
-
-/*The Chatbox CSS styles*/
-#ChatBox
-{
-    height: 300px;
-    position: fixed;
-    width: 220px;
-    margin-left: 15px;
-    z-index: 800;  /*Chatbox has priority*/
-    border-radius: 3px;
-    left: 80%;
-}
-
-#ChatBoxHeader
-{
-    position: fixed;
-    width: 216px;
-    background-color: rgba(0,0,0,0.8);
-    padding: 1px 2px;
-    z-index: 100;
-    padding-bottom: 3px;
-    border-radius: 3px;
-}
-
-#ChatBoxHeader *
-{
-    display: inline-block;
-    vertical-align: middle;
-}
-
-/*Make the ChatBox username and "X" SVG in-line*/
-#ChatBoxHeader p
-{
-    text-align: left;
-    font-size: 13px;
-    cursor: pointer;
-    color: white;
-    padding-left: 2px;
-}
-
-#ChatBoxHeader #ChatBoxClose
-{
-    float: right;
-    padding-top: 5px;
-    padding-right: 7px;
-    cursor: pointer;
-}
-
-
-#ChatContent
-{
-  padding: 5px 5px;
-  background-color: rgb(237, 238, 241);
-  height: 290px;
-  overflow: scroll;
-}
-
-/*Alternate the Chat Data like Facebook*/
-#ChatContent .ChatContentDatas:nth-child(odd)
-{
-    float: right;
-    border: 1px solid rgb(213, 213, 213);
-    background-color: rgb(254, 254, 254);
-    border-radius: 3px;
-    width: 70%;
-}
-
-#ChatContent .ChatContentDatas:nth-child(even)
-{
-    float: left;
-    border: 1px solid rgb(188, 199, 214);
-    background-color: rgb(224, 237, 255);
-    border-radius: 9px;
-    border-bottom-left-radius: 0px;
-    width: 70%;
-}
-
-/*Give the last message a margin-below so it doesn't overlap with the form*/
-#ChatContent .ChatContentDatas:last-child
-{
-    margin-bottom: 25px;
-}
-
-
-#ChatContent .ChatContentDatas
-{
-    font-size: 13px;
-    padding: 3px 3px;
-    margin: 3px 3px;
-}
-
-
-#ChatBoxForm
-{
-    position: fixed;
-    z-index: 100;  /*So it goes on top of the previous messages*/
-}
-
-#ChatBoxForm textarea
-{
-    overflow: scroll;
-    height: 20px;
-    resize: none;
-    line-height: 1.2em;
-    padding-left: 3px;
-    padding-top: 5px;
-    border: 1px solid black;
-    border-radius: 3px;
-    font-size: 10px;
-}
 
 
 
@@ -998,9 +733,6 @@ input[type="datetime-local"]
 
 
 
-
-
-
 /*Details for a specific Event*/
 /*Return2Events Button*/
 
@@ -1307,6 +1039,26 @@ input[type="datetime-local"]
 }
 
 
+/*Join Event Button*/
+.JoinEvent
+{
+    position: fixed;
+    cursor: pointer;
+    background-color: rgb(116, 173, 27);
+    width: 100px;
+    color: white;
+    border: 2px solid rgb(116, 173, 27);
+    border-radius: 10px;
+    padding: 5px 5px;
+    left: 75%;
+
+}
+
+.JoinEvent:hover
+{
+    position: fixed;
+    background-color: rgba(116, 173, 27, 0.8);
+}
 
 
 

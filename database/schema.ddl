@@ -18,55 +18,8 @@ DROP TABLE IF EXISTS Events CASCADE;
 DROP TABLE IF EXISTS Event_Conversation_Reply CASCADE;
 
 
-
-CREATE TABLE Users
+CREATE TABLE PlaySport
 (
-	id SERIAL PRIMARY KEY,
-	first_name VARCHAR(40) NOT NULL,
-	last_name VARCHAR(40) NOT NULL,
-<<<<<<< HEAD
-	birthday DATE NOT NULL,
-=======
-	birthday DATE,
->>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
-	gender VARCHAR(6) ,
-	height INTEGER,
-	weight DECIMAL,
-	email VARCHAR(255) UNIQUE NOT NULL,
-<<<<<<< HEAD
-	phone VARCHAR(15) NOT NULL,
-	campus VARCHAR(15)NOT NULL,
-	password text NOT NULL,
-	about text,
-	createdAt TIMESTAMP DEFAULT now(),
-	updatedAt TIMESTAMP DEFAULT now()
-=======
-	phone VARCHAR(15),
-	campus VARCHAR(15),
-	password text NOT NULL,
-	about text,
-	fbID VARCHAR(20)
->>>>>>> c2256b06fa6ca23386cfedaf2ce6d6694005867c
-);
-
-CREATE TABLE Location(
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE Sports(
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL
-);
-
-
-CREATE TABLE Interests(
-	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE,
-	PRIMARY KEY(userid, sportid)
-);
-
-CREATE TABLE PlaySport(
 	sportid INTEGER REFERENCES Sports(id) ON DELETE CASCADE,
 	userid  INTEGER REFERENCES Users(id) ON DELETE CASCADE,
 	sumRating REAL DEFAULT 0.0,
@@ -74,28 +27,8 @@ CREATE TABLE PlaySport(
 	PRIMARY KEY(sportid, userid)
 );
 
-/*
-	status_text: the state of this friend. 
-				 it can be the following states
-				
-				id  Meaning
-				0   Pending Friend Request
-				1   Confirm Friend Request
-				2   You
-*/
-CREATE TABLE Friends_Status(
-	id serial PRIMARY KEY,
-	status_text VARCHAR(45)
-);
 
-CREATE TABLE Friends(
-	friend_one INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	friend_two INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	status INTEGER REFERENCES Friends_Status(id),
-	createdAt TIMESTAMP DEFAULT now(),
-	CONSTRAINT must_be_different CHECK(friend_one != friend_two),
-	PRIMARY KEY(friend_one, friend_two)
-);
+
 
 
 CREATE TABLE Update_Friends(
@@ -127,25 +60,7 @@ CREATE TABLE Conversation_Reply(
 );
 
 
-CREATE TABLE Event(
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
-	location INTEGER REFERENCES Location(id),
-	max_Number_Of_Players INTEGER,
-	attending INTEGER DEFAULT 0,
-	time Date,
-	createdAt TIMESTAMP DEFAULT now(),
-	updatedAt TIMESTAMP DEFAULT now(),
-	CONSTRAINT capacity_reached CHECK (max_Number_Of_Players - attending >= 0)
-);
 
-
---Matching 1 event to many people
-CREATE TABLE Events(
-	id INTEGER REFERENCES Event(id) ON DELETE CASCADE,
-	userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
-	PRIMARY KEY(id, userid)
-);
 
 
 CREATE TABLE Event_Conversation_Reply(

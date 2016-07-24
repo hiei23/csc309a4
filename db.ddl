@@ -1,11 +1,13 @@
 
 DROP TABLE IF EXISTS Users CASCADE;
-DROP TABLE IF EXISTS Notifications CASCADE;
+DROP TABLE IF EXISTS UnreadNotifications CASCADE;
 DROP TABLE IF EXISTS Friends CASCADE;
 DROP TABLE IF EXISTS Sports CASCADE;
 DROP TABLE IF EXISTS Interests CASCADE;
 DROP TABLE IF EXISTS Event CASCADE;
-DROP TABLE IF EXISTS Event EventUsers;
+DROP TABLE IF EXISTS EventUsers CASCADE;
+DROP TABLE IF EXISTS EventGroupChat CASCADE;
+DROP TABLE IF EXISTS OneToOneChat CASCADE;
 
 CREATE TABLE Users
 (
@@ -43,18 +45,13 @@ CREATE TABLE Friends
     friend_one INTEGER REFERENCES Users(id) ON DELETE CASCADE,
     friend_two INTEGER REFERENCES Users(id) ON DELETE CASCADE,
     status INTEGER,
+    WhoInitiated INTEGER REFERENCES Users(id) ON DELETE CASCADE, --The person who initiated the friend req
     CONSTRAINT must_be_different CHECK(friend_one != friend_two),
     PRIMARY KEY(friend_one, friend_two)
 );
 
 
 
-CREATE TABLE pp
-(
-p1 BIGINT
-);
-
-INSERT INTO pp (p1) VALUES(1060690543979710);
 
 --1: cycling
 --2: waterpolo
@@ -116,6 +113,14 @@ CREATE TABLE EventGroupChat
     MessageTime TIMESTAMP DEFAULT now()
 );
 
+CREATE TABLE OneToOneChat
+(
+    sentById INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+    ReceivedById INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+    chatmessage text,
+    MessageTime TIMESTAMP DEFAULT now()
+);
+
 
 
 
@@ -147,51 +152,6 @@ INSERT INTO Sports (name) VALUES('tennis');
 INSERT INTO Sports (name) VALUES('volleyball');
 INSERT INTO Sports (name) VALUES('football');
 INSERT INTO Sports (name) VALUES('swimming');
-
-
-
-INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) VALUES('parham', 'oghabi', '2016-07-18'::date, 'male', 180, 70, 'poghabi@gmail.com', '647-889-0094', 'St.George', 'poghabi@gmail.com', 'I Love Food', now(), './assets/images/DefaultProfilePic.jpg');
-
-INSERT INTO Interests (userid, sportid) VALUES(1, 1);
-INSERT INTO Interests (userid, sportid) VALUES(1, 3);
-INSERT INTO Interests (userid, sportid) VALUES(1, 6);
-
-INSERT INTO UnreadNotifications (userid, numfriendreqs, nummessages, numnotifications) VALUES(1, 2, 2, 4);
---
-
-INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) VALUES('s', 'c', '2016-07-18'::date, 'male', 180, 70, 'sc@gmail.com', '647-889-0094', 'St.George', 'sc@gmail.com', 'I Love Food', now(), './assets/images/DefaultProfilePic.jpg');
-
-INSERT INTO Interests (userid, sportid) VALUES(2, 4);
-INSERT INTO Interests (userid, sportid) VALUES(2, 6);
-INSERT INTO Interests (userid, sportid) VALUES(2, 7);
-
-INSERT INTO UnreadNotifications (userid, numfriendreqs, nummessages, numnotifications) VALUES(2, 3, 2, 4);
---
-
-
-INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) VALUES('dan', 'oghabi', '2016-07-18'::date, 'female', 160, 70, 'pp@gmail.com', '647-889-0094', 'St.George', 'pp@gmail.com', 'I Love Food', now(), './assets/images/DefaultProfilePic.jpg');
-
-INSERT INTO Interests (userid, sportid) VALUES(3, 4);
-INSERT INTO Interests (userid, sportid) VALUES(3, 9);
-INSERT INTO Interests (userid, sportid) VALUES(3, 11);
-
-INSERT INTO UnreadNotifications (userid, numfriendreqs, nummessages, numnotifications) VALUES(3, 5, 5, 4);
-
-
-
---Friends with each other
-INSERT INTO Friends (friend_one, friend_two, status) VALUES(1, 2, 1);
-INSERT INTO Friends (friend_one, friend_two, status) VALUES(2, 1, 1);
-
-INSERT INTO Friends (friend_one, friend_two, status) VALUES(1, 3, 1);
-INSERT INTO Friends (friend_one, friend_two, status) VALUES(3, 1, 1);
-
---INSERT INTO Friends (friend_one, friend_two, status) VALUES(1, 4, 1);
---INSERT INTO Friends (friend_one, friend_two, status) VALUES(4, 1, 1);
-
-
-
-
 
 
 

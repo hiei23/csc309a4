@@ -7,9 +7,12 @@ var busboy = require('connect-busboy'); //middleware for form/file upload
 var path = require('path');     //used for file path
 var fs = require('fs-extra');   //File System - for file manipulation
 var passport = require('passport'); //module for fb authen
+var http = require('http');
+
 
 var Database = require('./db'); //no need for .js
 
+//pg.defaults.ssl = true;
 
 app.use(busboy());
 
@@ -36,11 +39,300 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
        );
 
 
+
+var server = app.listen(app.get('port'));
+var io = require('socket.io').listen(server);
+
+
 app.get('/', function (req, res)
              {
                 res.sendfile(__dirname + '/front_end/index.html');
              }
        );
+
+
+
+io.on('connection', function(socket)
+      {
+      console.log('a user connected - first socket active');
+      
+      
+      socket.on('disconnect', function(){
+                console.log('user disconnected');
+                });
+      
+//      socket.on('chat message', function( msg){
+//                console.log('message: ' + msg);
+//                
+////                var data= {
+////                "userID": data.targetID,
+////                "challengerName": data.challengerName
+////                };
+////                socket.broadcast.emit('receiveChallenge', data);
+//                   io.emit('chat message', msg);
+//                });
+      
+      socket.on('GroupChatMessage', function(msg)
+                {
+                
+                console.log('Server Socket main got ur messaage too!! ' + msg);
+                
+                }
+                );
+      
+      });
+
+//In order to send an event to everyone,
+//io.emit('some event', { for: 'everyone' });
+
+//Broadcasting means sending a message to everyone else except for the socket that starts it.
+//Example
+//If you want to send a message to everyone except for a certain socket (Ex: the sender himself) we have the broadcast flag:
+//
+//io.on('connection', function(socket){
+//      socket.broadcast.emit('hi');
+//      });
+
+
+var chat = io.of('/chat');
+chat.on('connection', function(socket)
+       {
+       console.log('2nd Socket activated');
+        
+
+       
+       socket.on('Yo socket 2, this is the search bar', function(msg){
+                 console.log('message: 2nd socket ' + msg);
+                 //io.emit('Yo socket 2, this is the search bar', msg);
+                 });
+       
+       }
+       
+       
+       );
+
+
+//socket.broadcast.emit('users_count', clients);
+//io.sockets.emit('users_count', clients);
+//Alternatively, you can use the broadcast function, which sends a message to everyone except the socket that starts it:
+
+var GroupChatEvents = io.of('/GroupChatEvents');
+
+
+//socket is the incoming socket
+GroupChatEvents.on('connection', function(socket)
+                                {
+                   //console.log('New client connected (id=' + socket.id + ').');
+                                console.log('Server: Client connected to GroupChatEvents multiplex socket');
+//                   
+//                   socket.on('disconnect', function(){
+//                             console.log('Server: Client DC from GroupChatEvents multiplex socket');
+//                             });
+                   
+                   socket.on('GroupChatMessage', function(msg)
+                             {
+                             
+                             console.log('Received search user bar message: ' + msg.myID);
+                             
+                              // socket.emit('Notification', msg.myID);  //Only sends back to the socket that sent it! THAT ONLY "GroupChatEvents" (only that socket in that namespace) who trigerred will get it
+                             GroupChatEvents.emit('Notification' + msg.myID, msg.myID);
+                               // GroupChatEvents.emit('Notification', 50);  //EVERYINE IN "GroupChatEvents" will get it [All sockets in that namespace]
+                             
+                             //Gets a message sent by a socket in namespace "GroupChatMessage", but only emits back to its own ID
+//                              GroupChatEvents.emit('Notification', 50);  //EVERYINE IN "GroupChatEvents" will get it [All sockets in that namespace]
+                           }
+                             );
+                   
+                                //        socket.emit('a message', {
+                                //                    that: 'only'
+                                //                    , '/chat': 'will get'
+                                //                    });
+                                
+                                //        chat.emit('a message', {
+                                //                  everyone: 'in'
+                                //                  , '/chat': 'will get'
+                                //                  });
+                                
+//                                socket.on('Yo socket 2, this is the search bar', function(msg){
+//                                          console.log('message: 2nd socket ' + msg);
+//                                          //io.emit('Yo socket 2, this is the search bar', msg);
+//                                          });
+                   
+                                }
+        
+        
+        );
+
+
+
+//GroupChatEvents.on('connection', function(socket)
+//                   {
+//                   console.log('Server outside F(X) second f(x): Client connected to GroupChatEvents multiplex socket');
+//                   
+//                   socket.on('disconnect', function(){
+//                             console.log('Server: Client DC from GroupChatEvents multiplex socket');
+//                             });
+//                   
+//                   socket.on('GroupChatMessage', function(msg)
+//                             {
+//                             
+//                             console.log('Received search user bar message Another F(X)!: ' + msg);
+//                             
+//                            // socket.emit('Notification', 50);
+//                             }
+//                             );
+//
+//        
+//                   
+//                   }
+//                   
+//                   
+//                   );
+
+
+/****************************************WebSockets***********************************/
+//This socket multiplex is only used for notifications (friendreqs, messages, notifications)
+var NotificationSocket = io.of('/Notifications');
+
+//This socket multiplex is only used for one to one messaging (sending the data)
+var One2OneMessageSocket = io.of('/One2OneMessaging');
+/**************************************************************************************/
+
+//socket is the incoming socket
+//As soon as a client connects, the function is run
+NotificationSocket.on('connection',
+                      
+                      function(socket)
+                       {
+
+                      
+                           //Add a listener if a user "Adds a Friend"
+                           socket.on('/AddAsFriend',
+                                         function(msg)
+                                         {
+                                             //msg.userid and msg.friendid are sent via the "NotificationSocket" multiplexed socket as a JSON file
+            
+                                             //Insert Friend request in Friends table with status 0 initially (pending)
+                                             //Instead of res and req, pass in msg.userid ,msg.friendid [Cuz sockets have no HTTP req and res]
+                                             var sql = 'INSERT INTO Friends (friend_one, friend_two, status, WhoInitiated) ' + "VALUES($1, $2, 0, $3);";
+                                             Database.query(sql, [msg.userid, msg.friendid, msg.userid], GenericCB, msg.userid, msg.friendid );
+                                             var sql_1 = 'INSERT INTO Friends (friend_one, friend_two, status, WhoInitiated) ' + "VALUES($1, $2, 0, $3);";
+                                             Database.query(sql_1, [msg.friendid, msg.userid, msg.userid], UpdateNotificationsCB, msg.friendid, msg.userid );
+                                         }
+                                     );
+                       
+
+                      
+                       
+                       }
+
+                   );
+
+/*****************************************AddAsFriend*****************************************************************/
+//Update notifications for the person who was added by us
+function UpdateNotificationsCB(err, result,friendid, userid)
+{
+    
+    if (err)
+    {
+        console.error(err);
+    }
+    
+    else
+    {
+        //increase their friendreq number
+        //Return the numfriendreqs
+        var sql = "UPDATE UnreadNotifications SET numfriendreqs = (numfriendreqs+1) where userid = $1 RETURNING numfriendreqs;";
+        Database.query(sql, [friendid], AddAsFriendCB, friendid, userid );
+    }
+}
+
+//use the returned new numfriendreqs to update the notifications of the added user
+//Real-time using socket.io
+function AddAsFriendCB(err, result, friendid, userid)
+{
+    
+    if (err)
+    {
+        console.error(err);
+    }
+    
+    else
+    {
+         //Pass the new numfriendreqs to the socket
+         //Send this message in the "NotificationSocket" namespace to everyone
+         //But because of the friendid, only the person who got added will be listening to this message
+         NotificationSocket.emit('FriendNotification' + friendid, result.rows[0].numfriendreqs);
+    }
+}
+/*****************************************END AddAsFriend*****************************************************************/
+
+
+//socket is the incoming socket
+//As soon as a client connects, the function is run
+One2OneMessageSocket.on('connection',
+                        
+                        function(socket)
+                        {
+                        
+                        
+                        //Add a listener if anyone sent a message
+                        socket.on('/SendingMessage',
+                                   function(msg)
+                                   {
+
+                                      //Insert the sent message into the database
+                                      var sql = 'INSERT INTO OneToOneChat (sentById, ReceivedById, chatmessage, MessageTime) ' + "VALUES($1, $2, $3, now());";
+                                      Database.query(sql, [msg.userid, msg.chattingToid, msg.chatmessage], GenericCB, msg.userid, msg.chattingToid );
+                                      
+                                      //Update the UnreadNotifications table for the person to whom the message was sent
+                                      var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages+1) where userid = $1 RETURNING nummessages;";
+                                      Database.query(sql1, [msg.chattingToid], SendMessageCB, msg.userid, msg ); //pass the msg object,(No http req and res)
+                                   }
+                                  );
+                        
+                        //Add a listener if a message was read
+                        socket.on('/ReadMessage',
+                                              function(msg)
+                                              {
+                                                  //msg.userid is sent
+                                                  //Update the UnreadNotifications table for the person to who read a message
+                                                  var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages-1) where userid = $1;";
+                                                  Database.query(sql1, [msg.userid], GenericCB, msg.userid, msg );
+                                              }
+                                  );
+                        
+                        
+                        
+                        
+                        }
+                        
+                        );
+
+
+/*****************************************Send Message*****************************************************************/
+//Send new nummessages to update the notifications and send the message content through the One2OneMessageSocket
+function SendMessageCB(err, result, userid, msg)
+{
+    
+    if (err)
+    {
+        console.error(err);
+    }
+    
+    else
+    {
+        //Pass a JSON containg the new nummessages, the fromuserid, and the chatmessage
+        //Send this message to everyone in the "One2OneMessageSocket.emit" namespace
+        //But because of the chattingToid, only the person who it got sent to will be listening to this message
+        One2OneMessageSocket.emit('ReceiveMessages' + msg.chattingToid, {nummessages: result.rows[0].nummessages, fromuserid: msg.userid, chatmessage: msg.chatmessage  } );
+    }
+}
+/*****************************************End Send Message*****************************************************************/
+
+
+
+
 
 
 
@@ -256,7 +548,6 @@ function UserLogin(err, result,res, req)
         res.setHeader('Access-Control-Allow-Origin', '*');
         //Send JSON File to AJAX
         res.end( JSON.stringify(JSON2Send) );
-        
     }
     
     
@@ -486,7 +777,6 @@ app.get('/GetDisplayedProfileInfo', function(req, res)
                                     {
                                         //Get all the info that should be displayed when a user visits someone elses profile:
                                         //Get the name and path of the profile picture in the server
-        
                                         var sql = "SELECT ProfileImage, first_name||' '||last_name AS username  FROM users where id = $1;";
         
                                         //Use the "FriendIDClicked" cookies
@@ -506,7 +796,6 @@ function GetDisplayedProfileInfoCB(err, result,res, req)
     
     else
     {
-//        res.clearCookie('FriendIDClicked'); //Clear the cookie
         var JSON2Send = [];
         
         var Object = {};
@@ -520,6 +809,58 @@ function GetDisplayedProfileInfoCB(err, result,res, req)
 }
 
 /*****************************************END Get displayed profile Info*****************************************************************/
+
+/*****************************************GetIsFriendorNot*****************************************************************/
+app.get('/GetIsFriendorNot', function(req, res)
+                            {
+                                //See if the profile we are viewing is our friend or not
+                                var sql = "SELECT status, WhoInitiated FROM Friends where (friend_one=$1 and friend_two=$2);";
+                                Database.query(sql, [req.cookies.UserID ,req.cookies.FriendIDClicked], GetIsFriendorNotCB, res, req );
+                            }
+        );
+
+
+
+function GetIsFriendorNotCB(err, result,res, req)
+{
+
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    //We are not friends and we haven't added them
+    else if(result.rows.length == 0)
+    {
+        res.send( "notfriend" );
+    }
+    
+    //We are either friends or we added them and are pending
+    else
+    {
+        //We are friends with this user
+        if(result.rows[0].status == 1)
+        {
+            res.send( "yesfriend" );
+        }
+        
+        //Friend Request Pending, we added the profile we are viewing
+        else if(result.rows[0].status == 0 && result.rows[0].whoinitiated == req.cookies.UserID)
+        {
+            res.send( "pendingfriend" );
+        }
+        
+        //Friend Request Pending, we GOT ADDED BY the profile we are viewing
+        else if(result.rows[0].status == 0 && result.rows[0].whoinitiated == req.cookies.FriendIDClicked)
+        {
+            res.send( "ThisUserAddedYou" );
+        }
+
+    }
+}
+
+/*****************************************END GetIsFriendorNot*****************************************************************/
 
 
 /*****************************************Upload Profile pic*****************************************************************/
@@ -892,46 +1233,14 @@ function GetUserAboutInfoCB(err, result,res, req)
 //        {
 //        //Get all the messages in the group chat for that event
 //        var sql = "SELECT sentById, ProfileImage, chatmessage FROM (EventGroupChat CROSS JOIN users) where (sentById = Users.id and eventid = $1) order by MessageTime ASC;";
-//        Database.query(sql, [req.body.eventID], GetEventMessagesCB, res, req );
+//        Database.query(sql, [req.body.eventID], GenericCB, res, req );
 //        }
 //        );
-//
-//
-//function GetEventMessagesCB(err, result,res, req)
-//{
-//    if (err)
-//    {
-//        console.error(err);
-//        res.send("Error " + err);
-//    }
-//    
-//    else
-//    {
-//        
-//        //JSON to send back containing the event messages
-//        var JSON2Send = [];
-//        
-//        //Go through all messages
-//        for(var i = 0; i < result.rows.length; i++)
-//        {
-//            var TheObject = {};
-//            TheObject['sentById'] = result.rows[i].sentbyid;
-//            TheObject['ProfileImage'] = result.rows[i].profileimage;
-//            TheObject['chatmessage'] = result.rows[i].chatmessage;
-//            JSON2Send.push(TheObject);
-//            
-//        }
-//        
-//        //Send it to AJAX
-//        res.end( JSON.stringify(JSON2Send) );
-//        
-//    }
-//}
 /*****************************************END UpdateAboutUserInfo*****************************************************************/
 
 
 
-/*****************************************SearchEventsByClick*****************************************************************/
+/*****************************************SearchEventsByClick | Typing*****************************************************************/
 //User is searching for events
 //Send back data to show preview of events matching their search
 app.post('/SearchEventsByClick', function(req, res)
@@ -942,13 +1251,23 @@ app.post('/SearchEventsByClick', function(req, res)
                             var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
 
                             Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
-         
-         
-
-
                         }
   
         );
+
+//User sends the SearchString
+app.post('/SearchEventsByTyping', function(req, res)
+                                 {
+                                     //Convert EventType and name to lower case to match with the lowercase SearchString
+                                     //SearchString can be an event name or an event sport type
+                                     //Select all events that match and that ((numppl - attendance) > 0) [the event has open spots]
+                                     //And subtract it from events in which you are already joined in
+                                     var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (((lower(EventType) LIKE $1) or (lower(name) LIKE $1)) and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
+                                     Database.query(sql, ['%' + req.body.SearchString + '%', req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
+                                 }
+         
+         );
+
 
 
 function GetEventsSelectedSportSearchCB(err, result,res, req)
@@ -961,13 +1280,12 @@ function GetEventsSelectedSportSearchCB(err, result,res, req)
     
     else
     {
-        console.log(result.rows);
+        
         var JSON2Send = [];
 
         //Go through all the Events
         for(var i = 0; i < result.rows.length; i++)
         {
-
             //Each object represents all the info needed for one event
             var TheObject = {};
             TheObject['EventName'] = result.rows[i].name;
@@ -984,74 +1302,299 @@ function GetEventsSelectedSportSearchCB(err, result,res, req)
         res.end( JSON.stringify(JSON2Send) );
     }
 }
-/*****************************************END SearchEventsByClick*****************************************************************/
+/*****************************************END SearchEventsByClick | Typing*****************************************************************/
+
+/*****************************************SearchEventsMoreDetail*****************************************************************/
+//User is searching for events
+//Send back data to show preview of events matching their search
+app.post('/SearchEventsMoreDetail', function(req, res)
+                             {
+         
+                 var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN Users) where (Eventid = $1 and EventAdminID = Users.id);";
+         
+                             Database.query(sql, [req.body.EventClicked], SendUserEventsCB, res, req );
+         
+                             }
+         
+         );
+
+/*****************************************END SearchEventsMoreDetail*****************************************************************/
+
+
+/*****************************************JoinEvent*****************************************************************/
+//User is searching for events
+//Send back data to show preview of events matching their search
+app.post('/JoinEvent', function(req, res)
+         {
+             var sql1 = 'INSERT INTO EventUsers (id, userid) ' + "VALUES($1, $2);";
+             Database.query(sql1, [req.body.EventToJoin, req.cookies.UserID], GenericCB, res, req );
+             
+             //Increase the attendance by 1
+             var sql2 = "UPDATE Event SET attendance = (attendance+1) where eventid = $1;";
+             Database.query(sql2, [req.body.EventToJoin], GenericCB, res, req );
+         }
+         
+         );
+/*****************************************END JoinEvent*****************************************************************/
+
+
+/*****************************************SearchUser*****************************************************************/
+//Searching for a user
+app.post('/SearchUsers', function(req, res)
+         {
+             //Convert all names to lowercase for matching
+             //Select all matching users and don't include the user himself
+             var sql = "SELECT id, first_name||' '||last_name AS name, ProfileImage FROM Users where ((lower(first_name||' '||last_name) LIKE $1) and (id <> $2)) ;";
+             Database.query(sql, ['%' + req.body.SearchUserString + '%', req.cookies.UserID], SearchUsersCB, res, req );
+         }
+         
+         );
 
 
 
+function SearchUsersCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        var JSON2Send = [];
+        
+        //Go through all the Users matched
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            //Each object represents all the info needed for one user
+            var TheObject = {};
+            TheObject['url'] = result.rows[i].profileimage;
+            TheObject['name'] = result.rows[i].name;
+            TheObject['userid'] = result.rows[i].id;
+            
+            JSON2Send.push(TheObject);
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+}
+/*****************************************END SearchUser*****************************************************************/
 
 
+/*****************************************GetFriendRequests*****************************************************************/
+app.get('/GetFriendRequests', function(req, res)
+            {
+                //Update UnreadNotifications table
+                //Since we clicked on the friend request icon, our UNREAD numfriendreqs becomes 0
+                var sql = "UPDATE UnreadNotifications SET numfriendreqs = 0 where userid = $1;";
+                Database.query(sql, [req.cookies.UserID], GenericCB, res, req );
+        
+                //Get all your friend requests and their picture and name
+                var sql = "SELECT Users.id, ProfileImage, first_name||' '||last_name AS name FROM (Users CROSS JOIN Friends) where (friend_one = $1 and Users.id=friend_two and status=0 and WhoInitiated<>$1);";
+                
+                //Use the cookies
+                Database.query(sql, [req.cookies.UserID], GetFriendRequestsCB, res, req );
+            }
+        );
 
 
+function GetFriendRequestsCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    //No Friend Reqs
+    else if(result.rows.length == 0)
+    {
+        var JSON2Send = [];
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+    
+    else
+    {
+        //console.log(result.rows);
+        
+        var JSON2Send = [];
+        
+        //Go through all the Users matched
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            //Each object represents all the info needed for one user
+            var TheObject = {};
+            TheObject['url'] = result.rows[i].profileimage;
+            TheObject['name'] = result.rows[i].name;
+            TheObject['userid'] = result.rows[i].id;
+            
+            JSON2Send.push(TheObject);
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+}
+/*****************************************END GetFriendRequests*****************************************************************/
 
 
+/*****************************************Accept | Reject FriendReqs*****************************************************************/
+//Accepting a friend
+app.post('/FriendAccepted', function(req, res)
+         {
+             //Friend Accepted, update the 2 rows relating to these 2 new friends
+             var sql = "UPDATE Friends SET status=1 where ((friend_one=$1 and friend_two=$2) or (friend_one=$2 and friend_two=$1));";
+             Database.query(sql, [req.cookies.UserID, req.body.friendidaccepted], Accept_RejectFriendCB, res, req );
+         }
+         
+         );
+
+//Rejecting a friend
+app.post('/FriendRejected', function(req, res)
+         {
+         //Friend Accepted, update the 2 rows relating to these 2 new friends
+         var sql = "DELETE FROM Friends WHERE ((friend_one=$1 and friend_two=$2) or (friend_one=$2 and friend_two=$1));";
+         Database.query(sql, [req.cookies.UserID, req.body.friendidrejected], Accept_RejectFriendCB, res, req );
+         }
+         
+         );
 
 
+function Accept_RejectFriendCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    else
+    {
+       res.send("");
+    }
+}
+/*****************************************END Accept | Reject FriendReqs*****************************************************************/
 
-//app.get('/ViewEvents', function(req, res)
-//        {
-//        
-//        var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2);";
-//        
-//        //Use the cookies
-//        Database.query(sql, [req.cookies.UserID, req.cookies.UserEmail], SendUserEventsCB, res, req );
-//        
-//        }
-//        );
-//
-//
-//function SendUserEventsCB(err, result,res, req)
-//{
-//    
-//    if (err)
-//    {
-//        console.error(err);
-//        res.send("Error " + err);
-//    }
-//    
-//    //Send the Events as a JSON file
-//    else
-//    {
-//        //console.log(result.rows);
-//        
+
+/*****************************************GetMessageHistoryWithUser*****************************************************************/
+app.get('/GetMessageHistoryWithUser', function(req, res)
+                                    {
+                                        //Get all the messages we exchanges with this user
+                                        var sql = "SELECT sentById, chatmessage FROM OneToOneChat where ((sentById = $1 and ReceivedById=$2) or (sentById = $2 and ReceivedById=$1)) order by MessageTime ASC;";
+                                        Database.query(sql, [req.cookies.UserID, req.cookies.FriendIDClicked], GetMessageHistoryWithUserCB, res, req );
+                                    }
+       );
+
+
+function GetMessageHistoryWithUserCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        
+        //JSON to send back containing the event messages
+        var JSON2Send = [];
+        
+        //Go through all messages
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            var TheObject = {};
+            TheObject['sentById'] = result.rows[i].sentbyid;
+            TheObject['chatmessage'] = result.rows[i].chatmessage;
+            JSON2Send.push(TheObject);
+            
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+        
+    }
+}
+/*****************************************END GetMessageHistoryWithUser*****************************************************************/
+
+
+/*****************************************Get GetListPplMessaged*****************************************************************/
+app.get('/GetListPplMessaged', function(req, res)
+        {
+
+        //Since we clicked on the messages icon, our UNREAD nummessages becomes 0
+//        var sql = "UPDATE UnreadNotifications SET nummessages = 0 where userid = $1;";
+//        Database.query(sql, [req.cookies.UserID], GenericCB, res, req );
+        
+        //For each person we have messaged, get their id, their fullname, their picture, our LATEST chatmessage with them, and the MessageTime
+        //Order by MessageTime DESC
+        var sql = "SELECT id, first_name||' '||last_name AS NameChattingTo, ProfileImage, chatmessage, MessageTime "+
+                  "FROM (Users CROSS JOIN " +
+                                          "( " +
+                                              "SELECT sentById, ReceivedById, chatmessage, MessageTime " +
+                                              "FROM OneToOneChat chat1 " +
+                                              "WHERE ( " +
+                                                        "(chat1.sentById=$1 or chat1.ReceivedById=$1) " +
+                                                        "and " +
+                                                        "(NOT EXISTS " +
+                                                                "(SELECT chat2.MessageTime " +
+                                                                "FROM OneToOneChat chat2 " +
+                                                                "WHERE (" +
+                                                                      "( (chat1.sentById=chat2.sentById and chat1.ReceivedById=chat2.ReceivedById) or (chat1.ReceivedById=chat2.sentById and chat1.sentById=chat2.ReceivedById) ) " +
+                                                                         "and (chat2.MessageTime > chat1.MessageTime) " +
+                                                                      ")" +
+                                                                ")" +
+                                                         ") " +
+                                                    ") " +
+                                          ") AS OneMessagePerUser" +
+                        ") " +
+                "WHERE ((Users.id <> $1) and (id=sentById or id=ReceivedById)) " +
+                "order by MessageTime DESC ;" ;
+        
+        console.log(sql);
+        
+        //Use the cookies
+        Database.query(sql, [req.cookies.UserID], GetListPplMessagedCB, res, req );
+        }
+        );
+
+
+function GetListPplMessagedCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+
+    
+    else
+    {
+        console.log(result.rows);
+        
 //        var JSON2Send = [];
 //        
-//        //Go through all the Events
+//        //Go through all the Users matched
 //        for(var i = 0; i < result.rows.length; i++)
 //        {
-//            
-//            //Each object represents all the info needed for one event
+//            //Each object represents all the info needed for one user
 //            var TheObject = {};
-//            TheObject['EventName'] = result.rows[i].name; -------------------------
-//            TheObject['EventType'] = result.rows[i].eventtype; -------------------------
-//            TheObject['EventDateTime'] = result.rows[i].eventdatetime; ---------------------
-//            TheObject['Duration'] = result.rows[i].duration;
-//            TheObject['EventEndTime'] = result.rows[i].eventendtime;
-//            TheObject['EventLocation'] = result.rows[i].location;
-//            TheObject['EventDescription'] = result.rows[i].description;
-//            TheObject['EventNumPpl'] = result.rows[i].numppl; ------------------------
-//            TheObject['EventNumSpotsLeft'] = result.rows[i].eventnumspotsleft; ------------------
-//            TheObject['EventID'] = result.rows[i].eventid;
-//            TheObject['EventAdminPic'] = result.rows[i].eventadminpic;
-//            TheObject['EventAdminName'] = result.rows[i].eventadminname;
+//            TheObject['url'] = result.rows[i].profileimage;
+//            TheObject['name'] = result.rows[i].name;
+//            TheObject['userid'] = result.rows[i].id;
 //            
 //            JSON2Send.push(TheObject);
 //        }
 //        
 //        //Send it to AJAX
 //        res.end( JSON.stringify(JSON2Send) );
-//        
-//    }
-//}
+    }
+}
+/*****************************************END GetListPplMessaged*****************************************************************/
+
 
 
 
@@ -1092,22 +1635,18 @@ function GenericCB(err, result,res, req)
     if (err)
     {
         console.error(err);
-        res.send("Error " + err);
+        //res.send("Error " + err);
     }
     else
     {
        //Success
        //Do nothing
+        
     }
     
 }
 
 
-app.listen(app.get('port'), function()
-                           {
-                              console.log('Node app is running on port', app.get('port'));
-                           }
-          );
 
 
 
@@ -1125,156 +1664,6 @@ app.listen(app.get('port'), function()
 
 
 
-
-
-
-
-
-
-
-
-/****************************************TEMP*****************************************************************/
-//                                 var sql = 'SELECT friend_two FROM friends where (friend_one = $1 and status = 1);'; //Status = 1 to make sure friends were approved
-//                                 Database.query(sql, [req.cookies.UserID], GetUserFriendsCB, res, req );
-
-//        pg.connect(process.env.DATABASE_URL, function(err, client, done)
-//                                           {
-//                                               if (err) { return console.error(err); }
-//
-//                                               var condition = true;
-//                                               async.waterfall([
-//                                                                function(callback)
-//                                                                {
-//                                                                    var sql = 'SELECT friend_two FROM friends where (friend_one = $1 and status = 1);'; //Status = 1 to make sure friends were approved
-//                                                                   //client.query(sql, [req.cookies.UserID], GetUserFriendsCB, res, req );
-//
-//                                                                console.log("Cookies Check based: " + req.cookies.UserPass );
-//                                                                client.query(sql, [req.cookies.UserID], function(err, result)
-//                                                                                                         {
-//                                                                                                            if(err){callback(err,null); return;}
-//                                                                                         console.log("Step 1: " + result.rows.length);
-//
-//
-//                                                                                         callback(null, result, "arg2");//Calls the next function
-//
-//                                                                                                         }
-//
-//                                                                             );
-//
-//
-//                                                                }
-//                                                                ,
-//
-//                                                                function(result1,arg2, callback)
-//                                                                {
-//
-//                                                                console.log('passed into function2!: ' + arg2);
-//                                                                //JSON to send back containing all the user's friends info
-//                                                                var JSON2Send = [];
-//
-//                                                                //Go through all the friends
-////                                                                for(var i = 0; i < result1.rows.length; i++)
-////                                                                {
-//                                                                //For each friend, get their profilepic, name, and their userID
-//                                                                var sql = "SELECT profileimage, first_name||' '||last_name AS username, id  FROM users WHERE (id = $1);";
-//
-//                                                                client.query(sql, [result1.rows[0].friend_two], function(err, result)
-//                                                                                                                 {
-//                                                                                                                    if(err){callback(err,null); return;}
-//                                                                                                                    console.log("Step 2: " + result.rows.length);
-//
-//
-//
-//                                                                                                                    //Calls the next function
-//                                                                                                                 var TheObject = {};
-//                                                                                                                 TheObject['url'] = result.rows[0].profileimage;
-//                                                                                                                 TheObject['name'] = result.rows[0].username;
-//                                                                                                                 TheObject['friendid'] = result.rows[0].id;
-//                                                                                                                 JSON2Send.push(TheObject);
-//
-//
-//                                                                                                                  callback(null, JSON2Send);//Calls the next function
-//                                                                                                                 }
-//                                                                             );
-//
-//
-////                                                                }
-//
-////                                                                callback(null, JSON2Send);//Calls the next function
-//
-//                                                                }
-//                                                                //,
-//
-//
-//
-//
-//
-////                                                                console.log("Results: " + JSON2Send);
-////                                                                var sql = 'SELECT friend_two FROM friends where (friend_one = $1 and status = 1);'; //Status = 1 to make sure friends were approved
-////                                                                client.query(sql, [req.cookies.UserID], GetUserFriendsCB, res, req );
-////
-////                                                                client.query(text, values, function(err, result)
-////                                                                             {
-////                                                                             done();
-////                                                                             cb(err, result, res, req);
-////                                                                             }
-////                                                                             );
-////
-//
-////                                                                }
-////                                                                ,
-////
-////
-////                                                                 PushSQL,
-////                                                                 function (next)
-////                                                                 {
-////                                                                     if (condition)
-////                                                                     {
-////                                                                        UpdateTable(id, name, next);
-////                                                                     }
-////                                                                     else
-////                                                                     {
-////                                                                        next();
-////                                                                     }
-////                                                                 }
-//                                                             ],
-//                                                                function(err, JSON2Send)
-//                                                                {
-//                                                               if (err) { console.error(err); return; }
-//                                                               console.log("Final: JSON: " + JSON2Send);
-//                                                               client.end();
-//                                                                    pg.end();
-//                                                                }
-//                                                            );
-//
-//
-//                                               function CreateExtensions(callback)
-//                                              {
-//                                               var queryConfig = 'CREATE EXTENSION postgis; CREATE EXTENSION hstore;';
-//                                               client.query(queryConfig, function(err) {
-//                                                            return callback(err);
-//                                                            });
-//                                               }
-//
-//                                               function PushSQL(callback)
-//                                               {
-//                                               var queryConfig = fs.readFileSync("./database/cmdb.sql", 'utf8');
-//                                               client.query(queryConfig, function(err) {
-//                                                            return callback(err);
-//                                                            });
-//                                               }
-//
-//                                               function UpdateTable(id, name, callback)
-//                                               {
-//                                               var queryConfig = "UPDATE table SET name = '" + name + "' WHERE id = " + id + ";";
-//                                               client.query(queryConfig, function(err) {
-//                                                            condition = false;
-//                                                            return callback(err);
-//                                                            });
-//                                               }
-//                                           });
-
-//*********************************
 
 
 
