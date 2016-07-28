@@ -563,57 +563,75 @@ div.ui-datepicker
 
 
 
-
-
-
-
-
-
-
-
-/*This viewport is the same as the viewport for 320px*/
-/*The hover nav bar works and elements did not need to be varied*/
-@media screen and (min-width: 480px)
-{
-
-
-
-
+#nav_icon a{
+    font-size: 20px;
+    color: #74AD1B;
+    display: none;
 }
 
 
 
 
-/*For all viewports from 768px until 1024px*/
-@media screen and (min-width: 768px)
+
+
+/*For all viewports smaller than 740px*/
+@media screen and (max-width: 740px)
 {
-
- 
-
-}
-
-
-
-/*This viewport is the same as the viewport for 768px*/
-/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
-@media screen and (min-width: 1024px)
-{
- 
+    .main_navs{
+        display: none;
+    }
     
+    .home_btns{
+        display: none;
+    }
     
+    #nav_icon{
+        float: right;
+        margin-top: 8px;
+    }
+    
+    #nav_icon a{
+        font-size: 25px;
+        display: inline;
+    }
+    
+    .main_navs_responsive{
+        background-color: rgba(0,0,0,0.9);
+        position: absolute;
+        top: 55px;
+        right: 0px;
+        width: 140px;
+    }
+    
+    .home_btns_responsive{
+        background-color: rgba(0,0,0,0.9);
+        position: absolute;
+        margin: 0px;
+        padding: 0px;
+        top: 208px;
+        right: 0px;
+        width: 140px;
+    }
+    
+    #Main_Nav ul li{
+        padding-left: 10px;
+    }
+    
+    #Login_Button
+    {
+        border: none;
+        padding-left:6px;
+        padding-top: 30px;
+        padding-bottom: 25px;
+    }
+    
+    #Register_Button{
+        padding-left:0px;
+        padding-top: 10px;
+        
+    }
     
 }
-
-
-
-/*This viewport is the same as the viewport for 768px*/
-/*The hover nav bar for 768 is similar to this viewport and elements did not need to be varied*/
-@media screen and (min-width: 1280px)
-{
-
-
-}
-
 
 
 

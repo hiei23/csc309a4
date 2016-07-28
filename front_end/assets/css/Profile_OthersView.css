@@ -120,18 +120,205 @@ li
 
 /* About section style */
 /*Paul Starts*/
+
+
 #AboutUser
 {
-	position: absolute;
-	margin: auto;
-	margin-left: 20%;
-	margin-bottom: 10%;
-	width: 60%;
+    position: absolute;
+    margin: auto;
+    margin-left: 20%;
+    margin-bottom: 10%;
+    width: 60%;
+    height: 385px;
     padding: 10px 10px;
+    padding-left: 30px;
+    padding-top: 20px;
     border: 1px solid rgb(185, 185, 185);
     border-radius: 5px;
     background-color: rgb(255, 255, 255);
 }
+
+#AboutUser form div.each_info, #AboutUser form div.each_info_stable
+{
+    margin: 10px 10px;
+    float: left;
+    width: 30%;
+}
+
+.dropdown
+{
+    float: left;
+    width: 100%;
+}
+
+/*Change the default input border*/
+#AboutUser .each_info input, #AboutUser .each_info_stable input,
+.dropdown-Campus, .dropdown-Gender
+{
+    border: 1px solid rgb(185, 185, 185);
+}
+
+#AboutUser span.label
+{
+    display: inline-block;
+}
+
+#AboutUser form div input,
+.dropdown-Campus, .dropdown-Gender
+{
+    width: 100%;
+    font-weight: normal;
+    background-color: white;
+    padding-left: 3px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-radius: 10px;
+}
+
+.dropdown-Campus, .dropdown-Gender
+{
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+#AboutUser form div input[name="Birthday"]
+{
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+label.Birthday
+{
+    position: absolute;
+    width: 29.5%;
+}
+
+label.About_Me
+{
+    position: absolute;
+    top: 245px;
+    left: 40px;
+    width: 30%;
+}
+
+#AboutUser form div textarea[name="About_Me"]
+{
+    display: block;
+    position: absolute;
+    padding: 10px 10px;
+    width: 100%;
+    border-radius: 10px;
+    resize: none;
+}
+
+#AboutUser form#info_input
+{
+    width: 100%;
+}
+
+#AboutUser input[disabled], #AboutUser form div textarea[disabled],
+.dropdown-Campus[disabled], .dropdown-Gender[disabled]
+{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#sports{
+    position: absolute;
+    top: 240px;
+    margin-left: 35%;
+}
+
+#ck-collection{
+    border:1px solid lightgrey;
+    border-radius: 4px;
+    width: 365px;
+    height: 118px;
+    position: relative;
+}
+
+.ck-button label{
+    display: inline-block;
+    border: solid 1px lightgrey;
+    background-color: white;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+.ck-button input{
+    display:none;
+}
+
+input[disabled]:checked + label{
+    background-color: lightgrey;
+}
+
+.ck-button:nth-child(1){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(2){
+    position: absolute;
+    margin-left: 88px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(3){
+    position: absolute;
+    margin-left: 188px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(4){
+    position: absolute;
+    margin-left: 272px;
+    margin-top: 5px;
+}
+
+.ck-button:nth-child(5){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(6){
+    position: absolute;
+    margin-left: 121px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(7){
+    position: absolute;
+    margin-left: 230px;
+    margin-top: 42px;
+}
+
+.ck-button:nth-child(8){
+    position: absolute;
+    margin-left: 6px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(9){
+    position: absolute;
+    margin-left: 82px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(10){
+    position: absolute;
+    margin-left: 177px;
+    margin-top: 80px;
+}
+
+.ck-button:nth-child(11){
+    position: absolute;
+    margin-left: 262px;
+    margin-top: 80px;
+}
+
 
 /*Paul Ends*/
 
@@ -213,6 +400,7 @@ li
 #SportingEventReview
 {
     text-align: center;
+    margin-bottom: 30px;
 }
 
 

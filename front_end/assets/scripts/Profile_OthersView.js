@@ -13,7 +13,9 @@ $(document).ready
                 success: function (response)
                 {
                     //console.log(response);
-                    
+                //Only process if any friend requests exist
+                if(response.length > 0)
+                {
                     //Now display the correct icon notification numbers
                     //If its zero, never display the red icon
                     if(response[0].numfriendreqs == 0)
@@ -50,6 +52,7 @@ $(document).ready
                         $('#FB_Notification_SVG p').show();
                         $('#FB_Notification_SVG p').text( response[0].numnotifications );
                     }
+                }
                     
                 }
                 }); //End of AJAX
@@ -68,47 +71,51 @@ $(document).ready
                 success: function (response)
                 {
                     //console.log(response);
-                    
-                 //Change the src of the profile picture to the profile pic stored on the server
-                 $( "#ProfilePic" ).attr('src', response[0].ProfileImage );
+                 //Only process if any friend requests exist
+                 if(response.length > 0)
+                 {
                  
-                 //Display the user's correct name
-                 $( "#Profile_UserName" ).text(response[0].username);
-                 
-                     //See if this user is our friend or not
-                     $.ajax({
-                            type: 'GET',
-                            url: "/GetIsFriendorNot",
-                            dataType: 'text', //DataType being received
-                            success: function (response)
-                            {
-                                //hide the "Add Friend" button
-                                if(response == "yesfriend")
+                     //Change the src of the profile picture to the profile pic stored on the server
+                     $( "#ProfilePic" ).attr('src', response[0].ProfileImage );
+                     
+                     //Display the user's correct name
+                     $( "#Profile_UserName" ).text(response[0].username);
+                     
+                         //See if this user is our friend or not
+                         $.ajax({
+                                type: 'GET',
+                                url: "/GetIsFriendorNot",
+                                dataType: 'text', //DataType being received
+                                success: function (response)
                                 {
-                                    $('#AddFriend').hide();
+                                    //hide the "Add Friend" button
+                                    if(response == "yesfriend")
+                                    {
+                                        $('#AddFriend').hide();
+                                    }
+                                
+                                    //We added the profile we are viewing
+                                    else if(response == "pendingfriend")
+                                    {
+                                        $('#AddFriend p').text('Friend Requested');
+                                    }
+                                
+                                    //notfriend
+                                    //Show the "Add Friend" Button
+                                    else if(response == "notfriend")
+                                    {
+                                        $('#AddFriend').show();
+                                    }
+                                
+                                    //This user added us
+                                    else if(response == "ThisUserAddedYou")
+                                    {
+                                        $('#AddFriend p').text('User Requested to be Friends');
+                                    }
+                                
                                 }
-                            
-                                //We added the profile we are viewing
-                                else if(response == "pendingfriend")
-                                {
-                                    $('#AddFriend p').text('Friend Requested');
-                                }
-                            
-                                //notfriend
-                                //Show the "Add Friend" Button
-                                else if(response == "notfriend")
-                                {
-                                    $('#AddFriend').show();
-                                }
-                            
-                                //This user added us
-                                else if(response == "ThisUserAddedYou")
-                                {
-                                    $('#AddFriend p').text('User Requested to be Friends');
-                                }
-                            
-                            }
-                            }); //End of AJAX
+                                }); //End of AJAX
+                 }
                  
                 }
                 }); //End of AJAX
@@ -311,62 +318,6 @@ $(document).ready
  
  
  
-         //Create a temporary variable to store all the sports available in TSports
-         //This will eventually come from the database
-         var Sports = [
-                          {
-                             "EventName" : "cycling",
-                             "url": "./assets/images/cycling.svg"
-                          },
-                          
-                          {
-                             "EventName" : "football",
-                             "url": "./assets/images/football.svg"
-                          },
-                       
-                           {
-                               "EventName" : "squash",
-                               "url": "./assets/images/squash.svg"
-                           },
-                           
-                           {
-                               "EventName" : "basketball",
-                               "url": "./assets/images/basketball.svg"
-                           },
-                           
-                           {
-                               "EventName" : "boxing",
-                               "url": "./assets/images/boxing.svg"
-                           },
-                       
-                       {
-                       "EventName" : "tennis",
-                       "url": "./assets/images/tennis.svg"
-                       },
-                       
-                       {
-                       "EventName" : "volleyball",
-                       "url": "./assets/images/volleyball.svg"
-                       },
-                       
-                       {
-                       "EventName" : "waterpolo",
-                       "url": "./assets/images/waterpolo.svg"
-                       },
-                       
-                       {
-                       "EventName" : "tabletennis",
-                       "url": "./assets/images/tabletennis.svg"
-                       },
-                       
-                       {
-                       "EventName" : "taekwondo",
-                       "url": "./assets/images/taekwondo.svg"
-                       },
-               
-                    ];
- 
- 
              //When the user clicks on the "UserReviews" Tab, show all the reviews/ratings/comments of the user in different sports
              $(document).on('click', '#UserReviews',
                             
@@ -379,99 +330,91 @@ $(document).ready
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
                             
-                            
-                                                        
-                                                        //Only run function if Reviews information is not displayed
-                                                        if( $('#ReviewsofUser').length == 0 )
-                                                        {
-                                                        
-                            
-                                                            //Create a section to show the sports the user has been rated in
-                                                            var $ReviewsSection = $('<section>',
-                                                                                                {
-                                                                                                  id: 'ReviewsofUser'
-                                                                                                }
-                                                                                    );
-                            
-                                                            //Create element for Sports the user has played
-                                                            var $SportsPlayed = $('<ul>',
-                                                                                   {
-                                                                                     id: 'SportsPlayed'
-                                                                                   }
-                                                                           );
-                            
-                                                            //insert the <ul> SportsPlayed to the $ReviewsSection
-                                                            $ReviewsSection.append($SportsPlayed);
-                            
-                                                            //insert $ReviewsSection after the #ProfileHeader
-                                                            $ReviewsSection.insertAfter('#ProfileHeader');
+                                                        //Remove displayed information about "Reviews" [To Refresh]
+                                                        $('#ReviewsofUser').remove();
+                                                        $('#SportingEventReview').remove();
                             
                             
-                                                            //Loop over all the sporting events (that this user HAS ATTENDED/played) and append them
-                                                            $.each(Sports,
-                                                                           function(index, item)
-                                                                           {
-                                                                           
-                                                                               //$Friend has the image and the friend name
-                                                                               var $sport = $('<li>',
-                                                                                                       {
-                                                                                                         class: 'SportingEvent'
-                                                                                                       }
-                                                                                               );
+                                                        //Get a list of all event sport types attended
+                                                        $.ajax({
+                                                               type: 'GET',
+                                                               url: "/GetFriendSportsAttended",
+                                                               dataType: 'JSON',
+                                                               //Receives the path of the user's profile picture in the server
+                                                               success: function (response)
+                                                               {
+                                                               
+                                                                   //Create a section to show the sports the user has been rated in
+                                                                   var $ReviewsSection = $('<section>',
+                                                                                           {
+                                                                                           id: 'ReviewsofUser'
+                                                                                           }
+                                                                                           );
                                                                    
-                                                                               //$Friend has the image and the friend name
-                                                                               var $sportImage = $('<img>',
-                                                                                                          {
-                                                                                                              src: item.url,
-                                                                                                              width: '30px'
-                                                                                                          }
-                                                                                              );
+                                                                   //Create element for Sports the user has played
+                                                                   var $SportsPlayed = $('<ul>',
+                                                                                                 {
+                                                                                                 id: 'SportsPlayed'
+                                                                                                 }
+                                                                                         );
                                                                    
-                                                                               $sport.append($sportImage);  //Append the sportImage to the <li>
+                                                                   //insert the <ul> SportsPlayed to the $ReviewsSection
+                                                                   $ReviewsSection.append($SportsPlayed);
                                                                    
-                                                                               $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
-
-                                                                           }
-                                                                   );
-                            
-                                                        }
+                                                                   //insert $ReviewsSection after the #ProfileHeader
+                                                                   $ReviewsSection.insertAfter('#ProfileHeader');
+                                                                   
+                                                                   
+                                                                   //Loop over all the sporting events (that this user HAS ATTENDED/played) and append them
+                                                                   $.each(response,
+                                                                                  function(index, item)
+                                                                                  {
+                                                                                  
+                                                                                  //$Friend has the image and the friend name
+                                                                                  var $sport = $('<li>',
+                                                                                                 {
+                                                                                                 class: 'SportingEvent'
+                                                                                                 }
+                                                                                                 );
+                                                                                  
+                                                                                  //$Friend has the image and the friend name
+                                                                                  var $sportImage = $('<img>',
+                                                                                                      {
+                                                                                                      src: './assets/images/'+ item.SportType + '.svg',
+                                                                                                      width: '30px'
+                                                                                                      }
+                                                                                                      );
+                                                                                  
+                                                                                  //Hidden input containing the user's ID
+                                                                                  var $sportID = $('<input>',
+                                                                                                   {
+                                                                                                   type: 'hidden',
+                                                                                                   name: 'SportTypeID',
+                                                                                                   value: item.SportTypeID
+                                                                                                   }
+                                                                                                   );
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  $sport.append($sportImage);  //Append the sportImage to the <li>
+                                                                                  $sport.append($sportID);  //Append the sportID to the <li>
+                                                                                  
+                                                                                  $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
+                                                                                  
+                                                                                  }
+                                                                          );
+                                                               }
+                                                               }); //End of AJAX
                             
                                                     }
                             
                             
                             );
  
+
  
  
-         //Comments left by other users, for the sporting event which they attended together
-         var Comments = [
-                           {
-                            "Date" : "Jan 1, 2016",
-                           "Comment": "Awesome Person. Never Gives up in soccer!"
-                           },
-                           
-                           {
-                             "Date" : "Feb 4, 2016",
-                             "Comment": "We were down 3-1! This guy came in from the sub and scored 3 goals! We won 4-3!"
-                           },
-                         
-                            {
-                             "Date" : "June 5, 2016",
-                             "Comment": "Ran 10K in a 90 min match :O That's how much professional soccer players run!"
-                            },
-                         
-                            {
-                             "Date" : "July 6, 2016",
-                             "Comment": "Good runner with lots of stamina. Hardcore defensive person but he scored 2 own-goals! :)"
-                            }
-                         
-                        ];
- 
- 
- 
- 
- 
-             //When the user clicks on a SportingEvent, show all the reviews/ratings/comments of the user in that specific sport
+             //When the user clicks on a SportingEvent, show all the reviews/ratings/comments of the user viewed in that specific sport
              $(document).on('click', '.SportingEvent',
                             
                                                 function()
@@ -483,118 +426,135 @@ $(document).ready
                             
                                                    //Clear the background-color and border-bottom for the previously clicked item (if any)
                                                    $('.SportingEventClicked').removeClass('SportingEventClicked');
-                                                   
+                            
                                                    //Add a class to change the background-color and border-bottom
                                                    $(this).addClass('SportingEventClicked');
                             
                             
-                            
-                            
-                                                    //Create a section
-                                                    var $SportingEventReview = $('<section>',
-                                                                                            {
-                                                                                              id: 'SportingEventReview'
-                                                                                            }
-                                                                                 );
-                            
-                                                    //Insert this specific sporting event review after the section #ReviewsofUser
-                                                    $SportingEventReview.insertAfter('#ReviewsofUser');
-                            
-                            
-                            
-                            
-                                                    var $StarRatings = $('<div>',
-                                                                                 {
-                                                                                    id: 'StarRatings'
-                                                                                 }
+                                                    //The sport ID clicked on is stored in a hidden input
+                                                    var SportIDClicked = $(this).children('input').val();
+                                                    
+                                                    //Get a list of all reviews of the user in this sport ID
+                                                    $.ajax({
+                                                           type: 'POST',
+                                                           url: "/GetFriendUserReviews",
+                                                           data: { "SportID": SportIDClicked }, //Send the sport ID clicked on
+                                                           dataType: 'JSON',
+                                                           success: function (response)
+                                                           {
+                                                           
+                                                           // console.log(response);
+                                                           //Create a section
+                                                           var $SportingEventReview = $('<section>',
+                                                                                        {
+                                                                                        id: 'SportingEventReview'
+                                                                                        }
+                                                                                        );
+                                                           
+                                                           //Insert this specific sporting event review after the section #ReviewsofUser
+                                                           $SportingEventReview.insertAfter('#ReviewsofUser');
+                                                           
+                                                           
+                                                           
+                                                           
+                                                           var $StarRatings = $('<div>',
+                                                                                {
+                                                                                id: 'StarRatings'
+                                                                                }
+                                                                                );
+                                                           
+                                                           
+                                                           //Append it to the #SportingEventReview Section
+                                                           $SportingEventReview.append($StarRatings);
+                                                           
+                                                           //Display the average number of stars this user received for this event
+                                                           for(var i=0; i < response[0].SportRating; i++)
+                                                           {
+                                                           
+                                                           //Create a star SVG four times
+                                                           var $star = $('<img>',
+                                                                         {
+                                                                         src: './assets/images/filled_star.svg',
+                                                                         width: '15px'
+                                                                         }
                                                                          );
-                            
-                            
-                                                    //Append it to the #SportingEventReview Section
-                                                    $SportingEventReview.append($StarRatings);
-                            
-                                                    //Display the number of stars this user received for this event, based on other user's ratings
-                                                    //Lets say he got 4 stars / out of 5
-                                                    for(var i=0; i < 4; i++)
-                                                    {
-                            
-                                                       //Create a star SVG four times
-                                                       var $star = $('<img>',
-                                                                               {
-                                                                                   src: './assets/images/rating_star.svg',
-                                                                                   width: '15px'
-                                                                               }
-                                                                    );
-                            
-                                                        //Append it to StarRatings
-                                                        $StarRatings.append($star);
-                                                    }
-                            
-                            
-                                                    //Comments
-                                                    var $Comments = $('<div>',
+                                                           
+                                                           //Append it to StarRatings
+                                                           $StarRatings.append($star);
+                                                           }
+                                                           
+                                                           
+                                                           //Comments
+                                                           var $Comments = $('<div>',
                                                                              {
-                                                                                id: 'Comments'
+                                                                             id: 'Comments'
                                                                              }
-                                                                     );
+                                                                             );
+                                                           
+                                                           
+                                                           //<ul> to add <li> comments
+                                                           var $CommentsUL = $('<ul>',
+                                                                               {
+                                                                               
+                                                                               }
+                                                                               );
+                                                           
+                                                           //Append the comments to the page
+                                                           $SportingEventReview.append($Comments);
+                                                           
+                                                           $Comments.append($CommentsUL);
+                                                           
+                                                           
+                                                           //Add the comments left by other users for this specific sport to the page
+                                                           $.each(response,
+                                                                  function(index, item)
+                                                                  {
+                                                                  
+                                                                  //The first object in the response contains the SportRating only
+                                                                  if(index > 0)
+                                                                  {
+                                                                  //$comment is each individual comment
+                                                                  var $comment = $('<li>',
+                                                                                   {
+                                                                                   class: 'Individual_Comment'
+                                                                                   }
+                                                                                   );
+                                                                  
+                                                                  
+                                                                  
+                                                                  //The Time of the comment
+                                                                  var $commentTime = $('<p>',
+                                                                                       {
+                                                                                       text: item.CommentDate,
+                                                                                       class: 'commentTime'
+                                                                                       }
+                                                                                       );
+                                                                  
+                                                                  //The Content of the comment
+                                                                  var $commentContent = $('<p>',
+                                                                                          {
+                                                                                          text: item.Comment,
+                                                                                          class: 'commentContent'
+                                                                                          }
+                                                                                          );
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+                                                                  $comment.append($commentTime);  //Append the time to the <li>
+                                                                  $comment.append($commentContent);  //Append the content to the <li>
+                                                                  
+                                                                  
+                                                                  //Append the <li> comment to the <ul>
+                                                                  $CommentsUL.append($comment);
+                                                                  }
+                                                                  }
+                                                                  );
+                                                           
+                                                           }
+                                                           }); //End of AJAX
                             
                             
-                                                    //<ul> to add <li> comments
-                                                    var $CommentsUL = $('<ul>',
-                                                                              {
-                                                                        
-                                                                              }
-                                                                       );
-                            
-                                                    //Append the comments to the page
-                                                    $SportingEventReview.append($Comments);
-                            
-                                                    $Comments.append($CommentsUL);
-                            
-                            
-                                                    //Add the comments left by other users for this specific sport to the page
-                                                    //Loop over all the comments
-                                                    $.each(Comments,
-                                                                   function(index, item)
-                                                                   {
-
-                                                                       //$comment is each individual comment
-                                                                       var $comment = $('<li>',
-                                                                                              {
-                                                                                               class: 'Individual_Comment'
-                                                                                              }
-                                                                                      );
-                                                           
-                                                           
-
-                                                                       //The Time of the comment
-                                                                       var $commentTime = $('<p>',
-                                                                                                   {
-                                                                                                    text: item.Date,
-                                                                                                    class: 'commentTime'
-                                                                                                   }
-                                                                                           );
-                                                           
-                                                                       //The Content of the comment
-                                                                       var $commentContent = $('<p>',
-                                                                                                   {
-                                                                                                   text: item.Comment,
-                                                                                                   class: 'commentContent'
-                                                                                                   }
-                                                                                           );
-
-                                                           
-                                                           
-                                                           
-                                                                       $comment.append($commentTime);  //Append the time to the <li>
-                                                                       $comment.append($commentContent);  //Append the content to the <li>
-                                                           
-                                               
-                                                                        //Append the <li> comment to the <ul>
-                                                                       $CommentsUL.append($comment);
-                                                           
-                                                                   }
-                                                         );
                             
                                                 }
                             
@@ -604,125 +564,396 @@ $(document).ready
  
  
                  /***************************************************Paul******************************************************/
-                 var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
-                                   "tabletennis", "tennis", "volleyball",
-                                   "football", "swimming"];
-                 
-                 var response = [
-                                 {
-                                 "Campus": "St.George",
-                                 "Given_Name": "Parham",
-                                 "Family_Name": "Oghabi",
-                                 "Phone_number": "(647)123-9999",
-                                 "Email_Address": "parham@hotmail.com",
-                                 "Birthday": "January 1, 1994",
-                                 "Height": "180",
-                                 "Weight": "72",
-                                 "Gender": "Male",
-                                 "About_Me": "",
-                                 "SportsInterested": ["cycling", "squash", "basketball"]
-                                 }
-                                 ];
-                 
-                 var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address",
-                                    "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
-                 
-                 
-                 //When the user clicks on the "About" Tab, show all info about the user
-                 $(document).on('click', '#UserAbout', DisplayUserInfo);
-                 
-                 function DisplayUserInfo()
+ 
+ 
+ /****** START of About section *******/
+ var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
+                   "tabletennis", "tennis", "volleyball",
+                   "football", "swimming"];
+ 
+ var about_order = ["First_Name", "Last_Name", "Email_Address", "Birthday", "Gender",
+                    "Phone_number", "Height", "Weight", "Campus", "About_Me", "Sports"];
+ 
+ 
+ //When the user clicks on the "About" Tab, show all info about the user
+ $('#UserAbout').on('click', requestUserInfo);
+ 
+ //Get info from the server and create campus HTML element to display.
+ function createCampusinfo(response)
+ {
+ $dropdown = $("<div/>", {
+               class: "dropdown"
+               });
+ 
+ $select = $("<select/>", {
+             required: "required",
+             name: "Campus",
+             class: "dropdown-Campus",
+             disabled: "disabled"
+             });
+ 
+ //option: default(placeholder for option), St.George, Missisauga, Scarborough
+ $option0 = $("<option/>", {
+              value: "default",
+              text: "Campus"
+              });
+ 
+ $option1 = $("<option/>", {
+              value: "stgeorge",
+              text: "St.George"
+              });
+ 
+ $option2 = $("<option/>", {
+              value: "missisauga",
+              text: "Missisauga"
+              });
+ 
+ $option3 = $("<option/>", {
+              value: "scarborough",
+              text: "Scarborough"
+              });
+ 
+ //Set selected when it's chosen by user
+ if (response[0].Campus === "stgeorge")
+ {
+ $option1.attr("selected", "selected");
+ }
+ else if (response[0].Campus === "missisauga")
+ {
+ $option2.attr("selected", "selected");
+ }
+ else if (response[0].Campus === "scarborough")
+ {
+ $option3.attr("selected", "selected");
+ }
+ else
+ {
+ //"Campus" is shown as a default.
+ $option0.attr("selected", "selected");
+ }
+ 
+ $select.append($option0);
+ $select.append($option1);
+ $select.append($option2);
+ $select.append($option3);
+ 
+ $dropdown.append($select);
+ 
+ return $dropdown;
+ 
+ }
+ 
+ 
+ //Create info of gender in html elements using jquery.
+ function createGenderInfo(response)
+ {
+ //dropdown for gender choice.
+ $dropdown = $("<div/>", {
+               class: "dropdown"
+               });
+ 
+ $select = $("<select/>", {
+             required: "required",
+             name: "gender",
+             class: "dropdown-Gender",
+             disabled: "disabled"
+             });
+ 
+ //option for male and female
+ $option1 = $("<option/>", {
+              value: "male",
+              text: "Male"
+              });
+ 
+ $option2 = $("<option/>", {
+              value: "female",
+              text: "Female"
+              });
+ 
+ //display user's gender.
+ if (response[0].Gender === "male")
+ {
+ $option1.attr("selected", "selected");
+ }
+ else
+ {
+ $option2.attr("selected", "selected");
+ }
+ 
+ $select.append($option1);
+ $select.append($option2);
+ 
+ $dropdown.append($select);
+ 
+ return $dropdown;
+ }
+ 
+ 
+ function removeOtherDisplayedInfo()
+ {
+ //Remove all other displayed information about "Friends" (if exists)
+ $('#FriendsofUser').remove();
+ 
+ //Remove all other displayed information about "Reviews" (if exists)
+ $('#ReviewsofUser').remove();
+ $('#SportingEventReview').remove();
+ 
+ //Remove all other displayed information about "About" (if exists)
+ //Refresh, get new data from the server
+ $('#AboutUser').remove();
+ 
+ }
+ 
+ //Callback function of click event of "About" section.
+ function requestUserInfo()
+ {
+ 
+ //Get info about the user from the server
+ $.ajax({
+        type: 'GET',
+        url: "/GetUserAboutInfo",  //URL to send to the server
+        dataType: 'JSON'
+        //Receives the path of the user's profile picture in the server
+        }).done(function(response) {
+                //remove previously displayed info
+                removeOtherDisplayedInfo();
+                
+                //display user info
+                DisplayUserInfo(response);
+                }); //End of AJAX
+ 
+ }
+ 
+ //Display user's info on success of ajax request.
+ function DisplayUserInfo(response)
+ {
+ //Create a section to info about the user
+ var $AboutSection = $('<section>',
+                       {
+                       id: 'AboutUser'  //Please don't change this ID
+                       }
+                       );
+ 
+ //insert $AboutSection after the #ProfileHeader
+ $AboutSection.insertAfter('#ProfileHeader');
+ 
+ //Paul ADD CODE HERE
+ $form_input = $('<form/>',
                  {
-                     //Remove all other displayed information about "Friends" (if exists)
-                     $('#FriendsofUser').remove();
-                     
-                     //Remove all other displayed information about "Reviews" (if exists)
-                     $('#ReviewsofUser').remove();
-                     $('#SportingEventReview').remove();
-                     
-                     //Remove all other displayed information about "Upcoming Events" (if exists)
-                     $('#EventsofUser').remove();
-                     //Remove all info about the selected event
-                     $('#SelectedEvent').remove();
-                     
-                     //Remove all other displayed information about "Searching Events" (if exists)
-                     $('#SearchEventSection').remove();
-                     
-                     //Remove all other displayed information about "Creating Events" (if exists)
-                     $('#CreateEventSection').remove();
-                     //Remove the datepicker
-                     $('.xdsoft_datetimepicker').remove();
-                     //unwrap div with the class for blurring the background from #ProfileHeader
-                     $('#ProfileHeader').unwrap();
-                     
-                     //Remove all other displayed information about "About" (if exists)
-                     //Refresh, get new data from the server
-                     $('#AboutUser').remove();
-                     
-                     
-                     $('#EventSuccessful').hide();
-                     
-                     
-                     
-                     //Get info about the user from the server
-                     //             $.ajax({
-                     //                    type: 'GET',
-                     //                    url: "/GetUserAboutInfo",  //URL to send to send to the server
-                     //                    dataType: 'JSON',
-                     //                    //Receives the path of the user's profile picture in the server
-                     //                    success: function (response)
-                     //                    {
-                                             //Create a section to info about the user
-                                             var $AboutSection = $('<section>',
-                                                                               {
-                                                                                 id: 'AboutUser'  //Please don't change this ID
-                                                                               }
-                                                                   );
-                                             
-                                             //insert $AboutSection after the #ProfileHeader
-                                             $AboutSection.insertAfter('#ProfileHeader');
-                                             
-                                             
-                                             
-                                             
-                                             //                        console.log(response[0].Campus);  //Gives St.George
-                                             //                        console.log(response[0].Height);  //Gives 180
-                                             //
-                                             //                        var SportsInterested = response[0].SportsInterested;  //SportsInterested is an array
-                                             //
-                                             //                        for(var i=0; i<SportsInterested.length; i++)
-                                             //                        console.log(SportsInterested[i]) //Prints cycling , squash, basketball
-                                             
-                                             
-                                             //Paul ADD CODE HERE
- 
-                     
-                     
-                     //                    }
-                     //                    }); //End of AJAX
-                 
-                 
-                 
-                 
-                 
+                 id: "info_input"
                  }
+                 );
+ 
+ //for every each user's info, display
+ for (var i = 0; i < about_order.length - 1; i++)
+ {
+ var $div = $('<div/>',
+              {
+              class: "each_info"
+              }
+              );
+ 
+ if (about_order[i] === "Email_Address" ||
+     about_order[i] === "Last_Name" ||
+     about_order[i] === "First_Name")
+ {
+ $div = $('<div/>',
+          {
+          class: "each_info_stable"
+          }
+          );
+ }
+ 
+ var $label = $('<label/>',
+                {
+                class: about_order[i]
+                }
+                );
+ 
+ var $label_text = $('<span/>',
+                     {
+                     class: "label",
+                     text: about_order[i].replace("_", " ") + ":"
+                     }
+                     );
+ 
+ var $info;
+ 
+ //Display About me section as <textarea>
+ if (about_order[i] === "About_Me")
+ {
+ $info = $('<textarea>',
+           {
+           name: about_order[i],
+           placeholder: "Brief Personal Description",
+           class: about_order[i],
+           text: response[0][about_order[i]],
+           rows: 6,
+           cols: 35,
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Campus")
+ {
+ $info = createCampusinfo(response);
+ }
+ else if (about_order[i] === "Gender")
+ {
+ $info = createGenderInfo(response);
+ }
+ else if (about_order[i] === "Birthday")
+ {
+ 
+ $info = $("<input>",
+           {
+           type: "date",
+           name: about_order[i],
+           class: about_order[i],
+           pattern: "^(19|20)\d\d[- /.](0[1-9]|1[012])" +
+           "[- /.](0[1-9]|[12][0-9]|3[01])",
+           value: response[0].Birthday,
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Height" || about_order[i] === "Weight")
+ {
+ var unit = {"Height":"cm", "Weight":"kg"};
+ $info = $("<input>",
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           placeholder: unit[about_order[i]],
+           pattern: "[0-9]{1,3}",
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Phone_number")
+ {
+ $info = $("<input>",
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           placeholder: "ex.(647)123-9999",
+           pattern: "[0-9]{10}|(\([0-9]{3}\))?([0-9]{3})?-?[0-9]{3}-[0-9]{4}|\([0-9]{3}\)[0-9]{7}",
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else
+ {
+ $info = $('<input>',
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           disabled: "disabled"
+           }
+           );
+ }
  
  
  
+ $label.append($label_text);
+ $label.append($info);
+ $div.append($label);
+ 
+ $form_input.append($div);
+ 
+ }
+ 
+ 
+ 
+ $info = $('<section/>', {
+           id: "sports"
+           });
+ 
+ 
+ var $p_text = $('<p/>', {
+                 text: "Sports:"
+                 });
+ 
+ var $div_collection = $('<div/>',{
+                         id:"ck-collection"
+                         })
+ 
+ 
+ //console.log(response[0]);
+ 
+ var len = sport_list.length;
+ 
+ for(var i = 0;i < len;i++){
+ var $div_ckbtn = $('<div/>',{
+                    class:"ck-button"
+                    });
+ 
+ var $input_ckb = $('<input>',{
+                    type:"checkbox",
+                    id:sport_list[i],
+                    name:sport_list[i],
+                    value:sport_list[i],
+                    disabled: "disabled",
+                    checked: "checked"
+                    });
+ 
+ 
+ if (response[0].SportsInterested.indexOf(sport_list[i]) === -1)
+ {
+ $input_ckb.removeAttr("checked");
+ }
+ 
+ var $label_sport = $('<label/>',{
+                      for:sport_list[i]
+                      });
+ 
+ var $img = $('<img>',{
+              width:"20",
+              height:"20",
+              src:"assets/images/" + sport_list[i] + ".svg"
+              });
+ 
+ $label_sport.append($img);
+ $label_sport.append(sport_list[i]);
+ 
+ $div_ckbtn.append($input_ckb);
+ $div_ckbtn.append($label_sport);
+ 
+ $div_collection.append($div_ckbtn);
+ }
+ 
+ $info.append($p_text);
+ $info.append($div_collection);
+ 
+ $form_input.append($info);
+ 
+ $AboutSection.append($form_input);
+ }
+ 
+/****** END of About section *******/
  
  
  //Your Code should end here
  /***************************************************Paul******************************************************/
  
-
  
  
-    } //End of $(document).ready function
-
-
-
-
-);
+ 
+ } //End of $(document).ready function
+ 
+ 
+ 
+ 
+ );
 
 
 

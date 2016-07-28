@@ -8,7 +8,7 @@ var path = require('path');     //used for file path
 var fs = require('fs-extra');   //File System - for file manipulation
 var passport = require('passport'); //module for fb authen
 var http = require('http');
-
+var bcrypt = require('bcrypt-nodejs');
 
 var Database = require('./db'); //no need for .js
 
@@ -40,163 +40,27 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 
 
-var server = app.listen(app.get('port'));
-var io = require('socket.io').listen(server);
-
-
 app.get('/', function (req, res)
              {
-                res.sendfile(__dirname + '/front_end/index.html');
+                res.sendFile(__dirname + '/front_end/index.html');
              }
        );
 
 
-
-io.on('connection', function(socket)
-      {
-      console.log('a user connected - first socket active');
-      
-      
-      socket.on('disconnect', function(){
-                console.log('user disconnected');
-                });
-      
-//      socket.on('chat message', function( msg){
-//                console.log('message: ' + msg);
-//                
-////                var data= {
-////                "userID": data.targetID,
-////                "challengerName": data.challengerName
-////                };
-////                socket.broadcast.emit('receiveChallenge', data);
-//                   io.emit('chat message', msg);
-//                });
-      
-      socket.on('GroupChatMessage', function(msg)
-                {
-                
-                console.log('Server Socket main got ur messaage too!! ' + msg);
-                
-                }
-                );
-      
-      });
-
-//In order to send an event to everyone,
-//io.emit('some event', { for: 'everyone' });
-
-//Broadcasting means sending a message to everyone else except for the socket that starts it.
-//Example
-//If you want to send a message to everyone except for a certain socket (Ex: the sender himself) we have the broadcast flag:
-//
-//io.on('connection', function(socket){
-//      socket.broadcast.emit('hi');
-//      });
-
-
-var chat = io.of('/chat');
-chat.on('connection', function(socket)
-       {
-       console.log('2nd Socket activated');
-        
-
-       
-       socket.on('Yo socket 2, this is the search bar', function(msg){
-                 console.log('message: 2nd socket ' + msg);
-                 //io.emit('Yo socket 2, this is the search bar', msg);
-                 });
-       
-       }
-       
-       
-       );
-
-
-//socket.broadcast.emit('users_count', clients);
-//io.sockets.emit('users_count', clients);
-//Alternatively, you can use the broadcast function, which sends a message to everyone except the socket that starts it:
-
-var GroupChatEvents = io.of('/GroupChatEvents');
-
-
-//socket is the incoming socket
-GroupChatEvents.on('connection', function(socket)
-                                {
-                   //console.log('New client connected (id=' + socket.id + ').');
-                                console.log('Server: Client connected to GroupChatEvents multiplex socket');
-//                   
-//                   socket.on('disconnect', function(){
-//                             console.log('Server: Client DC from GroupChatEvents multiplex socket');
-//                             });
-                   
-                   socket.on('GroupChatMessage', function(msg)
-                             {
-                             
-                             console.log('Received search user bar message: ' + msg.myID);
-                             
-                              // socket.emit('Notification', msg.myID);  //Only sends back to the socket that sent it! THAT ONLY "GroupChatEvents" (only that socket in that namespace) who trigerred will get it
-                             GroupChatEvents.emit('Notification' + msg.myID, msg.myID);
-                               // GroupChatEvents.emit('Notification', 50);  //EVERYINE IN "GroupChatEvents" will get it [All sockets in that namespace]
-                             
-                             //Gets a message sent by a socket in namespace "GroupChatMessage", but only emits back to its own ID
-//                              GroupChatEvents.emit('Notification', 50);  //EVERYINE IN "GroupChatEvents" will get it [All sockets in that namespace]
-                           }
-                             );
-                   
-                                //        socket.emit('a message', {
-                                //                    that: 'only'
-                                //                    , '/chat': 'will get'
-                                //                    });
-                                
-                                //        chat.emit('a message', {
-                                //                  everyone: 'in'
-                                //                  , '/chat': 'will get'
-                                //                  });
-                                
-//                                socket.on('Yo socket 2, this is the search bar', function(msg){
-//                                          console.log('message: 2nd socket ' + msg);
-//                                          //io.emit('Yo socket 2, this is the search bar', msg);
-//                                          });
-                   
-                                }
-        
-        
-        );
-
-
-
-//GroupChatEvents.on('connection', function(socket)
-//                   {
-//                   console.log('Server outside F(X) second f(x): Client connected to GroupChatEvents multiplex socket');
-//                   
-//                   socket.on('disconnect', function(){
-//                             console.log('Server: Client DC from GroupChatEvents multiplex socket');
-//                             });
-//                   
-//                   socket.on('GroupChatMessage', function(msg)
-//                             {
-//                             
-//                             console.log('Received search user bar message Another F(X)!: ' + msg);
-//                             
-//                            // socket.emit('Notification', 50);
-//                             }
-//                             );
-//
-//        
-//                   
-//                   }
-//                   
-//                   
-//                   );
-
-
 /****************************************WebSockets***********************************/
+var server = app.listen(app.get('port'));
+var io = require('socket.io').listen(server);
+
 //This socket multiplex is only used for notifications (friendreqs, messages, notifications)
 var NotificationSocket = io.of('/Notifications');
 
 //This socket multiplex is only used for one to one messaging (sending the data)
 var One2OneMessageSocket = io.of('/One2OneMessaging');
+
+//This socket multiplex is only used for Event Chat messaging (sending the data)
+var EventGroupChatSocket = io.of('/EventGroupChat');
 /**************************************************************************************/
+
 
 //socket is the incoming socket
 //As soon as a client connects, the function is run
@@ -220,9 +84,6 @@ NotificationSocket.on('connection',
                                              Database.query(sql_1, [msg.friendid, msg.userid, msg.userid], UpdateNotificationsCB, msg.friendid, msg.userid );
                                          }
                                      );
-                       
-
-                      
                        
                        }
 
@@ -276,35 +137,33 @@ One2OneMessageSocket.on('connection',
                         {
                         
                         
-                        //Add a listener if anyone sent a message
-                        socket.on('/SendingMessage',
-                                   function(msg)
-                                   {
+                            //Add a listener if anyone sent a message
+                            socket.on('/SendingMessage',
+                                       function(msg)
+                                       {
 
-                                      //Insert the sent message into the database
-                                      var sql = 'INSERT INTO OneToOneChat (sentById, ReceivedById, chatmessage, MessageTime) ' + "VALUES($1, $2, $3, now());";
-                                      Database.query(sql, [msg.userid, msg.chattingToid, msg.chatmessage], GenericCB, msg.userid, msg.chattingToid );
-                                      
-                                      //Update the UnreadNotifications table for the person to whom the message was sent
-                                      var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages+1) where userid = $1 RETURNING nummessages;";
-                                      Database.query(sql1, [msg.chattingToid], SendMessageCB, msg.userid, msg ); //pass the msg object,(No http req and res)
-                                   }
-                                  );
+                                          //Insert the sent message into the database
+                                          var sql = 'INSERT INTO OneToOneChat (sentById, ReceivedById, chatmessage, MessageTime) ' + "VALUES($1, $2, $3, now());";
+                                          Database.query(sql, [msg.userid, msg.chattingToid, msg.chatmessage], GenericCB, msg.userid, msg.chattingToid );
+                                          
+                                          //Update the UnreadNotifications table for the person to whom the message was sent
+                                          var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages+1) where userid = $1 RETURNING nummessages;";
+                                          Database.query(sql1, [msg.chattingToid], SendMessageCB, msg.userid, msg ); //pass the msg object,(No http req and res)
+                                       }
+                                      );
+                            
+                            //Add a listener if a message was read
+                            socket.on('/ReadMessage',
+                                                  function(msg)
+                                                  {
+                                                      //msg.userid is sent
+                                                      //Update the UnreadNotifications table for the person to who read a message
+                                                      var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages-1) where userid = $1;";
+                                                      Database.query(sql1, [msg.userid], GenericCB, msg.userid, msg );
+                                                  }
+                                      );
                         
-                        //Add a listener if a message was read
-                        socket.on('/ReadMessage',
-                                              function(msg)
-                                              {
-                                                  //msg.userid is sent
-                                                  //Update the UnreadNotifications table for the person to who read a message
-                                                  var sql1 = "UPDATE UnreadNotifications SET nummessages = (nummessages-1) where userid = $1;";
-                                                  Database.query(sql1, [msg.userid], GenericCB, msg.userid, msg );
-                                              }
-                                  );
-                        
-                        
-                        
-                        
+ 
                         }
                         
                         );
@@ -323,12 +182,92 @@ function SendMessageCB(err, result, userid, msg)
     else
     {
         //Pass a JSON containg the new nummessages, the fromuserid, and the chatmessage
-        //Send this message to everyone in the "One2OneMessageSocket.emit" namespace
+        //Send this message to everyone in the "One2OneMessageSocket.emit" namespace [Including the sender]
         //But because of the chattingToid, only the person who it got sent to will be listening to this message
         One2OneMessageSocket.emit('ReceiveMessages' + msg.chattingToid, {nummessages: result.rows[0].nummessages, fromuserid: msg.userid, chatmessage: msg.chatmessage  } );
     }
 }
 /*****************************************End Send Message*****************************************************************/
+
+
+
+//socket is the incoming socket
+//As soon as a client connects, the function is run
+EventGroupChatSocket.on('connection',
+                      
+                                  function(socket)
+                                  {
+                        
+                                        socket.on('JoinEventRoom', function(room)
+                                                                  {
+                                                                      //room is the EventID passed
+                                                                      //The socket/client that sent this message joins a room dedicated for this EventID
+                                                                      socket.join(room);
+                                                                  }
+                                                  );
+                        
+                        
+                                      //Add a listener if a user in the event Sends Group Message
+                                      socket.on('/SendGroupMessage',
+                                                                function(msg)
+                                                                {
+                                                                    //Insert the sent message into the database
+                                                                    var sql = 'INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime) ' + "VALUES($1, $2, $3, now());";
+                                                                    Database.query(sql, [msg.Chat_EventID, msg.userid, msg.chatmessage], GenericCB, msg.userid, msg);
+                                                
+                                                                    //Get the profile picture of the person who sent the message
+                                                                    var sql = "SELECT ProfileImage FROM Users where id = $1;";
+                                                                    Database.query(sql, [msg.userid], SendGroupMessageCB, socket, msg);
+                                                                }
+                                               );
+                        
+                        
+                                      socket.on('LeaveRoom', function(room)
+                                                            {
+                                                               //console.log("LeavingRoom: " + room);
+                                                               //Client leaves the room
+                                                               socket.leave(room);
+                                                            }
+                                              );
+                      
+                                  }
+                      
+                      );
+
+
+/*****************************************SendGroupMessage*****************************************************************/
+//Broadcast the chat group message to all other users in the event
+function SendGroupMessageCB(err, result, socket, msg)
+{
+    
+    if (err)
+    {
+        console.error(err);
+    }
+    
+    else
+    {
+        //Broadcast the message to all other users in the socket room/event [Except to the sender]
+        socket.broadcast.to(msg.Chat_EventID).emit('ReceiveEventMessages', {eventID: msg.Chat_EventID, chatmessage: msg.chatmessage, SenderDP: result.rows[0].profileimage  });
+    }
+}
+/*****************************************End SendGroupMessage*****************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -377,8 +316,12 @@ function NewUserCB(err, result,res, req)
     {
         //New User
         //insert in the DB
-        var sql = 'INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage) ' + "VALUES($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, now(), './assets/images/DefaultProfilePic.jpg');";
-        Database.query(sql, [req.body.firstname, req.body.lastname, req.body.birthday, req.body.gender, req.body.height, req.body.weight, req.body.email, req.body.phone, req.body.campus, req.body.password, req.body.aboutme ], GetUserIDCB, res, req );
+        //hash the password before storing it
+        var hashedPass = bcrypt.hashSync(req.body.password);
+        var sql = 'INSERT INTO users (first_name, last_name, birthday, gender, height, weight, email, phone, campus, password, about, createdAt, ProfileImage,hashedpassword) ' + "VALUES($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, now(), './assets/images/DefaultProfilePic.jpg',$12);";
+        Database.query(sql, [req.body.firstname, req.body.lastname,  req.body.birthday, req.body.gender, req.body.height, req.body.weight, req.body.email, req.body.phone, req.body.campus, req.body.password, req.body.about,hashedPass ], GetUserIDCB, res, req );
+        
+   
 
     }
     
@@ -683,6 +626,15 @@ function GetLoginUserInfoCB(err, result,res, req)
         res.send("Error " + err);
     }
     
+    //Valid Query but no result found
+    else if( result.rowCount == 0 )
+    {
+        var JSON2Send = [];
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+    
     else
     {
         
@@ -731,10 +683,11 @@ app.get('/GetDisplayedProfileUserFriends', function(req, res)
 app.post('/GetEventUsers', function(req, res)
                             {
                             //Get list of the users in the Event and all their info
-                            var sql = "SELECT users.id as friend_two, first_name||' '||last_name AS username, ProfileImage FROM (users CROSS JOIN EventUsers) where (EventUsers.userid = Users.id and EventUsers.id = $1);";
-                            Database.query(sql, [req.body.eventID], GetUserFriends_EventUsersCB, res, req );
+                            var sql = "SELECT users.id as friend_two, first_name||' '||last_name AS username, ProfileImage, EventRatingSubmitted FROM (users CROSS JOIN EventUsers) where (EventUsers.userid = Users.id and EventUsers.id = $1);";
+                            Database.query(sql, [req.body.eventID], GetEventUsersCB, res, req );
                             }
         );
+
 
 
 function GetUserFriends_EventUsersCB(err, result,res, req)
@@ -768,6 +721,39 @@ function GetUserFriends_EventUsersCB(err, result,res, req)
     }
 }
 
+function GetEventUsersCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //console.log(result.rows);
+        
+        //JSON to send back containing all the user's friends info
+        var JSON2Send = [];
+        
+        //Go through all the friends | (events)
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            //Add the object for the user's friend | (user in the event)
+            var TheObject = {};
+            TheObject['url'] = result.rows[i].profileimage;
+            TheObject['name'] = result.rows[i].username;
+            TheObject['friendid'] = result.rows[i].friend_two;
+            TheObject['EventRatingSubmitted'] = result.rows[i].eventratingsubmitted;
+            JSON2Send.push(TheObject);
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+        
+    }
+}
+
 /*****************************************End Get User's Friends| Event Users*****************************************************************/
 
 
@@ -792,6 +778,15 @@ function GetDisplayedProfileInfoCB(err, result,res, req)
     {
         console.error(err);
         res.send("Error " + err);
+    }
+    
+    //Valid Query but no result found
+    else if( result.rowCount == 0 )
+    {
+        var JSON2Send = [];
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
     }
     
     else
@@ -1007,7 +1002,7 @@ function EventCreatedCB(err, result,res, req)
 app.get('/ViewEvents', function(req, res)
                      {
     
-                        var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2);";
+                        var sql = "SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, (EXTRACT(EPOCH FROM EndTime::Time - DateTime::Time)/3600)||' Hours' AS Duration, to_char(EndTime, 'HH:MI AM') AS EventEndTime, location, Description, numppl, (numppl - attendance) AS EventNumSpotsLeft, ProfileImage AS EventAdminPic, first_name||' '||last_name AS EventAdminName, (datetime::date||' '||endtime)::timestamp AS CompleteEndTime FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $1 and EventUsers.id = Eventid and userid = Users.id and email = $2) ORDER BY DateTime DESC;";
                         
                         //Use the cookies
                         Database.query(sql, [req.cookies.UserID, req.cookies.UserEmail], SendUserEventsCB, res, req );
@@ -1050,6 +1045,7 @@ function SendUserEventsCB(err, result,res, req)
             TheObject['EventID'] = result.rows[i].eventid;
             TheObject['EventAdminPic'] = result.rows[i].eventadminpic;
             TheObject['EventAdminName'] = result.rows[i].eventadminname;
+            TheObject['CompleteEndTime'] = result.rows[i].completeendtime;
             
             JSON2Send.push(TheObject);
         }
@@ -1091,7 +1087,6 @@ function IsAdminLeaveEventCB(err, result,res, req)
     //User who is leaving the event is the admin
     else if(result.rowCount == 1)
     {
-        
         //Remove the whole event from Table "Event"
         //Changes are propagated by "On Delete Cascade"
         var sql = "DELETE FROM Event where (Eventid = $1 and EventAdminID = $2);";
@@ -1165,23 +1160,30 @@ function GetEventMessagesCB(err, result,res, req)
 
 
 
-/*****************************************GetAboutUserInfo*****************************************************************/
-app.get('/GetUserAboutInfo', function(req, res)
-                            {
-                            //Get all the info that should be displayed when the user logs in:
-                            //Get the path of the user's profile picture in the server
-                            //Get the user's full name profile picture in the server
-                            //Get the UnreadNotifications (numfriendreqs, nummessages, numnotifications)
-                            var sql = "SELECT campus, first_name, last_name, phone, email, to_char(birthday, 'DD Mon YYYY') AS Birthday, height, weight, gender, about, Sports.name  FROM (users CROSS JOIN Interests CROSS JOIN Sports) where (Interests.sportid = Sports.sportid and id=$1 and password=$2 and id = Interests.userid);";
-                            
-                            //Use the cookies
-                            Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], GetUserAboutInfoCB, res, req );
-                            }
-        );
+/*****************************************GetAboutUserInfo - Paul*****************************************************************/
+app.get('/GetUserAboutInfo', function(req, res) {
+        //Get all the info that should be displayed when the user logs in:
+        //Get the path of the user's profile picture in the server
+        //Get the user's full name profile picture in the server
+        var sql = "SELECT campus, first_name, last_name, phone, email, to_char(birthday, 'YYYY-MM-DD') AS Birthday, height, weight, gender, about, Sports.name  FROM (users CROSS JOIN Interests CROSS JOIN Sports) where (Interests.sportid = Sports.sportid and id=$1 and id = Interests.userid);";
+        
+        //pass normal userid to function when clicking "about" on selfview.
+        var userID_Pass = [req.cookies.UserID];
+        
+        //pass FriendID to function when clicking "about" on Otherview.
+        if (req.cookies.FriendIDClicked !== undefined)
+        {
+        userID_Pass = [req.cookies.FriendIDClicked];
+        }
+        
+        //Use the cookies
+        Database.query(sql, userID_Pass, GetUserAboutInfoCB, res, req );
+        });
 
 
 function GetUserAboutInfoCB(err, result,res, req)
 {
+    //handle error
     if (err)
     {
         console.error(err);
@@ -1190,53 +1192,247 @@ function GetUserAboutInfoCB(err, result,res, req)
     
     else
     {
-        console.log(result.rowCount);
-        console.log(result.rows);
-        var JSON2Send = [];
-        
-        var Object = {};
-        Object['Campus'] = result.rows[0].campus;
-        Object['Given_Name'] = result.rows[0].first_name;
-        Object['Family_Name'] = result.rows[0].last_name;
-        Object['Phone_number'] = result.rows[0].phone;
-        Object['Email_Address'] = result.rows[0].email;
-        Object['Birthday'] = result.rows[0].birthday;
-        Object['Height'] = result.rows[0].height;
-        Object['Weight'] = result.rows[0].weight;
-        Object['Gender'] = result.rows[0].gender;
-        Object['About_Me'] = result.rows[0].about;
-        
-
-        //List of user's sports interest they chose
-        var SportsInterested = [];
-       
-        //Go through all Interested Sports
-        for(var i = 0; i < result.rows.length; i++)
+        //If the user doesn't have any interested sports, then just request for other infos (all except for sports).
+        if (result.rows.length === 0)
         {
-            SportsInterested.push(result.rows[i].name);
+            var sql = "SELECT campus, first_name, last_name, phone, email, to_char(birthday, 'YYYY-MM-DD') AS Birthday, height, weight, gender, about FROM Users WHERE id=$1;";
+            
+            //pass normal userid to function when clicking "about" on selfview.
+            var userID_Pass = [req.cookies.UserID];
+            
+            //pass FriendID to function when clicking "about" on Otherview.
+            if (req.cookies.FriendIDClicked !== undefined)
+            {
+                userID_Pass = [req.cookies.FriendIDClicked];
+            }
+            
+            Database.query(sql, userID_Pass, GetUserAboutInfo_NoSports, res, req );
         }
-        
-        Object['SportsInterested'] = SportsInterested;
-        JSON2Send.push(Object);
-
-        
-        //Send it to AJAX
-        res.end( JSON.stringify(JSON2Send) );
+        else
+        {
+            //Send json file to the front-end to display
+            sendUserInfoJSON(result, res);
+        }
     }
 }
-/*****************************************END GetAboutUserInfo*****************************************************************/
+
+//when the user doesn't specify interested sports, then just get other infos.
+function GetUserAboutInfo_NoSports(err, result, res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    else
+    {
+        sendUserInfoJSON(result, res);
+    }
+}
+
+function sendUserInfoJSON(result, res)
+{
+    var JSON2Send = [];
+    
+    //put in
+    var Object = {};
+    Object['Campus'] = result.rows[0].campus;
+    Object['First_Name'] = result.rows[0].first_name;
+    Object['Last_Name'] = result.rows[0].last_name;
+    Object['Phone_number'] = result.rows[0].phone;
+    Object['Email_Address'] = result.rows[0].email;
+    Object['Birthday'] = result.rows[0].birthday;
+    Object['Height'] = result.rows[0].height;
+    Object['Weight'] = result.rows[0].weight;
+    Object['Gender'] = result.rows[0].gender;
+    Object['About_Me'] = result.rows[0].about;
+    if (result.rows[0].about === null)
+    {
+        Object['About_Me'] = "";
+    }
+    
+    //List of user's sports interest they chose
+    var SportsInterested = [];
+    
+    //Go through all Interested Sports
+    for(var i = 0; i < result.rows.length; i++)
+    {
+        SportsInterested.push(result.rows[i].name);	
+    }
+    
+    Object['SportsInterested'] = SportsInterested;
+    JSON2Send.push(Object);
+    
+    //Send it to AJAX
+    res.end( JSON.stringify(JSON2Send) );
+}
+/*****************************************END GetAboutUserInfo Paul*****************************************************************/
 
 
 
-/*****************************************UpdateAboutUserInfo*****************************************************************/
-//app.post('/UpdateAboutUserInfo', function(req, res)
-//        {
-//        //Get all the messages in the group chat for that event
-//        var sql = "SELECT sentById, ProfileImage, chatmessage FROM (EventGroupChat CROSS JOIN users) where (sentById = Users.id and eventid = $1) order by MessageTime ASC;";
-//        Database.query(sql, [req.body.eventID], GenericCB, res, req );
-//        }
-//        );
-/*****************************************END UpdateAboutUserInfo*****************************************************************/
+/*****************************************UpdateAboutUserInfo - Paul*****************************************************************/
+app.post('/updateUserInfo', function(req, res){
+         var userInfo = [];
+         userInfo.push(req.body.Birthday);
+         userInfo.push(req.body.Height);
+         userInfo.push(req.body.Weight);
+         userInfo.push(req.body.Phone_number);
+         userInfo.push(req.body.campus);
+         userInfo.push(req.body.About_Me);
+         userInfo.push(req.cookies.UserID);
+         
+         interested = getUserInterest(req);
+         
+         var query = "UPDATE Users SET birthday = $1, height = $2, weight = $3, phone = $4, campus = $5, about = $6 WHERE users.id = $7;"
+         
+         //update user info
+         Database.query(query, userInfo, GenericCB, res, req);
+         
+         var deleteUserInterest ='DELETE FROM interests WHERE userid = $1;';
+         
+         //delete the interest
+         Database.query(deleteUserInterest, [req.cookies.UserID], update, res, req);
+         //add new interest
+         });
+
+function update(err, result, res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    else
+    {
+        
+        var SportsInterested = getUserInterest(req);
+        
+        //insert new interests into interest table.
+        for(var i=0; i < SportsInterested.length; i++)
+        {
+            var sql = 'INSERT INTO Interests (userid, sportid) ' + "VALUES($1, $2);";
+            Database.query(sql, [req.cookies.UserID, SportsInterested[i]], GenericCB, res, req);
+        }
+        
+        res.end(JSON.stringify([]));
+    }
+}
+
+function getUserInterest(req){
+    
+    var SportsInterested = [];
+    if(req.body.hasOwnProperty('cycling'))
+    {
+        SportsInterested.push(1); //The code for cycling
+    }
+    
+    if(req.body.hasOwnProperty('waterpolo'))
+    {
+        SportsInterested.push(2); //The code for waterpolo
+    }
+    
+    if(req.body.hasOwnProperty('squash'))
+    {
+        SportsInterested.push(3); //The code for squash
+    }
+    
+    if(req.body.hasOwnProperty('boxing'))
+    {
+        SportsInterested.push(4); //The code for boxing
+    }
+    
+    if(req.body.hasOwnProperty('taekwondo'))
+    {
+        SportsInterested.push(5); //The code for taekwondo
+    }
+    
+    if(req.body.hasOwnProperty('basketball'))
+    {
+        SportsInterested.push(6); //The code for basketball
+    }
+    
+    
+    if(req.body.hasOwnProperty('tabletennis'))
+    {
+        SportsInterested.push(7); //The code for tabletennis
+    }
+    
+    if(req.body.hasOwnProperty('tennis'))
+    {
+        SportsInterested.push(8); //The code for tennis
+    }
+    
+    if(req.body.hasOwnProperty('volleyball'))
+    {
+        SportsInterested.push(9); //The code for volleyball
+    }
+    
+    if(req.body.hasOwnProperty('football'))
+    {
+        SportsInterested.push(10); //The code for football
+    }
+    
+    if(req.body.hasOwnProperty('swimming'))
+    {
+        SportsInterested.push(11); //The code for swimming
+    }
+    return SportsInterested;
+}
+/*****************************************END UpdateAboutUserInfo Paul*****************************************************************/
+
+/***********************************Paul SELFVIEW: CHANGE PASSWORD ********************************/
+app.post('/ChangePassword', function(req,res){
+         var sql = 'SELECT id, password FROM Users where (id = $1);';
+         Database.query(sql, [req.cookies.UserID], ChangePassword, res, req );
+         });
+
+function ChangePassword(err, result, res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    else
+    {
+        //console.log(req);
+        //console.log(result);
+        
+        //set status to success initially.
+        var stat = {"status":0};
+        
+        if (req.body.newPass !== req.body.confirmNewPass)
+        {
+            //send status -1 (fails to confirm new password).
+            stat.status = -1;
+            res.end(JSON.stringify(stat));
+        }
+        else if (req.body.currentPass !== result.rows[0].password)
+        {
+            //send status -2 (fails to confirm current password).
+            stat.status = -2;
+            res.end(JSON.stringify(stat));
+        }
+        else
+        {
+            //send status 0 (success to change password)
+            
+            /***********/
+            var sql = "UPDATE Users SET password = $1,hashedpassword = $2 WHERE id = $3";
+            var hashedpassword = bcrypt.hashSync(req.body.newPass);
+            Database.query(sql, [req.body.newPass, hashedpassword,result.rows[0].id], GenericCB, res, req );
+            /************/
+            
+            //update cookies.UserPass to new password.
+            res.cookie( 'UserPass' , req.body.newPass);
+            
+            res.end(JSON.stringify(stat));
+        }
+    }
+}
+/***********************************Paul END SELFVIEW: CHANGE PASSWORD ****************************/
+
+
 
 
 
@@ -1244,14 +1440,14 @@ function GetUserAboutInfoCB(err, result,res, req)
 //User is searching for events
 //Send back data to show preview of events matching their search
 app.post('/SearchEventsByClick', function(req, res)
-                        {
-         
-                            //Select all events that match the sport selected and that ((numppl - attendance) > 0) [the event has open spots]
-                            //And subtract it from events in which you are already joined in
-                            var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
+                            {
+             
+                                //Select all events that match the sport selected and that ((numppl - attendance) > 0) [the event has open spots]
+                                //And subtract it from events in which you are already joined in
+                                var sql = "(SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM Event where (EventType = $1 and ((numppl - attendance) > 0))) EXCEPT (SELECT Eventid, name, EventType, to_char(DateTime, 'DD Mon YYYY HH:MI AM') AS EventDateTime, numppl, (numppl - attendance) AS EventNumSpotsLeft FROM (Event CROSS JOIN EventUsers CROSS JOIN Users) where (userid = $2 and EventUsers.id = Eventid and userid = Users.id) );";
 
-                            Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
-                        }
+                                Database.query(sql, [req.body.EventSportClicked, req.cookies.UserID], GetEventsSelectedSportSearchCB, res, req );
+                            }
   
         );
 
@@ -1326,15 +1522,31 @@ app.post('/SearchEventsMoreDetail', function(req, res)
 //Send back data to show preview of events matching their search
 app.post('/JoinEvent', function(req, res)
          {
+         
+         //console.log('gna join event: ' + req.cookies.UserID + ' event to join: ' + req.body.EventToJoin);
+         
              var sql1 = 'INSERT INTO EventUsers (id, userid) ' + "VALUES($1, $2);";
-             Database.query(sql1, [req.body.EventToJoin, req.cookies.UserID], GenericCB, res, req );
-             
-             //Increase the attendance by 1
-             var sql2 = "UPDATE Event SET attendance = (attendance+1) where eventid = $1;";
-             Database.query(sql2, [req.body.EventToJoin], GenericCB, res, req );
+             Database.query(sql1, [req.body.EventToJoin, req.cookies.UserID], JoinEventCB, res, req );
          }
          
          );
+
+function JoinEventCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //Increase the attendance by 1
+        var sql = "UPDATE Event SET attendance = (attendance+1) where eventid = $1;";
+        Database.query(sql, [req.body.EventToJoin], GenericCB, res, req );
+        res.send("");
+    }
+}
 /*****************************************END JoinEvent*****************************************************************/
 
 
@@ -1480,11 +1692,11 @@ function Accept_RejectFriendCB(err, result,res, req)
 
 
 /*****************************************GetMessageHistoryWithUser*****************************************************************/
-app.get('/GetMessageHistoryWithUser', function(req, res)
+app.post('/GetMessageHistoryWithUser', function(req, res)
                                     {
                                         //Get all the messages we exchanges with this user
                                         var sql = "SELECT sentById, chatmessage FROM OneToOneChat where ((sentById = $1 and ReceivedById=$2) or (sentById = $2 and ReceivedById=$1)) order by MessageTime ASC;";
-                                        Database.query(sql, [req.cookies.UserID, req.cookies.FriendIDClicked], GetMessageHistoryWithUserCB, res, req );
+                                        Database.query(sql, [req.cookies.UserID, req.body.Chattingtoid], GetMessageHistoryWithUserCB, res, req );
                                     }
        );
 
@@ -1526,12 +1738,12 @@ app.get('/GetListPplMessaged', function(req, res)
         {
 
         //Since we clicked on the messages icon, our UNREAD nummessages becomes 0
-//        var sql = "UPDATE UnreadNotifications SET nummessages = 0 where userid = $1;";
-//        Database.query(sql, [req.cookies.UserID], GenericCB, res, req );
+        var sql = "UPDATE UnreadNotifications SET nummessages = 0 where userid = $1;";
+        Database.query(sql, [req.cookies.UserID], GenericCB, res, req );
         
-        //For each person we have messaged, get their id, their fullname, their picture, our LATEST chatmessage with them, and the MessageTime
+        //For each person we have ever messaged, get their id, their fullname, their picture, our LATEST chatmessage with them, and the MessageTime
         //Order by MessageTime DESC
-        var sql = "SELECT id, first_name||' '||last_name AS NameChattingTo, ProfileImage, chatmessage, MessageTime "+
+        var sql = "SELECT id, first_name||' '||last_name AS NameChattingTo, ProfileImage, chatmessage "+
                   "FROM (Users CROSS JOIN " +
                                           "( " +
                                               "SELECT sentById, ReceivedById, chatmessage, MessageTime " +
@@ -1554,8 +1766,6 @@ app.get('/GetListPplMessaged', function(req, res)
                 "WHERE ((Users.id <> $1) and (id=sentById or id=ReceivedById)) " +
                 "order by MessageTime DESC ;" ;
         
-        console.log(sql);
-        
         //Use the cookies
         Database.query(sql, [req.cookies.UserID], GetListPplMessagedCB, res, req );
         }
@@ -1573,30 +1783,360 @@ function GetListPplMessagedCB(err, result,res, req)
     
     else
     {
-        console.log(result.rows);
+        //console.log(result.rows);
         
-//        var JSON2Send = [];
-//        
-//        //Go through all the Users matched
-//        for(var i = 0; i < result.rows.length; i++)
-//        {
-//            //Each object represents all the info needed for one user
-//            var TheObject = {};
-//            TheObject['url'] = result.rows[i].profileimage;
-//            TheObject['name'] = result.rows[i].name;
-//            TheObject['userid'] = result.rows[i].id;
-//            
-//            JSON2Send.push(TheObject);
-//        }
-//        
-//        //Send it to AJAX
-//        res.end( JSON.stringify(JSON2Send) );
+        var JSON2Send = [];
+        
+        //Go through list of people messaged
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            //Each object is the latest messaged we exchanged with that user
+            var TheObject = {};
+            TheObject['url'] = result.rows[i].profileimage;
+            TheObject['name'] = result.rows[i].namechattingto;
+            TheObject['userid'] = result.rows[i].id;
+            TheObject['chatmessage'] = result.rows[i].chatmessage;
+            
+            JSON2Send.push(TheObject);
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
     }
 }
 /*****************************************END GetListPplMessaged*****************************************************************/
 
 
 
+/*****************************************SubmitEventRatings*****************************************************************/
+app.post('/SubmitEventRatings', function(req, res)
+                                {
+                                      //console.log(req.body);
+         
+                                     //Update the EventUsers table, the ratings for this event have been submitted
+                                     var sql = "UPDATE EventUsers SET EventRatingSubmitted = 'yes' where (id = $1 and userid=$2);";
+                                     Database.query(sql, [req.body.EventID_RatingsSubmitted, req.cookies.UserID], SubmitRatingsCB, res, req );
+                                }
+        );
+
+
+function SubmitRatingsCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        
+        //Only one user was rated
+        if( req.body.EventUserID.length == 1 )
+        {
+            
+            //If the rating value is 0, that means the user was not rated, so don't insert
+            if(req.body.ratingvalue != 0)
+            {
+                var sql = 'INSERT INTO Ratings (userid, eventid, comment, rating) ' + "VALUES($1, $2, $3, $4);";
+                Database.query(sql, [req.body.EventUserID, req.body.EventID_RatingsSubmitted, req.body.EventRatingComments, req.body.ratingvalue], GenericCB, res, req );
+            }
+        }
+        
+        
+        //Multiple users were rated
+        else
+        {
+            //Go through all the users in this event who were rated
+            for(var i = 0; i < req.body.EventUserID.length; i++)
+            {
+                
+                //If the rating value is 0, that means the user was not rated, so don't insert
+                if(req.body.ratingvalue[i] != 0)
+                {
+                    var sql = 'INSERT INTO Ratings (userid, eventid, comment, rating) ' + "VALUES($1, $2, $3, $4);";
+                    Database.query(sql, [req.body.EventUserID[i], req.body.EventID_RatingsSubmitted, req.body.EventRatingComments[i], req.body.ratingvalue[i]], GenericCB, res, req );
+                }
+            }
+        }
+        
+        
+        res.redirect('/Profile_SelfView.html');
+    }
+}
+/*****************************************END SubmitEventRatings*****************************************************************/
+
+
+
+/*****************************************GetAllSports*****************************************************************/
+app.get('/GetAllSports', function(req, res)
+                         {
+                            //Get all the sports available
+                            var sql = "SELECT DISTINCT name AS EventType FROM Sports;";
+                            Database.query(sql, [], GetAllSportsCB, res, req );
+                         }
+       );
+
+
+function GetAllSportsCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //console.log(result.rows);
+        
+        //JSON to send back
+        var JSON2Send = [];
+
+        //Go through all the event sport types attended
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            var TheObject = {};
+            TheObject['SportType'] = result.rows[i].eventtype;
+            JSON2Send.push(TheObject);
+            
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+        
+    }
+}
+/*****************************************END GetAllSports*****************************************************************/
+
+
+/*****************************************GetSportsAttended*****************************************************************/
+app.get('/GetSportsAttended', function(req, res)
+                            {
+                                //Get all the distinct event types and their type ID the user attended and was rated in
+                                var sql = "SELECT DISTINCT EventType, EventTypeID FROM (Ratings CROSS JOIN Event) where (userid=$1 and Ratings.eventid=Event.Eventid) ;";
+                                Database.query(sql, [req.cookies.UserID], GetSportsAttendedCB, res, req );
+                            }
+        );
+
+app.get('/GetFriendSportsAttended', function(req, res)
+                                    {
+                                        //Get all the distinct event types and their type ID the user attended and was rated in
+                                        var sql = "SELECT DISTINCT EventType, EventTypeID FROM (Ratings CROSS JOIN Event) where (userid=$1 and Ratings.eventid=Event.Eventid) ;";
+                                        Database.query(sql, [req.cookies.FriendIDClicked], GetSportsAttendedCB, res, req );
+                                    }
+        );
+
+
+function GetSportsAttendedCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //console.log(result.rows);
+        
+        //JSON to send back
+        var JSON2Send = [];
+        
+        //Go through all the event sport types attended
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            var TheObject = {};
+            TheObject['SportType'] = result.rows[i].eventtype;
+            TheObject['SportTypeID'] = result.rows[i].eventtypeid;
+            JSON2Send.push(TheObject);
+            
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+        
+    }
+}
+/*****************************************END GetSportsAttended*****************************************************************/
+
+
+
+/*****************************************GetUserReviews*****************************************************************/
+app.post('/GetUserReviews', function(req, res)
+                        {
+                            //Get the user's average rating in this sport
+                            //Sport ID clicked is sent to server by AJAX
+                            var sql = "SELECT round(sum(rating)/count(rating)) AS SportRating FROM (Ratings CROSS JOIN Event) WHERE (userid=$1 and Ratings.eventid=Event.Eventid and EventTypeID=$2);";
+                            Database.query(sql, [req.cookies.UserID, req.body.SportID], GetUserRatingCB, res, req );
+                        }
+        );
+
+
+function GetUserRatingCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //JSON to send back
+        var JSON2Send = [];
+        var TheObject = {};
+        TheObject['SportRating'] = result.rows[0].sportrating;
+        JSON2Send.push(TheObject);
+        
+        //Get a list of all reviews of the user in this sport ID
+        var sql = "SELECT comment,  to_char(ratingDateTime, 'DD Mon YYYY') AS CommentDate FROM (Ratings CROSS JOIN Event) WHERE (userid=$1 and Ratings.eventid=Event.Eventid and EventTypeID=$2) ORDER BY ratingDateTime DESC;";
+        //Pass the JSON to next CB function to send, instead of req cuz we dont need req anymore
+        Database.query(sql, [req.cookies.UserID, req.body.SportID], GetUserReviewsCB, res, JSON2Send );
+    }
+}
+
+function GetUserReviewsCB(err, result,res, JSON2Send)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+                //Go through all the Reviews
+                for(var i = 0; i < result.rows.length; i++)
+                {
+                    //Don't enter the review if the comment is empty!
+                    if( result.rows[i].comment.length > 0 )
+                    {
+                        var TheObject = {};
+                        TheObject['Comment'] = result.rows[i].comment;
+                        TheObject['CommentDate'] = result.rows[i].commentdate;
+                        JSON2Send.push(TheObject);
+                    }
+        
+                }
+        
+                //Send it to AJAX
+                res.end( JSON.stringify(JSON2Send) );
+    }
+}
+/*****************************************END GetUserReviews*****************************************************************/
+
+
+/*****************************************GetFriendUserReviews*****************************************************************/
+app.post('/GetFriendUserReviews', function(req, res)
+                                 {
+                                 //Get the user's average rating in this sport
+                                 //Sport ID clicked is sent to server by AJAX
+                                 var sql = "SELECT round(sum(rating)/count(rating)) AS SportRating FROM (Ratings CROSS JOIN Event) WHERE (userid=$1 and Ratings.eventid=Event.Eventid and EventTypeID=$2);";
+                                 Database.query(sql, [req.cookies.FriendIDClicked, req.body.SportID], GetFriendUserRatingCB, res, req );
+                                 }
+         );
+
+
+function GetFriendUserRatingCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //JSON to send back
+        var JSON2Send = [];
+        var TheObject = {};
+        TheObject['SportRating'] = result.rows[0].sportrating;
+        JSON2Send.push(TheObject);
+        
+        //Get a list of all reviews of the user in this sport ID
+        var sql = "SELECT comment,  to_char(ratingDateTime, 'DD Mon YYYY') AS CommentDate FROM (Ratings CROSS JOIN Event) WHERE (userid=$1 and Ratings.eventid=Event.Eventid and EventTypeID=$2) ORDER BY ratingDateTime DESC;";
+        //Pass the JSON to next CB function to send, instead of req cuz we dont need req anymore
+        Database.query(sql, [req.cookies.FriendIDClicked, req.body.SportID], GetFriendUserReviewsCB, res, JSON2Send );
+    }
+}
+
+function GetFriendUserReviewsCB(err, result,res, JSON2Send)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+    else
+    {
+        //Go through all the Reviews
+        for(var i = 0; i < result.rows.length; i++)
+        {
+            //Don't enter the review if the comment is empty!
+            if( result.rows[i].comment.length > 0 )
+            {
+                var TheObject = {};
+                TheObject['Comment'] = result.rows[i].comment;
+                TheObject['CommentDate'] = result.rows[i].commentdate;
+                JSON2Send.push(TheObject);
+            }
+            
+        }
+        
+        //Send it to AJAX
+        res.end( JSON.stringify(JSON2Send) );
+    }
+}
+/*****************************************END GetFriendUserReviews*****************************************************************/
+
+
+
+/*****************************************WasUserLoggedIn*****************************************************************/
+app.get('/WasUserLoggedIn', function(req, res)
+                            {
+                                //No cookies exists
+                                if( req.cookies.UserID == undefined && req.cookies.UserPass == undefined)
+                                {
+                                    res.send("notloggedin");
+                                }
+                                
+                                //There are cookies, check if the cookies are valid
+                                else
+                                {
+                                    var sql = 'SELECT * FROM users where (id = $1 and password = $2);';
+                                    Database.query(sql, [req.cookies.UserID, req.cookies.UserPass], WasUserLoggedInCB, res, req );
+                                }
+        
+                            }
+        );
+
+
+function WasUserLoggedInCB(err, result,res, req)
+{
+    if (err)
+    {
+        console.error(err);
+        res.send("Error " + err);
+    }
+    
+
+    //Valid user login
+    else if( result.rowCount == 1 )
+    {
+        res.send("userwasloggedin");
+    }
+    
+    
+    //Invalid Login info
+    else
+    {
+        res.send("notloggedin");
+    }
+    
+}
+/*****************************************END WasUserLoggedIn*****************************************************************/
 
 
 
@@ -1604,6 +2144,280 @@ function GetListPplMessagedCB(err, result,res, req)
 
 
 
+
+
+
+
+
+
+
+
+
+
+/*****************************************Start Admin Jim*****************************************************************/
+
+app.get('/admin', function (req, res)
+                {
+                res.sendFile(__dirname + '/front_end/admin_login.html');
+                }
+        );
+
+app.post('/WebsiteAdminLogin',function(req,res)
+         {
+         var sql = 'SELECT * FROM admins WHERE account = $1 and password = $2';
+         Database.query(sql,[req.body.account,req.body.password],AdminLoginCB,res,req);
+         });
+
+function AdminLoginCB(err,result,res,req){
+    if(err){
+        console.log(err);
+        res.send(err);
+    }
+    else if(result.rowCount == 1){
+        //find the admin account&password from the db
+        //add a cookie to http header to store admin's name
+        res.cookie( 'AdminName' , result.rows[0].name);
+        res.send("ok");
+        
+    }else{
+        //not found
+        res.send("loginfailed");
+    }
+}
+
+app.get('/getAllUsersInfo',function(req,res){
+        var sql = 'SELECT * FROM users';
+        Database.query(sql,[],GetAllUsersCB,res,req);
+        });
+
+function GetAllUsersCB(err,result,res,req){
+    var JSON2Send = [];
+    //console.log(result);
+    if(err){
+        console.log(err);
+        res.send(err);
+    }
+    else if(result.rowCount == 0){
+        //no users in the table
+        res.end(JSON.stringify(JSON2Send));
+    }else{
+        //at least one user in the table
+        var len = result.rowCount;
+        for(var i = 0;i < len;i++){
+            var Object = {};
+            Object.first_name = result.rows[i].first_name;
+            Object.last_name = result.rows[i].last_name;
+            if(result.rows[i].birthday != null){
+                //convert date to year/month/day format
+                var date = '';
+                var month = result.rows[i].birthday.getUTCMonth() + 1;
+                var day = result.rows[i].birthday.getUTCDate();
+                var year = result.rows[i].birthday.getUTCFullYear();
+                date = year + "/" + month + "/" + day;
+                Object.birthday = date;
+            }else{
+                Object.birthday = null;
+            }
+            
+            Object.gender = result.rows[i].gender;
+            Object.height = result.rows[i].height;
+            Object.weight = result.rows[i].weight;
+            Object.email = result.rows[i].email;
+            Object.phone = result.rows[i].phone;
+            Object.campus = result.rows[i].campus;
+            Object.password = result.rows[i].password;
+            Object.profileimage = result.rows[i].profileimage;
+            JSON2Send.push(Object);
+        }
+        res.end(JSON.stringify(JSON2Send));
+    }
+}
+
+app.post('/deleteUserInfo',function(req,res){
+         var sql = "DELETE FROM users WHERE email = $1 and password = $2;";
+         Database.query(sql,[req.body.email,req.body.password],deleteUserCB,res,req);
+         });
+
+function deleteUserCB(err,result,res,req){
+    if(err){
+        console.log(err);
+        res.send(err);
+    }else{
+        res.send('ok');
+    }
+}
+
+
+app.post('/updateUserPassword',function(req,res){
+         var sql = "UPDATE users SET password = $1,hashedpassword = $2 WHERE email = $3 AND password = $4;";
+         var hashedpassword = bcrypt.hashSync(req.body.newPassword);
+         Database.query(sql,[req.body.newPassword,hashedpassword,req.body.email,req.body.oldPassword],updateUserPasswordCB,res,req);
+         });
+
+function updateUserPasswordCB(err,result,res,req){
+    if(err){
+        console.log(err);
+        res.send(err);
+    }else{
+        res.send('ok');
+    }
+}
+
+app.get('/getAllEventsInfo',function(req,res){
+        //natural join users and event tables
+        var sql = "SELECT first_name||' '||last_name AS ownername,eventid,name,location,numppl,attendance,datetime,endtime,eventtype FROM users u JOIN event e ON u.id = e.eventadminid;";
+        Database.query(sql,[],GetAllEventsCB,res,req);
+        });
+
+function GetAllEventsCB(err,result,res,req){
+    var JSON2Send = [];
+    //console.log(result);
+    if(err){
+        console.log(err);
+        res.send(err);
+    }
+    else if(result.rowCount == 0){
+        //no users in the table
+        res.end(JSON.stringify(JSON2Send));
+    }else{
+        //at least one user in the table
+        var len = result.rowCount;
+        for(var i = 0;i < len;i++){
+            var Object = {};
+            Object.ownername = result.rows[i].ownername;
+            Object.name = result.rows[i].name;
+            Object.location = result.rows[i].location;
+            Object.numppl = result.rows[i].numppl;
+            Object.attendance = result.rows[i].attendance;
+            
+            //convert date to year/month/day format
+            var date = '';
+            var month = result.rows[i].datetime.getUTCMonth() + 1;
+            var day = result.rows[i].datetime.getUTCDate();
+            var year = result.rows[i].datetime.getUTCFullYear();
+            var hour = result.rows[i].datetime.getHours();
+            var minute = result.rows[i].datetime.getMinutes();
+            date = year + "-" + month + "-" + day + '  ' +formatAMPM(result.rows[i].datetime);
+            Object.datetime = date;
+            
+            Object.endtime = result.rows[i].endtime;
+            Object.eventtype = result.rows[i].eventtype;
+            //store eventid for delete api
+            Object.eventid = result.rows[i].eventid;
+            //console.log(Object.eventid);
+            JSON2Send.push(Object);
+        }
+        //console.log(JSON2Send);
+        res.end(JSON.stringify(JSON2Send));
+    }
+}
+
+function formatAMPM(date)
+{
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}
+
+app.post('/deleteEventInfo',function(req,res){
+         var sql = 'DELETE FROM event WHERE eventid = $1;';
+         Database.query(sql,[req.body.eventid],DeleteEventCB,res,req);
+         });
+
+function DeleteEventCB(err,result,res,req){
+    if(err){
+        console.log(err);
+        res.send(err);
+    }else{
+        res.send('ok');
+    }
+}
+
+app.get('/getStatusInfo',function(req,res){
+        var sql = 'SELECT * FROM users;';
+        Database.query(sql,[],getStatusInfoCB,res,req);
+        });
+
+
+var JSON2Send = {};
+function getStatusInfoCB(err,result,res,req){
+    if(err){
+        JSON2Send.stats = err;
+    }else{
+        JSON2Send.totalUsers = result.rowCount;
+        var sql = 'SELECT * FROM event;';
+        Database.query(sql,[],getEventCB,res,req);
+    }
+}
+function getEventCB(err,result,res,req){
+    if(err){
+        JSON2Send.stats = err;
+    }else{
+        JSON2Send.stats = 'ok';
+        JSON2Send.totalEvents = result.rowCount;
+        if(result.rowCount > 0){
+            //arr for storing # of sports
+            var count = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+            for(var i = 0;i < result.rowCount;i++){
+                count[parseInt(result.rows[i].eventtypeid)]++;
+            }
+            var largest = Math.max.apply(Math, count);
+            //sportids for storing the max sportid
+            var sportids = [];
+            for(var i = 0;i < count.length;i++){
+                if(count[i] == largest){
+                    sportids.push(i);
+                }
+            }
+            JSON2Send.popularSport = " ";
+            var arrSports = ['cycling','waterpolo','squash','boxing','taekwondo',
+                             'basketball','tabletennis','tennis','volleyball','football','swimming'];
+            for(var i = 0;i < sportids.length;i++){
+                if(i < sportids.length - 1){
+                    JSON2Send.popularSport += arrSports[sportids[i]-1] + "<br>";
+                }
+                else{
+                    JSON2Send.popularSport += arrSports[sportids[i]-1];
+                }
+            }
+            
+        }else{
+            JSON2Send.popularSport = '';
+        }
+        res.end(JSON.stringify(JSON2Send));
+    }
+}
+
+app.get('/AdminSignOut', function(req,res)
+        {
+        //clear all the cookies
+        res.clearCookie('AdminName');
+        //AJAX will go to the homepage
+        res.send("Signed Out");
+        });
+
+/*****************************************End Admin Jim*****************************************************************/
+
+/***********************Paul START***********************/
+
+//export app to use in unit test.
+module.exports = app;
+
+
+app.get("/deleteUser", function(req, res) {
+        var sql = "DELETE FROM Users WHERE email = 'tester@tsports.com';";
+        Database.query(sql, [], GenericCB, res, req );
+        res.send("DELETED");
+        });
+
+
+
+/***********************Paul END**************************/
 
 
 
@@ -1621,6 +2435,8 @@ app.get('/SignOut', function(req,res)
         res.clearCookie('UserID');
         res.clearCookie('UserEmail');
         res.clearCookie('UserPass');
+        res.clearCookie('FriendIDClicked');
+        res.clearCookie('EventIDOpened');
         
         //AJAX will go to the homepage
         res.send("Signed Out");
@@ -1645,10 +2461,6 @@ function GenericCB(err, result,res, req)
     }
     
 }
-
-
-
-
 
 
 

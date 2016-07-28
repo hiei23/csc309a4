@@ -158,6 +158,8 @@ $(document).ready
                                                 //If friend reqs not shown, display them
                                                 if(  $('#FriendReqsPreviewBox').length == 0 )
                                                 {
+                                                    //First remove the ListpplMessagedPreviewBox if it is open
+                                                    $('#ListpplMessagedPreviewBox').remove();
 
                                                     $.ajax({
                                                            type: 'GET',
@@ -396,8 +398,8 @@ $(document).ready
                             
                                                     function()
                                                     {
-                                                    //Remove the ChatBox from the page and all the contents inside it
-                                                    $('#ChatBox').remove();
+                                                        //Remove the ChatBox from the page and all the contents inside it
+                                                        $('#ChatBox').remove();
                                                     }
                             );
 
@@ -408,6 +410,8 @@ $(document).ready
                             
                                 function()
                                 {
+                                    //Remove any chatbox currently open (ie. might be chatting with somebody else)
+                                    $('#ChatBox').remove();
                             
                                     //If we clicked on MessageUser, then we have to be on their profile page so we have their id and name
                                     var UserChattingToName = $('#Profile_UserName').text();
@@ -419,15 +423,16 @@ $(document).ready
                             
                                         //Make an AJAX call to get message history with this user (if any)
                                         $.ajax({
-                                               type: 'GET',
+                                               type: 'POST',
                                                url: "/GetMessageHistoryWithUser",
-                                               dataType: 'text',
+                                               data: {Chattingtoid: UserChattingToID},
+                                               dataType: 'JSON',
                                                //Receives the message history with the user
                                                success: function (response)
                                                {
                                                    //Pass the user's name, their id, and the message history to make a chatbox
                                                    //Convert JSON to JS object
-                                                   CreateChatBox(UserChattingToName,UserChattingToID, JSON.parse(response));
+                                                   CreateChatBox(UserChattingToName,UserChattingToID, response);
                                                }
                                                }); //End of AJAX
                             
@@ -438,43 +443,6 @@ $(document).ready
  
  
  
- 
- 
- 
- 
-                            //toggle dropdown menu!
-                                //Make an AJAX call to get message history with this user (if any)
-//                                $.ajax({
-//                                       type: 'GET',
-//                                       url: "/ListPplMessage",
-//                                       dataType: 'text',
-//                                       //Receives the message history with the user
-//                                       success: function (response)
-//                                       {
-//                                       //Pass the user's name, their id, and the message history to make a chatbox
-//                                       //Convert JSON to JS object
-//                                       CreateChatBox(UserChattingToName,UserChattingToID, JSON.parse(response));
-//                                       }
-//                                       }); //End of AJAX
- 
-                                //make an ajax call and get a list of all pople i messaged with and the last message sent, use group by message time, max(), in the same ajax server side, clear all unread messaes notifications
-                            //to zero cuz we just opened and read them all
-                                //Then using this info make a dropdown menu
-                                //if click on any of them, first check if a chatbox is already open, maybe withs omeone else, if yes, then remove that chatbox and create new one
-                                //make another ajax call to get get complete message history like the $(document)mcode above, then create a chatbox like above paragraph as well, everything else is the same
-                            //after that its gna be the same function as $(document).on click "MEssageUser"
-                                //When click on the messages icon, toggle the dropdwn menu like i did for friendSVG icon,
-                                //also once the dropdown is there, image if i already opened a chat with someone else and i am chatting with them, do an
-                            //If a ChatBox exists, don't make a new one
-//                            if( $('#ChatBox').length == 0 )
-//                            {
-                            //if a chatbox is already open, then remove that chatbox, and then create a chatbox for the new person i requested
- //Change the "GetMessageHistoryWithUser" in the server, for "Message button", the friendid was always in the cookie CUZ we always intitated the message button when on their page, but in this case, the friendid is NOT in the cookie, so we have to manually pass it to server
- //so inorder to keep on fucntion on server side only, change that function to and the above client side function to manually send the friendid to the server (the id of hte person we are chatting to)
-//Make displayed list scrollable! not not like friend lists of user unlimited
- //ACtually make the search user one scrollable as well, FROM NOWWWW NOT LATER!
-               
- 
              //User clicks on the "FB_Message_SVG" in the status bar
              //Show list of all people they chatted to (like FB)
              $(document).on('click', '#FB_Message_SVG',
@@ -482,131 +450,122 @@ $(document).ready
                             {
                             
                                 //Since we clicked on it, our UNREAD message requests is now zero so hide it
-//                                $('#FB_Message_SVG p').hide();
+                                //The below AJAX request tells the server to update the message notifications in the DB
+                                $('#FB_Message_SVG p').hide();
                             
                                 //If list of people messaged not shown, display them
                                 if(  $('#ListpplMessagedPreviewBox').length == 0 )
                                 {
+                                    //First remove the #FriendReqsPreviewBox if it is open
+                                    $('#FriendReqsPreviewBox').remove();
                                 
-                            $.ajax({
-                                   type: 'GET',
-                                   url: "/GetListPplMessaged",
-                                   dataType: 'JSON',
-                                   //Receives all the friend requests
-                                   success: function (response)
-                                   {
-                                       //console.log(response);
-                                       
-                                       //Only process if we have any message list (ie. we messaged people before)
-//                                       if(response.length > 0)
-//                                       {
-//                                       
-//                                       //The box that contains all the people messaged
-//                                       var $ListpplMessagedPreviewBox = $('<section>',
-//                                                                     {
-//                                                                     id: 'ListpplMessagedPreviewBox'
-//                                                                     }
-//                                                                     );
-//                                       
-//                                       //Append $FriendReqsPreviewBox under the friend icon
-//                                       $FriendReqsPreviewBox.insertAfter('#FB_Friend_SVG');
-//                                       
-//                                       //The <ul> inside which we will place the friend requests
-//                                       var $FriendReqUL = $('<ul>',
-//                                                            {
-//                                                            id: 'FriendReqUL'
-//                                                            }
-//                                                            );
-//                                       
-//                                       //UL contains all the friend requests
-//                                       $FriendReqsPreviewBox.append($FriendReqUL);
-//                                       
-//                                       
-//                                       //Loop over all the friend requests
-//                                       $.each(response,
-//                                              function(index, item)
-//                                              {
-//                                              
-//                                              var $Request = $('<div>',
-//                                                               {
-//                                                               class: 'friendreq'
-//                                                               }
-//                                                               );
-//                                              
-//                                              var $Name = $('<div>',
-//                                                            {
-//                                                            //Make the first letter of each word capitalized
-//                                                            text: item.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}),
-//                                                            class: 'FriendReqName'
-//                                                            }
-//                                                            );
-//                                              
-//                                              var $Image = $('<img>',
-//                                                             {
-//                                                             src: item.url,
-//                                                             width: '20px',
-//                                                             height: '20px',
-//                                                             class:  'FriendReqImage'
-//                                                             }
-//                                                             );
-//                                              
-//                                              var $DivAccept_Reject = $('<div>',
-//                                                                        {
-//                                                                        class: 'Accept_Reject_icons'
-//                                                                        }
-//                                                                        );
-//                                              
-//                                              
-//                                              //icon to accept the request
-//                                              var $ImageAcceptRequest = $('<img>',
-//                                                                          {
-//                                                                          src: './assets/images/approvefriend.svg',
-//                                                                          width: '13px',
-//                                                                          height: '13px',
-//                                                                          class:  'AcceptFriendReq'
-//                                                                          }
-//                                                                          );
-//                                              
-//                                              //icon to reject the request
-//                                              var $ImageRejectRequest = $('<img>',
-//                                                                          {
-//                                                                          src: './assets/images/rejectfriend.svg',
-//                                                                          width: '13px',
-//                                                                          height: '13px',
-//                                                                          class:  'RejectFriendReq'
-//                                                                          }
-//                                                                          );
-//                                              
-//                                              $DivAccept_Reject.append($ImageAcceptRequest);
-//                                              $DivAccept_Reject.append($ImageRejectRequest);
-//                                              
-//                                              //Attach a hidden input to user ID
-//                                              //So that upon click, we can go to his profile
-//                                              var $UserID = $('<input>',
-//                                                              {
-//                                                              type: 'hidden',
-//                                                              name: 'FriendRequestUserID',
-//                                                              value: item.userid
-//                                                              }
-//                                                              );
-//                                              
-//                                              
-//                                              $Request.append($Image);  //Append the Image
-//                                              $Request.append($Name);   //Append the name
-//                                              $Request.append($DivAccept_Reject);  //Append the accept and reject icons
-//                                              $Request.append($UserID);   //Append the friend id
-//                                              
-//                                              $FriendReqUL.append($Request);   //Append the Request to the list
-//                                              
-//                                              
-//                                              }
-//                                              
-//                                              );
-//                                       }
-                                   
-                                       }
-                                       }); //End of AJAX
-                                
+                                    $.ajax({
+                                           type: 'GET',
+                                           url: "/GetListPplMessaged",
+                                           dataType: 'JSON',
+                                           //Receives all the friend requests
+                                           success: function (response)
+                                           {
+                                               //console.log(response);
+                                               
+                                               //Only process if we have any message list (ie. we messaged people before)
+                                               if(response.length > 0)
+                                               {
+
+                                               //The box that contains all the people messaged
+                                               var $ListpplMessagedPreviewBox = $('<section>',
+                                                                                             {
+                                                                                              id: 'ListpplMessagedPreviewBox'
+                                                                                             }
+                                                                                 );
+                                               
+                                               //Append $ListpplMessagedPreviewBox under the message icon
+                                               $ListpplMessagedPreviewBox.insertAfter('#FB_Message_SVG');
+
+                                               //The <ul> inside which we will place the list of people we message
+                                               var $MessageUL = $('<ul>',
+                                                                        {
+                                                                         id: 'PplMessagedUL'
+                                                                        }
+                                                                 );
+
+                                               //UL contains all the people we messaged
+                                               $ListpplMessagedPreviewBox.append($MessageUL);
+
+                                               
+                                               //Loop over all the people we message
+                                               $.each(response,
+                                                      function(index, item)
+                                                      {
+                                                      
+                                                      var $PersonMessaged = $('<div>',
+                                                                                       {
+                                                                                        class: 'PersonMessaged'
+                                                                                       }
+                                                                       );
+                                                      
+                                                      
+                                                      var $Image = $('<img>',
+                                                                             {
+                                                                              src: item.url,
+                                                                              width: '25px',
+                                                                              height: '25px',
+                                                                              class:  'PersonMessagedimg'
+                                                                             }
+                                                                     );
+                                                      
+                                                      //Contains the name of the person we messaged and our latest message exchanged
+                                                      var $DivName_Message = $('<div>',
+                                                                                    {
+                                                                                     class: 'PersonMessagedInfo'
+                                                                                    }
+                                                                                );
+                                                      
+                                                      var $Name = $('<p>',
+                                                                            {
+                                                                            //Make the first letter of each word capitalized
+                                                                            text: item.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}),
+                                                                            class: 'PersonMessagedName'
+                                                                            }
+                                                                    );
+                                                      
+                                                      
+                                                      //latest message exhanged witht that user
+                                                      var $TheMessage= $('<p>',
+                                                                                  {
+                                                                                    text: item.chatmessage.substring(0,30) + "...",  //Only show the first 30 characters
+                                                                                    class:  'PersonMessagedMessage'
+                                                                                  }
+                                                                                  );
+                                                      
+                                                      $DivName_Message.append($Name);
+                                                      $DivName_Message.append($TheMessage);
+                                                      
+                                                      //Attach a hidden input to user ID of the person we messaged
+                                                      var $UserID = $('<input>',
+                                                                                {
+                                                                                  type: 'hidden',
+                                                                                  name: 'PersonMessagedUserID',
+                                                                                  value: item.userid
+                                                                                 }
+                                                                      );
+                                                      
+                                                      
+                                                      $PersonMessaged.append($Image);  //Append the Image
+                                                      $PersonMessaged.append($DivName_Message);   //Append the name
+                                                      $PersonMessaged.append($UserID);   //Append the friend id
+                                                      
+                                                      $MessageUL.append($PersonMessaged);   //Append the Request to the list
+                                                      
+                                                      
+                                                      }
+                                                      
+                                                      );
+                                                 }
+                                           
+                                               }
+                                               }); //End of AJAX
+                            
                                 }
                                 
                                 //list of people messaged is being displayed, toggle it
@@ -616,6 +575,46 @@ $(document).ready
                             
                             );
  
+ 
+ 
+         //When the user clicks on a ".PersonMessaged" (a person from ListpplMessagedPreviewBox), make a ChatBox pop up at the bottom of the screen like facebook
+         $(document).on('click', '.PersonMessaged',
+                        
+                        function()
+                        {
+                        
+                            //Remove any chatbox currently open (ie. might be chatting with somebody else)
+                            $('#ChatBox').remove();
+                        
+                            //If we clicked on '.PersonMessaged', get their name
+                            var UserChattingToName = $(this).children('.PersonMessagedInfo').children('.PersonMessagedName').text();
+                            var UserChattingToID = $(this).children('input[name="PersonMessagedUserID"]').val(); //Can't use the cookie for friendid
+                        
+                            //If a ChatBox exists, don't make a new one
+                            if( $('#ChatBox').length == 0 )
+                            {
+                            
+                                //Make an AJAX call to get message history with this user (if any)
+                                $.ajax({
+                                       type: 'POST',
+                                       url: "/GetMessageHistoryWithUser",
+                                       data: {Chattingtoid: UserChattingToID},
+                                       dataType: 'JSON',
+                                       //Receives the message history with the user
+                                       success: function (response)
+                                       {
+                                           //Pass the user's name, their id, and the message history to make a chatbox
+                                           //Convert JSON to JS object
+                                           CreateChatBox(UserChattingToName,UserChattingToID, response);
+                                       }
+                                       }); //End of AJAX
+                        
+                            }
+                        }
+                        
+                        );
+
+
  
  
              //Pressing enter sends the message
@@ -724,6 +723,14 @@ $(document).ready
                                      
                                                                }
                                     );
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
  
  
@@ -898,6 +905,7 @@ function CreateChatBox( NameChattingTo, IDChattingTo, MessageHistory )
 
     
 }
+
 
 
 

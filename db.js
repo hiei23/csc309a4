@@ -1,6 +1,9 @@
 
 var pg = require('pg');
 
+var connectionString = process.env.DATABASE_URL || 'postgres://wielrhuhgaumwo:vS5efDv-xOGL5XxcckpMqR2pqT@ec2-54-225-244-221.compute-1.amazonaws.com:5432/dpnm78ei6assj';
+pg.defaults.ssl = true;
+
 
 //PostgreSQL server can only handle 1 query at a time per conenction so use pg.connect
 module.exports =
@@ -12,7 +15,7 @@ query:
     //res is the HTTP response variable
     function(text, values, cb, res, req)
     {
-        pg.connect(process.env.DATABASE_URL, function(err, client, done)
+        pg.connect(connectionString, function(err, client, done)
                                                {
                                                client.query(text, values, function(err, result)
                                                                         {

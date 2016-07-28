@@ -3,6 +3,10 @@ $(document).ready
 (
     function()
     {
+         /****************************************WebSockets***********************************/
+         var socket = io();  //Connects to the root socket namespace
+         var EventGroupChatSocket = io('/EventGroupChat');
+         /************************************************************************************/
  
          //Get the user's basic info when they login: profile pic, name, UnreadNotifications icons
          $.ajax({
@@ -80,10 +84,6 @@ $(document).ready
             }
 
  
- 
- 
- 
- 
          //Clicking on the sign out button, send a request to the server
          $(document).on('click', '#SignOut_Button',
                         
@@ -94,7 +94,6 @@ $(document).ready
                                                    type: 'GET',
                                                    url: "/SignOut",  //URL to send to send to the server
                                                    dataType: 'text',
-                                                   //Receives the path of the user's profile picture in the server
                                                    success: function (response)
                                                    {
                                                         //Go back to home page
@@ -116,21 +115,42 @@ $(document).ready
  
 
  
-         //Clicking on the bodynav (About, Friends, Reviews) highlights it and underlines it
-         $(document).on('click', '#BodyNav ul li',
+//         //Clicking on the bodynav (About, Friends, Reviews) highlights it and underlines it
+//         $(document).on('click', '#BodyNav ul li',
+//                
+//                                        function()
+//                                        {
+//                                            //Clear the background-color and border-bottom for the previously clicked item (if any)
+//                                            $('.BodyNavClicked').removeClass('BodyNavClicked');
+//                        
+//                                            //Add a class to change the background-color and border-bottom
+//                                            $(this).addClass('BodyNavClicked');
+//                        
+//                                        }
+//                
+//                
+//                );
+ 
+ 
+ /**************************************paul*************************************************/
+ 
+ //Clicking on the bodynav (About, Friends, Reviews) highlights it and underlines it
+ $(document).on('click', '#allNav li',
                 
-                                        function()
-                                        {
-                                            //Clear the background-color and border-bottom for the previously clicked item (if any)
-                                            $('.BodyNavClicked').removeClass('BodyNavClicked');
-                        
-                                            //Add a class to change the background-color and border-bottom
-                                            $(this).addClass('BodyNavClicked');
-                        
-                                        }
+                function()
+                {
+                    //Clear the background-color and border-bottom for the previously clicked item (if any)
+                    $('.BodyNavClicked').removeClass('BodyNavClicked');
+                    
+                    //Add a class to change the background-color and border-bottom
+                    $(this).addClass('BodyNavClicked');
+                
+                }
                 
                 
                 );
+ 
+/**************************************end paul*************************************************/
  
  
  
@@ -141,6 +161,9 @@ $(document).ready
                         
                                                 function()
                                                 {
+                        
+                                                    //Leave the EventID room [If was entered in the first place]
+                                                    EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
                         
                                                     //Remove all other displayed information about "About" (if exists)
                                                     $('#AboutUser').remove();
@@ -170,6 +193,9 @@ $(document).ready
                                                     $('#FriendsofUser').remove();
                         
                                                     $('#EventSuccessful').hide();
+                        
+                                                    //Remove "change password" section
+                                                    $('#PasswordChange').remove();
                         
                                                 //Trigger AJAX and get friends info
                                                 $.ajax({
@@ -272,73 +298,16 @@ $(document).ready
  
  
  
-         //Create a temporary variable to store all the sports available in TSports
-         //This will eventually come from the database
-         var Sports = [
-                          {
-                             "EventName" : "Cycling",
-                             "url": "./assets/images/cycling.svg"
-                          },
-                          
-                          {
-                             "EventName" : "Football",
-                             "url": "./assets/images/football.svg"
-                          },
-                       
-                           {
-                               "EventName" : "Squash",
-                               "url": "./assets/images/squash.svg"
-                           },
-                           
-                           {
-                               "EventName" : "Basketball",
-                               "url": "./assets/images/basketball.svg"
-                           },
-                           
-                           {
-                               "EventName" : "Boxing",
-                               "url": "./assets/images/boxing.svg"
-                           },
-                       
-                       {
-                       "EventName" : "Tennis",
-                       "url": "./assets/images/tennis.svg"
-                       },
-                       
-                       {
-                       "EventName" : "Volleyball",
-                       "url": "./assets/images/volleyball.svg"
-                       },
-                       
-                       {
-                       "EventName" : "Waterpolo",
-                       "url": "./assets/images/waterpolo.svg"
-                       },
-                       
-                       {
-                       "EventName" : "Tabletennis",
-                       "url": "./assets/images/tabletennis.svg"
-                       },
-                       
-                       {
-                       "EventName" : "Taekwondo",
-                       "url": "./assets/images/taekwondo.svg"
-                       },
-                       
-                       {
-                       "EventName" : "Swimming",
-                       "url": "./assets/images/swimming.svg"
-                       }
-               
-                    ];
- 
  
              //When the user clicks on the "UserReviews" Tab, show all the reviews/ratings/comments of the user in different sports
              $(document).on('click', '#UserReviews',
                             
                                                     function()
                                                     {
-       
+                            
+                                                        //Leave the EventID room [If was entered in the first place]
+                                                        EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
+                            
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
                             
@@ -362,61 +331,84 @@ $(document).ready
                             
                                                         $('#EventSuccessful').hide();
                             
+                                                        //Remove section and create again (Refresh)
+                                                        $('#ReviewsofUser').remove();
+                                                        $('#SportingEventReview').remove();
                             
-                                                        //Only run function if Reviews information is not displayed
-                                                        if( $('#ReviewsofUser').length == 0 )
-                                                        {
+                                                        //Remove "change password" section
+                                                        $('#PasswordChange').remove();
+                            
+
+                                                        //Get a list of all event sport types attended
+                                                        $.ajax({
+                                                               type: 'GET',
+                                                               url: "/GetSportsAttended",
+                                                               dataType: 'JSON',
+                                                               //Receives the path of the user's profile picture in the server
+                                                               success: function (response)
+                                                               {
                                                         
-                            
-                                                            //Create a section to show the sports the user has been rated in
-                                                            var $ReviewsSection = $('<section>',
-                                                                                                {
-                                                                                                  id: 'ReviewsofUser'
-                                                                                                }
-                                                                                    );
-                            
-                                                            //Create element for Sports the user has played
-                                                            var $SportsPlayed = $('<ul>',
+                                                                    //Create a section to show the sports the user has been rated in
+                                                                    var $ReviewsSection = $('<section>',
+                                                                                                        {
+                                                                                                          id: 'ReviewsofUser'
+                                                                                                        }
+                                                                                            );
+                                    
+                                                                    //Create element for Sports the user has played
+                                                                    var $SportsPlayed = $('<ul>',
+                                                                                           {
+                                                                                             id: 'SportsPlayed'
+                                                                                           }
+                                                                                   );
+                                    
+                                                                    //insert the <ul> SportsPlayed to the $ReviewsSection
+                                                                    $ReviewsSection.append($SportsPlayed);
+                                    
+                                                                    //insert $ReviewsSection after the #ProfileHeader
+                                                                    $ReviewsSection.insertAfter('#ProfileHeader');
+                                    
+                                    
+                                                                    //Loop over all the sporting events (that this user HAS ATTENDED/played) and append them
+                                                                    $.each(response,
+                                                                                   function(index, item)
                                                                                    {
-                                                                                     id: 'SportsPlayed'
+                                                                                   
+                                                                                       //$Friend has the image and the friend name
+                                                                                       var $sport = $('<li>',
+                                                                                                               {
+                                                                                                                 class: 'SportingEvent'
+                                                                                                               }
+                                                                                                       );
+                                                                           
+                                                                                       //$Friend has the image and the friend name
+                                                                                       var $sportImage = $('<img>',
+                                                                                                                  {
+                                                                                                                      src: './assets/images/'+ item.SportType + '.svg',
+                                                                                                                      width: '30px'
+                                                                                                                  }
+                                                                                                         );
+                                                                           
+                                                                                       //Hidden input containing the user's ID
+                                                                                       var $sportID = $('<input>',
+                                                                                                                   {
+                                                                                                                    type: 'hidden',
+                                                                                                                    name: 'SportTypeID',
+                                                                                                                    value: item.SportTypeID
+                                                                                                                   }
+                                                                                                       );
+                                                                           
+                                                                           
+                                                                           
+                                                                                       $sport.append($sportImage);  //Append the sportImage to the <li>
+                                                                                       $sport.append($sportID);  //Append the sportID to the <li>
+                                                                           
+                                                                                       $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
+
                                                                                    }
                                                                            );
-                            
-                                                            //insert the <ul> SportsPlayed to the $ReviewsSection
-                                                            $ReviewsSection.append($SportsPlayed);
-                            
-                                                            //insert $ReviewsSection after the #ProfileHeader
-                                                            $ReviewsSection.insertAfter('#ProfileHeader');
-                            
-                            
-                                                            //Loop over all the sporting events (that this user HAS ATTENDED/played) and append them
-                                                            $.each(Sports,
-                                                                           function(index, item)
-                                                                           {
-                                                                           
-                                                                               //$Friend has the image and the friend name
-                                                                               var $sport = $('<li>',
-                                                                                                       {
-                                                                                                         class: 'SportingEvent'
-                                                                                                       }
-                                                                                               );
-                                                                   
-                                                                               //$Friend has the image and the friend name
-                                                                               var $sportImage = $('<img>',
-                                                                                                          {
-                                                                                                              src: item.url,
-                                                                                                              width: '30px'
-                                                                                                          }
-                                                                                              );
-                                                                   
-                                                                               $sport.append($sportImage);  //Append the sportImage to the <li>
-                                                                   
-                                                                               $SportsPlayed.append($sport);  //Append the SportingEvent to the <ul>
-
-                                                                           }
-                                                                   );
-                            
-                                                        }
+                                                               }
+                                                               }); //End of AJAX
                             
                                                     }
                             
@@ -424,34 +416,7 @@ $(document).ready
                             );
  
  
- 
-         //Comments left by other users, for the sporting event which they attended together
-         var Comments = [
-                           {
-                            "Date" : "Jan 1, 2016",
-                           "Comment": "Awesome Person. Never Gives up in soccer!"
-                           },
-                           
-                           {
-                             "Date" : "Feb 4, 2016",
-                             "Comment": "We were down 3-1! This guy came in from the sub and scored 3 goals! We won 4-3!"
-                           },
-                         
-                            {
-                             "Date" : "June 5, 2016",
-                             "Comment": "Ran 10K in a 90 min match :O That's how much professional soccer players run!"
-                            },
-                         
-                            {
-                             "Date" : "July 6, 2016",
-                             "Comment": "Good runner with lots of stamina. Hardcore defensive person but he scored 2 own-goals! :)"
-                            }
-                         
-                        ];
- 
- 
- 
- 
+
  
              //When the user clicks on a SportingEvent, show all the reviews/ratings/comments of the user in that specific sport
              $(document).on('click', '.SportingEvent',
@@ -469,114 +434,128 @@ $(document).ready
                                                    //Add a class to change the background-color and border-bottom
                                                    $(this).addClass('SportingEventClicked');
                             
+                                                   //The sport ID clicked on is stored in a hidden input
+                                                   var SportIDClicked = $(this).children('input').val();
                             
-                            
-                            
-                                                    //Create a section
-                                                    var $SportingEventReview = $('<section>',
-                                                                                            {
-                                                                                              id: 'SportingEventReview'
-                                                                                            }
+                                                    //Get a list of all reviews of the user in this sport ID
+                                                    $.ajax({
+                                                           type: 'POST',
+                                                           url: "/GetUserReviews",
+                                                           data: { "SportID": SportIDClicked }, //Send the sport ID clicked on
+                                                           dataType: 'JSON',
+                                                           success: function (response)
+                                                           {
+                                                    
+                                                                 // console.log(response);
+                                                                //Create a section
+                                                                var $SportingEventReview = $('<section>',
+                                                                                                        {
+                                                                                                          id: 'SportingEventReview'
+                                                                                                        }
+                                                                                             );
+                                        
+                                                                //Insert this specific sporting event review after the section #ReviewsofUser
+                                                                $SportingEventReview.insertAfter('#ReviewsofUser');
+                                        
+                                        
+                                        
+                                        
+                                                                var $StarRatings = $('<div>',
+                                                                                             {
+                                                                                                id: 'StarRatings'
+                                                                                             }
+                                                                                     );
+                                        
+                                        
+                                                                //Append it to the #SportingEventReview Section
+                                                                $SportingEventReview.append($StarRatings);
+                                        
+                                                                //Display the average number of stars this user received for this event
+                                                                for(var i=0; i < response[0].SportRating; i++)
+                                                                {
+                                        
+                                                                   //Create a star SVG four times
+                                                                   var $star = $('<img>',
+                                                                                               {
+                                                                                                   src: './assets/images/filled_star.svg',
+                                                                                                   width: '15px'
+                                                                                               }
+                                                                                       );
+                                        
+                                                                    //Append it to StarRatings
+                                                                    $StarRatings.append($star);
+                                                                }
+                                        
+                                        
+                                                                //Comments
+                                                                var $Comments = $('<div>',
+                                                                                         {
+                                                                                            id: 'Comments'
+                                                                                         }
                                                                                  );
-                            
-                                                    //Insert this specific sporting event review after the section #ReviewsofUser
-                                                    $SportingEventReview.insertAfter('#ReviewsofUser');
-                            
-                            
-                            
-                            
-                                                    var $StarRatings = $('<div>',
-                                                                                 {
-                                                                                    id: 'StarRatings'
-                                                                                 }
-                                                                         );
-                            
-                            
-                                                    //Append it to the #SportingEventReview Section
-                                                    $SportingEventReview.append($StarRatings);
-                            
-                                                    //Display the number of stars this user received for this event, based on other user's ratings
-                                                    //Lets say he got 4 stars / out of 5
-                                                    for(var i=0; i < 4; i++)
-                                                    {
-                            
-                                                       //Create a star SVG four times
-                                                       var $star = $('<img>',
+                                        
+                                        
+                                                                //<ul> to add <li> comments
+                                                                var $CommentsUL = $('<ul>',
+                                                                                          {
+                                                                                    
+                                                                                          }
+                                                                                   );
+                                        
+                                                                //Append the comments to the page
+                                                                $SportingEventReview.append($Comments);
+                                        
+                                                                $Comments.append($CommentsUL);
+                                        
+                                        
+                                                                //Add the comments left by other users for this specific sport to the page
+                                                                $.each(response,
+                                                                               function(index, item)
+                                                                               {
+
+                                                                                    //The first object in the response contains the SportRating only
+                                                                                    if(index > 0)
                                                                                    {
-                                                                                       src: './assets/images/rating_star.svg',
-                                                                                       width: '15px'
+                                                                                       //$comment is each individual comment
+                                                                                       var $comment = $('<li>',
+                                                                                                              {
+                                                                                                               class: 'Individual_Comment'
+                                                                                                              }
+                                                                                                      );
+                                                                           
+                                                                           
+
+                                                                                       //The Time of the comment
+                                                                                       var $commentTime = $('<p>',
+                                                                                                                   {
+                                                                                                                    text: item.CommentDate,
+                                                                                                                    class: 'commentTime'
+                                                                                                                   }
+                                                                                                           );
+                                                                           
+                                                                                       //The Content of the comment
+                                                                                       var $commentContent = $('<p>',
+                                                                                                                   {
+                                                                                                                   text: item.Comment,
+                                                                                                                   class: 'commentContent'
+                                                                                                                   }
+                                                                                                           );
+
+                                                                           
+                                                                           
+                                                                           
+                                                                                       $comment.append($commentTime);  //Append the time to the <li>
+                                                                                       $comment.append($commentContent);  //Append the content to the <li>
+                                                                           
+                                                               
+                                                                                        //Append the <li> comment to the <ul>
+                                                                                       $CommentsUL.append($comment);
                                                                                    }
-                                                                           );
-                            
-                                                        //Append it to StarRatings
-                                                        $StarRatings.append($star);
-                                                    }
-                            
-                            
-                                                    //Comments
-                                                    var $Comments = $('<div>',
-                                                                             {
-                                                                                id: 'Comments'
-                                                                             }
+                                                                               }
                                                                      );
-                            
-                            
-                                                    //<ul> to add <li> comments
-                                                    var $CommentsUL = $('<ul>',
-                                                                              {
-                                                                        
-                                                                              }
-                                                                       );
-                            
-                                                    //Append the comments to the page
-                                                    $SportingEventReview.append($Comments);
-                            
-                                                    $Comments.append($CommentsUL);
-                            
-                            
-                                                    //Add the comments left by other users for this specific sport to the page
-                                                    //Loop over all the comments
-                                                    $.each(Comments,
-                                                                   function(index, item)
-                                                                   {
-
-                                                                       //$comment is each individual comment
-                                                                       var $comment = $('<li>',
-                                                                                              {
-                                                                                               class: 'Individual_Comment'
-                                                                                              }
-                                                                                      );
-                                                           
-                                                           
-
-                                                                       //The Time of the comment
-                                                                       var $commentTime = $('<p>',
-                                                                                                   {
-                                                                                                    text: item.Date,
-                                                                                                    class: 'commentTime'
-                                                                                                   }
-                                                                                           );
-                                                           
-                                                                       //The Content of the comment
-                                                                       var $commentContent = $('<p>',
-                                                                                                   {
-                                                                                                   text: item.Comment,
-                                                                                                   class: 'commentContent'
-                                                                                                   }
-                                                                                           );
-
-                                                           
-                                                           
-                                                           
-                                                                       $comment.append($commentTime);  //Append the time to the <li>
-                                                                       $comment.append($commentContent);  //Append the content to the <li>
-                                                           
-                                               
-                                                                        //Append the <li> comment to the <ul>
-                                                                       $CommentsUL.append($comment);
-                                                           
-                                                                   }
-                                                         );
+                                                    
+                                                           }
+                                                           }); //End of AJAX
                             
                                                 }
                             
@@ -587,108 +566,522 @@ $(document).ready
  
  
  /***************************************************Paul******************************************************/
-                 var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
-                                   "tabletennis", "tennis", "volleyball",
-                                   "football", "swimming"];
- 
-                 var response = [
-                                 {
-                                    "Campus": "St.George",
-                                    "Given_Name": "Parham",
-                                    "Family_Name": "Oghabi",
-                                    "Phone_number": "(647)123-9999",
-                                    "Email_Address": "parham@hotmail.com",
-                                    "Birthday": "January 1, 1994",
-                                    "Height": "180",
-                                    "Weight": "72",
-                                    "Gender": "Male",
-                                    "About_Me": "",
-                                    "SportsInterested": ["cycling", "squash", "basketball"]
-                                }
-                                 ];
- 
-                 var about_order = ["Campus", "Given_Name", "Family_Name", "Phone_number", "Email_Address",
-                                    "Birthday", "Height", "Weight", "Gender", "About_Me", "Sports"];
  
  
-                 //When the user clicks on the "About" Tab, show all info about the user
-                $(document).on('click', '#UserAbout', DisplayUserInfo);
+ var sport_list = ["cycling", "waterpolo", "squash", "boxing", "taekwondo", "basketball",
+                   "tabletennis", "tennis", "volleyball",
+                   "football", "swimming"];
  
-                function DisplayUserInfo()
+ var about_order = ["First_Name", "Last_Name", "Email_Address", "Birthday", "Gender",
+                    "Phone_number", "Height", "Weight", "Campus", "About_Me", "Sports"];
+ 
+ 
+ //When the user clicks on the "About" Tab, show all info about the user
+ $('#UserAbout').on('click', requestUserInfo);
+ 
+ //Get info from the server and create campus HTML element to display.
+ function createCampusinfo(response)
+ {
+ $dropdown = $("<div/>", {
+               class: "dropdown"
+               });
+ 
+ $select = $("<select/>", {
+             required: "required",
+             name: "Campus",
+             class: "dropdown-Campus",
+             disabled: "disabled"
+             });
+ 
+ //option: default(placeholder for option), St.George, Missisauga, Scarborough
+ $option0 = $("<option/>", {
+              value: "default",
+              text: "Campus"
+              });
+ 
+ $option1 = $("<option/>", {
+              value: "stgeorge",
+              text: "St.George"
+              });
+ 
+ $option2 = $("<option/>", {
+              value: "missisauga",
+              text: "Missisauga"
+              });
+ 
+ $option3 = $("<option/>", {
+              value: "scarborough",
+              text: "Scarborough"
+              });
+ 
+ //Set selected when it's chosen by user
+ if (response[0].Campus === "stgeorge")
+ {
+ $option1.attr("selected", "selected");
+ }
+ else if (response[0].Campus === "missisauga")
+ {
+ $option2.attr("selected", "selected");
+ }
+ else if (response[0].Campus === "scarborough")
+ {
+ $option3.attr("selected", "selected");
+ }
+ else
+ {
+ //"Campus" is shown as a default.
+ $option0.attr("selected", "selected");
+ }
+ 
+ $select.append($option0);
+ $select.append($option1);
+ $select.append($option2);
+ $select.append($option3);
+ 
+ $dropdown.append($select);
+ 
+ return $dropdown;
+ 
+ }
+ 
+ 
+ //Create info of gender in html elements using jquery.
+ function createGenderInfo(response)
+ {
+ //dropdown for gender choice.
+ $dropdown = $("<div/>", {
+               class: "dropdown"
+               });
+ 
+ $select = $("<select/>", {
+             required: "required",
+             name: "gender",
+             class: "dropdown-Gender",
+             disabled: "disabled"
+             });
+ 
+ //option for male and female
+ $option1 = $("<option/>", {
+              value: "male",
+              text: "Male"
+              });
+ 
+ $option2 = $("<option/>", {
+              value: "female",
+              text: "Female"
+              });
+ 
+ //display user's gender.
+ if (response[0].Gender === "male")
+ {
+ $option1.attr("selected", "selected");
+ }
+ else
+ {
+ $option2.attr("selected", "selected");
+ }
+ 
+ $select.append($option1);
+ $select.append($option2);
+ 
+ $dropdown.append($select);
+ 
+ return $dropdown;
+ }
+ 
+ 
+ function removeOtherDisplayedInfo()
+ {
+ //Leave the EventID room [If was entered in the first place]
+ EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
+ 
+ //Remove all other displayed information about "Friends" (if exists)
+ $('#FriendsofUser').remove();
+ 
+ //Remove all other displayed information about "Reviews" (if exists)
+ $('#ReviewsofUser').remove();
+ $('#SportingEventReview').remove();
+ 
+ //Remove all other displayed information about "Upcoming Events" (if exists)
+ $('#EventsofUser').remove();
+ //Remove all info about the selected event
+ $('#SelectedEvent').remove();
+ 
+ //Remove all other displayed information about "Searching Events" (if exists)
+ $('#SearchEventSection').remove();
+ 
+ //Remove all other displayed information about "Creating Events" (if exists)
+ $('#CreateEventSection').remove();
+ //Remove the datepicker
+ $('.xdsoft_datetimepicker').remove();
+ //unwrap div with the class for blurring the background from #ProfileHeader
+ $('#ProfileHeader').unwrap();
+ 
+ //Remove all other displayed information about "About" (if exists)
+ //Refresh, get new data from the server
+ $('#AboutUser').remove();
+ 
+ $('#EventSuccessful').hide();
+ 
+ //Remove "change password" section
+ $('#PasswordChange').remove();
+ }
+ 
+ //Callback function of click event of "About" section.
+ function requestUserInfo()
+ {
+ $.removeCookie("FriendIDClicked");
+ 
+ //Get info about the user from the server
+ $.ajax({
+        type: 'GET',
+        url: "/GetUserAboutInfo",  //URL to send to the server
+        dataType: 'JSON'
+        //Receives the path of the user's profile picture in the server
+        }).done(function(response) {
+                //remove previously displayed info
+                removeOtherDisplayedInfo();
+                
+                //display user info
+                DisplayUserInfo(response);
+                }); //End of AJAX
+ 
+ }
+ 
+ //Display user's info on success of ajax request.
+ function DisplayUserInfo(response)
+ {
+ //Create a section to info about the user
+ var $AboutSection = $('<section>',
+                       {
+                       id: 'AboutUser'  //Please don't change this ID
+                       }
+                       );
+ 
+ //insert $AboutSection after the #ProfileHeader
+ $AboutSection.insertAfter('#ProfileHeader');
+ 
+ $form_input = $('<form/>',
+                 {
+                 id: "info_input"
+                 }
+                 );
+ 
+ //for every each user's info, display
+ for (var i = 0; i < about_order.length - 1; i++)
+ {
+ var $div = $('<div/>',
+              {
+              class: "each_info"
+              }
+              );
+ 
+ if (about_order[i] === "Email_Address" ||
+     about_order[i] === "Last_Name" ||
+     about_order[i] === "First_Name")
+ {
+ $div = $('<div/>',
+          {
+          class: "each_info_stable"
+          }
+          );
+ }
+ 
+ var $label = $('<label/>',
                 {
-                  //Remove all other displayed information about "Friends" (if exists)
-                  $('#FriendsofUser').remove();
-                  
-                  //Remove all other displayed information about "Reviews" (if exists)
-                  $('#ReviewsofUser').remove();
-                  $('#SportingEventReview').remove();
-
-                   //Remove all other displayed information about "Upcoming Events" (if exists)
-                   $('#EventsofUser').remove();
-                   //Remove all info about the selected event
-                   $('#SelectedEvent').remove();
-
-                  //Remove all other displayed information about "Searching Events" (if exists)
-                  $('#SearchEventSection').remove();
-
-                  //Remove all other displayed information about "Creating Events" (if exists)
-                  $('#CreateEventSection').remove();
-                 //Remove the datepicker
-                 $('.xdsoft_datetimepicker').remove();
-                  //unwrap div with the class for blurring the background from #ProfileHeader
-                  $('#ProfileHeader').unwrap();
- 
-                 //Remove all other displayed information about "About" (if exists)
-                 //Refresh, get new data from the server
-                 $('#AboutUser').remove();
-                 
- 
-                  $('#EventSuccessful').hide();
- 
- 
-
-             //Get info about the user from the server
-//             $.ajax({
-//                    type: 'GET',
-//                    url: "/GetUserAboutInfo",  //URL to send to send to the server
-//                    dataType: 'JSON',
-//                    //Receives the path of the user's profile picture in the server
-//                    success: function (response)
-//                    {
-                      //Create a section to info about the user
-                      var $AboutSection = $('<section>',
-                                                          {
-                                                              id: 'AboutUser'  //Please don't change this ID
-                                                          }
-                                           );
-
-                      //insert $AboutSection after the #ProfileHeader
-                      $AboutSection.insertAfter('#ProfileHeader');
-
-
-                    
-                    
-//                        console.log(response[0].Campus);  //Gives St.George
-//                        console.log(response[0].Height);  //Gives 180
-//     
-//                        var SportsInterested = response[0].SportsInterested;  //SportsInterested is an array
-//                        
-//                        for(var i=0; i<SportsInterested.length; i++)
-//                        console.log(SportsInterested[i]) //Prints cycling , squash, basketball
-                    
-                    
-                    //Paul ADD CODE HERE
- 
-                    
-                    
-//                    }
-//                    }); //End of AJAX
- 
- 
- 
- 
-
+                class: about_order[i]
                 }
+                );
+ 
+ var $label_text = $('<span/>',
+                     {
+                     class: "label",
+                     text: about_order[i].replace("_", " ") + ":"
+                     }
+                     );
+ 
+ var $info;
+ 
+ //Display About me section as <textarea>
+ if (about_order[i] === "About_Me")
+ {
+ $info = $('<textarea>',
+           {
+           name: about_order[i],
+           placeholder: "Brief Personal Description",
+           class: about_order[i],
+           text: response[0][about_order[i]],
+           rows: 6,
+           cols: 35,
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Campus")
+ {
+ $info = createCampusinfo(response);
+ }
+ else if (about_order[i] === "Gender")
+ {
+ $info = createGenderInfo(response);
+ }
+ else if (about_order[i] === "Birthday")
+ {
+ 
+ $info = $("<input>",
+           {
+           type: "date",
+           name: about_order[i],
+           class: about_order[i],
+           pattern: "^(19|20)\d\d[- /.](0[1-9]|1[012])" +
+           "[- /.](0[1-9]|[12][0-9]|3[01])",
+           value: response[0].Birthday,
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Height" || about_order[i] === "Weight")
+ {
+ var unit = {"Height":"cm", "Weight":"kg"};
+ $info = $("<input>",
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           placeholder: unit[about_order[i]],
+           pattern: "[0-9]{1,3}",
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else if (about_order[i] === "Phone_number")
+ {
+ $info = $("<input>",
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           placeholder: "ex.(647)123-9999",
+           pattern: "[0-9]{10}|(\([0-9]{3}\))?([0-9]{3})?-?[0-9]{3}-[0-9]{4}|\([0-9]{3}\)[0-9]{7}",
+           required: "true",
+           disabled: "disabled"
+           }
+           );
+ }
+ else
+ {
+ $info = $('<input>',
+           {
+           type: "text",
+           name: about_order[i],
+           class: about_order[i],
+           value: response[0][about_order[i]],
+           disabled: "disabled"
+           }
+           );
+ }
+ 
+ $label.append($label_text);
+ $label.append($info);
+ $div.append($label);
+ 
+ $form_input.append($div);
+ }
+ 
+ 
+ 
+ $info = $('<section/>', {
+           id: "sports"
+           });
+ 
+ 
+ var $p_text = $('<p/>', {
+                 text: "Sports:"
+                 });
+ 
+ var $div_collection = $('<div/>',{
+                         id:"ck-collection"
+                         })
+ 
+ 
+ var len = sport_list.length;
+ 
+ for(var i = 0;i < len;i++){
+ var $div_ckbtn = $('<div/>',{
+                    class:"ck-button"
+                    });
+ 
+ var $input_ckb = $('<input>',{
+                    type:"checkbox",
+                    id:sport_list[i],
+                    name:sport_list[i],
+                    value:sport_list[i],
+                    disabled: "disabled",
+                    checked: "checked"
+                    });
+ 
+ if (response[0].SportsInterested.indexOf(sport_list[i]) === -1)
+ {
+ $input_ckb.removeAttr("checked");
+ }
+ 
+ var $label_sport = $('<label/>',{
+                      for:sport_list[i]
+                      });
+ 
+ var $img = $('<img>',{
+              width:"20",
+              height:"20",
+              src:"assets/images/" + sport_list[i] + ".svg"
+              });
+ 
+ $label_sport.append($img);
+ $label_sport.append(sport_list[i]);
+ 
+ $div_ckbtn.append($input_ckb);
+ $div_ckbtn.append($label_sport);
+ 
+ $div_collection.append($div_ckbtn);
+ }
+ 
+ $info.append($p_text);
+ $info.append($div_collection);
+ 
+ 
+ 
+ var $edit = $('<button/>', {
+               class: "edit_button",
+               text: "Edit"
+               });
+ 
+ $form_input.append($info);
+ 
+ $AboutSection.append($form_input);
+ $AboutSection.append($edit);
+ 
+ }
+ 
+ 
+ //set css hover event of sport buttons when editting.
+ function set() {
+ $(".ck-button").hover(function() {
+                       $(this).css({
+                                   "color":"#000000",
+                                   "outline":"none",
+                                   "border":"1px solid #97D38D",
+                                   "border-radius":"4px",
+                                   "box-shadow":"0 0 10px #97D38D"
+                                   });
+                       }, function() {
+                       $(this).css({
+                                   "box-shadow":"none",
+                                   "border":"none"
+                                   });
+                       });
+ }
+ 
+ //When edit button is clicked, display submit,cancel button and allow user to edit certain infos.
+ $(document).on('click', '.edit_button',
+                function()
+                {
+                //Allow user to edit their info (except for unchangable infos)
+                $(".each_info input").removeAttr("disabled");
+                $(".each_info textarea").removeAttr("disabled");
+                $(".ck-button input").removeAttr("disabled");
+                $(".dropdown-Campus").removeAttr("disabled");
+                
+                $(".edit_button").remove();
+                
+                //change color of sport buttons when editting.
+                set();
+                
+                //display submit button (input with type=submit) and cancel button.
+                var $submit = $('<input/>',
+                                {
+                                class: "submit_button",
+                                type: "submit",
+                                value: "Submit"
+                                }
+                                );
+                
+                var $cancel = $('<button/>',
+                                {
+                                class: "cancel_button",
+                                text: "Cancel"
+                                }
+                                );
+                $cancel.insertAfter('#info_input');
+                $submit.insertAfter("#sports");
+                }
+                );
+ 
+ //cancel editing. Go back to previous display.
+ $(document).on('click', '.cancel_button',
+                function()
+                {
+                console.log("here cancel button");
+                requestUserInfo();
+                }
+                );
+ 
+ 
+ //when submit button is clicked, get new infos from input,textarea,dropdowns, and send them to
+ //the server in JSON file format (array of single dictionary; dictionary contains all information)
+ $(document).on("submit", "#info_input",
+                function(e)
+                {
+                e.preventDefault();
+                
+                var new_data = [];
+                var data_dic = {};
+                data_dic["First_Name"] = $("input.First_Name").val();
+                data_dic["Last_Name"] = $("input.Last_Name").val();
+                data_dic["Email_Address"] = $("input.Email_Address").val();
+                data_dic["Gender"] = $("select.dropdown-Gender").val();
+                
+                var changed_info = $("form").serializeArray();
+                
+                //put info except for sports into data_dic
+                for (var i = 0; i < 6; i++)
+                {
+                data_dic[changed_info[i].name] = changed_info[i].value;
+                }
+                
+                var sportsInterested = [];
+                
+                for (i; i < changed_info.length; i++)
+                {
+                sportsInterested.push(changed_info[i].name);
+                }
+                
+                data_dic["SportsInterested"] = sportsInterested;
+                
+                new_data.push(data_dic);
+                
+                //post new info about the user to the server
+                $.ajax({
+                       type: 'POST',
+                       url: "/updateUserInfo",  //URL to send to the server
+                       dataType: 'JSON',
+                       data: changed_info,
+                       //Receives the path of the user's profile picture in the server
+                       success: function(response)
+                       {
+                       //remove previously displayed info
+                       removeOtherDisplayedInfo();
+                       
+                       //here, pass new_data created above (data that contains new data)
+                       DisplayUserInfo(new_data);
+                       }
+                       }); //End of AJAX
+                
+                }
+                );
+ 
 
  
  
@@ -707,12 +1100,15 @@ $(document).ready
                                                     function()
                                                     {
                                 
+                                                        //Leave the EventID room [If was entered in the first place]
+                                                        EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
+                                
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
-                                                        
+                                
                                                         //Remove all other displayed information about "Friends" (if exists)
                                                         $('#FriendsofUser').remove();
-                                                        
+                                
                                                         //Remove all other displayed information about "Reviews" (if exists)
                                                         $('#ReviewsofUser').remove();
                                                         $('#SportingEventReview').remove();
@@ -735,6 +1131,9 @@ $(document).ready
                                                         $('#SelectedEvent').remove();
                                 
                                                         $('#EventSuccessful').hide();
+                                
+                                                        //Remove "change password" section
+                                                        $('#PasswordChange').remove();
                                 
                                 
                                                     //Trigger AJAX and get events
@@ -991,7 +1390,6 @@ $(document).ready
                                                                );
 
                                 
-                                
                                                         var $EventName= $('<h3>',
                                                                                 {
                                                                                   text: JSONEvent.EventName,
@@ -1208,6 +1606,8 @@ $(document).ready
                                                                                  id: 'EventUsers'
                                                                                 }
                                                                       );
+                                    var JSONEventUsers = [];
+                                    var IsEventRatingSubmitted;
                                 
                                 
                                     //Trigger AJAX
@@ -1220,11 +1620,15 @@ $(document).ready
                                            data: { eventID: EventID },
                                            success: function (response)
                                            {
+                                                   JSONEventUsers = response; //To be used for the rating
+                                           
                                                     //Loop over all the users in this event and append them
                                                     $.each(response,
                                                                            function(index, item)
                                                                            {
                                                            
+                                                                               //Check if WE have submitted the event ratings or not
+                                                                               if( item.friendid == $.cookie("UserID"))  IsEventRatingSubmitted = item.EventRatingSubmitted;
                                                            
                                                                                var $User = $('<div>',
                                                                                                        {
@@ -1396,6 +1800,208 @@ $(document).ready
                                                               
                                                               //Append the form to the ChatBox
                                                               $EventGroupChat.append($GroupChatForm);
+                                                          
+                                                          
+                                                              //Calculate the height of the chatbox to scroll down automatically
+                                                              var HeightofChat = 0;
+                                                              $("#EventGroupChat #GroupChatContent").children().each(function(){HeightofChat = HeightofChat + $(this).outerHeight(true);})
+                                                              $("#EventGroupChat #GroupChatContent").animate({ scrollTop: HeightofChat }, "slow"); //scroll to the last message
+                                                          
+                                                          
+                                                              //Chat History is now loaded
+                                                              //Store the EventID in a cookie in order to leave socket room when needed
+                                                              $.cookie("EventIDOpened", EventID);
+                                                          
+                                                          
+                                                               //Tell the server to join the room for this EventID
+                                                               EventGroupChatSocket.emit('JoinEventRoom', EventID);
+
+          
+                                                          
+                                                              //We got the messages for this event
+                                                              //Now check if this event is over or not yet
+                                                          
+                                                              var currentDate = new Date();
+                                                              var eventEndDateTime = new Date(JSONEvent.CompleteEndTime);
+                                                          
+                                                          
+                                                              //If the event is over AND more than 1 person attended the event AND Ratings haven't been submitted previously => display the Event Rating
+                                                              if( currentDate > eventEndDateTime && ((JSONEvent.EventNumPpl - JSONEvent.EventNumSpotsLeft) > 1) &&  IsEventRatingSubmitted === 'no' )
+                                                              {
+
+
+                                                                  //Create a form input for all the users to be able to type
+                                                                  var $EventRating = $('<div>',
+                                                                                                 {
+                                                                                                   id: 'EventRating'
+                                                                                                 }
+                                                                                         );
+
+                                                                  $SelectedEvent.append($EventRating);
+                                                          
+                                                          
+                                                                  //Create a form input for all the users to be able to type
+                                                                  var $RatingHeader = $('<h3>',
+                                                                                                 {
+                                                                                                   text: 'Ratings Are Now Open!',
+                                                                                                   id: 'RatingHeader'
+                                                                                                 }
+                                                                                        );
+                                                          
+                                                                   $EventRating.append($RatingHeader);
+                                                          
+                                                          
+                                                                    //Make a Form for the ratings
+                                                                    var $RatingForm = $('<form>',
+                                                                                                {
+                                                                                                 action: '/SubmitEventRatings',
+                                                                                                 id: 'RatingForm',
+                                                                                                 method: 'POST'
+                                                                                                }
+                                                                                        );
+                                                                      
+                                                                    $EventRating.append($RatingForm);
+                                                          
+                                                                      //Each person in the event can be rated and commented on [Except for the user on himself]
+                                                                      //Loop over all the users in this event and append them
+                                                                      $.each(JSONEventUsers,
+                                                                                 function(index, item)
+                                                                                 {
+                                                                             
+                                                                                     //All users in the event excluding the user himself
+                                                                                     if( item.friendid !=  $.cookie("UserID") )
+                                                                                     {
+                                                              
+                                                                             
+                                                                                         var $UserRating = $('<div>',
+                                                                                                                    {
+                                                                                                                      class: 'EventRatingIndividualUser'
+                                                                                                                    }
+                                                                                                            );
+                                                                             
+                                                                                        $RatingForm.append($UserRating);
+                                                                             
+                                                                             
+                                                                                         var $UserRatingInfo = $('<div>',
+                                                                                                                         {
+                                                                                                                          class: 'UserRatingInfo'
+                                                                                                                         }
+                                                                                                                );
+                                                                             
+                                                                                        $UserRating.append($UserRatingInfo);
+                                                                             
+                                                                                         
+                                                                                         
+                                                                                         var $UserImage =  $('<img>',
+                                                                                                                     {
+                                                                                                                        src: item.url,
+                                                                                                                        width: '40px',
+                                                                                                                        height: '40px'
+                                                                                                                     }
+                                                                                                            );
+                                                                             
+                                                                                         //Hidden input containing the user's ID
+                                                                                         var $UserID = $('<input>',
+                                                                                                                 {
+                                                                                                                  type: 'hidden',
+                                                                                                                  name: 'EventUserID',
+                                                                                                                  value: item.friendid
+                                                                                                                 }
+                                                                                                         );
+                                                                             
+                                                                                         var $UserName =  $('<p>',
+                                                                                                                 {
+                                                                                                                     text:  item.name
+                                                                                                                 }
+                                                                                                            );
+                                                                             
+                                                                                         $UserRatingInfo.append($UserImage);
+                                                                                         $UserRatingInfo.append($UserName);
+                                                                                         $UserRatingInfo.append($UserID);
+                                                                             
+                                                                             
+                                                                     
+                                                                                        //The place where we enter our comment about the user
+                                                                                        var $UserComment =   $('<textarea>',
+                                                                                                                            {
+                                                                                                                            placeholder: 'Comment on the User',
+                                                                                                                            rows: 3,
+                                                                                                                            maxlength: 400,
+                                                                                                                            name: 'EventRatingComments',
+                                                                                                                            autocomplete: 'off'
+                                                                                                                            }
+                                                                                                              );
+                                                                             
+                                                                                        $UserRating.append($UserComment);
+                                                                             
+                                                                             
+                                                                                         //Rating the user using stars
+                                                                                         var $UserStarRating =   $('<div>',
+                                                                                                                            {
+                                                                                                                             class: 'UserStarRating'
+                                                                                                                            }
+                                                                                                                   );
+                                                                             
+                                                                                         $UserRating.append($UserStarRating);
+                                                                             
+                                                                                         //Append 5 empty stars at first
+                                                                                         for(var i = 1; i<6; i++)
+                                                                                         {
+                                                                                             var $Star =  $('<img>',
+                                                                                                                 {
+                                                                                                                     src: './assets/images/empty_star.svg',
+                                                                                                                     width: '20px',
+                                                                                                                     class: 'rate' + i  //Each star has a rate
+                                                                                                                 }
+                                                                                                            );
+                                                                             
+                                                                                              $UserStarRating.append($Star);
+                                                                                         }
+                                                                             
+                                                                                            //Attach a hidden input containing the rating  value to submit with the form
+                                                                                            var $UserRatingValue = $('<input>',
+                                                                                                                             {
+                                                                                                                              type: 'hidden',
+                                                                                                                              name: 'ratingvalue',
+                                                                                                                              class: 'ratingvalue',
+                                                                                                                              value: 0  //The Value is initally 0
+                                                                                                                             }
+                                                                                                                     );
+                                                                                             
+                                                                                            $UserStarRating.append($UserRatingValue);
+                                                                             
+                                                                                      }
+                                                                                 }
+                                                                             );
+                                                          
+                                                                              //Add Form submit button
+                                                                              var $SubmitRatings = $('<input>',
+                                                                                                                 {
+                                                                                                                  type: 'submit',
+                                                                                                                  id: 'SubmitRatings',
+                                                                                                                  value: 'Submit Ratings'
+                                                                                                                 }
+                                                                                                     );
+                                                                              
+                                                                              
+                                                                              //Append it to the form
+                                                                              $RatingForm.append($SubmitRatings);
+                                                          
+                                                          
+                                                                              //Attach a hidden input containing the event ID which we are submitting the rating for
+                                                                              var $EventIDRatingsSubmitted = $('<input>',
+                                                                                                                       {
+                                                                                                                        type: 'hidden',
+                                                                                                                        name: 'EventID_RatingsSubmitted',
+                                                                                                                        id: 'EventIDRatingsSubmitted',
+                                                                                                                        value: EventID
+                                                                                                                       }
+                                                                                                               );
+                                                                              
+                                                                              $RatingForm.append($EventIDRatingsSubmitted);
+                                                              }
+
+
                                                    
                                                           }
                                                           }); //End of AJAX 2 (Get Event Messages)
@@ -1408,6 +2014,47 @@ $(document).ready
                                 
                                 );
  
+
+ 
+ 
+ 
+                 //Clicking on the star ratings
+                 $(document).on('click', '.UserStarRating img' ,
+                                    function()
+                                    {
+                                         //Make the star the user clicked and all stars before it filled
+                                         $(this).prevAll().andSelf().attr('src', './assets/images/filled_star.svg');
+                                
+                                        //Make all stars after the star the user clicked empty
+                                        $(this).nextAll().attr('src', './assets/images/empty_star.svg');
+                                
+                                        //Update the value of the hidden input ".ratingvalue" based on the star chosen
+                                        switch($(this).attr('class'))
+                                        {
+                                            case "rate1":
+                                                        $(this).siblings('input').val(1); //Set the hidden input's rating value as 1
+                                                        break;
+                                
+                                            case "rate2":
+                                                        $(this).siblings('input').val(2);
+                                                        break;
+                                
+                                            case "rate3":
+                                                        $(this).siblings('input').val(3);
+                                                        break;
+                                
+                                            case "rate4":
+                                                        $(this).siblings('input').val(4);
+                                                        break;
+                                
+                                            case "rate5":
+                                                        $(this).siblings('input').val(5);
+                                                        break;
+
+                                        }
+                                    }
+                                
+                                );
  
  
                  //When a user clicks on any of his friends|users, take them to their profile
@@ -1480,11 +2127,142 @@ $(document).ready
                                                                             
                                                                             //Show all displayed information about "Upcoming Events" first
                                                                             $('#EventsofUser').show();
+                                
+                                                                            //Leave the EventID room
+                                                                            EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
+                                
                                                                         }
-                                                                        
+                                
                                 
                                 );
  
+ 
+
+ 
+                 //Pressing enter when in the event chat sends the message
+                 $(window).keydown(
+                                   function(event)
+                                   {
+                                       //If we press enter while the cursor is in the event GroupChatForm
+                                       if(event.which==13 && $(event.target).is("#SelectedEvent #GroupChatForm textarea"))
+                                       {
+                                   
+                                           event.preventDefault();
+                                           var TypedMessage = $("#SelectedEvent #GroupChatForm textarea").val();
+                                   
+                                           //$EventChatMessage has the message and the image of the person who sent it
+                                           var $EventChatMessage = $('<div>',
+                                                                             {
+                                                                              class: 'ChatContentDatas',
+                                                                             }
+                                                                     );
+                                   
+                                           
+                                           //Make an img tag for the profile pic of the person who sent it (us)
+                                           //Then append it to $EventChatMessage
+                                           var $SentByProfilePic = $('<img>',
+                                                                             {
+                                                                              src:  $('#ProfilePic').prop('src'),  //Get the img from our profile
+                                                                              width: '25px',
+                                                                              height: '25px',
+                                                                              class: 'EventMessageDisplayPic'
+                                                                             }
+                                                                     );
+                                           
+                                           $EventChatMessage.append($SentByProfilePic);
+                                           
+                                  
+                                           var  $p = $('<p>',
+                                                           {
+                                                            text: TypedMessage
+                                                           }
+                                                       );
+                                           
+                                           //Add a class so it floats to the left
+                                           $EventChatMessage.addClass('MessageByMe');
+                                           
+                                           $EventChatMessage.append($p);
+                                
+                                           $('#GroupChatContent').append($EventChatMessage);
+                                
+
+                                           //Calculate the height of the chatbox to scroll down automatically
+                                           var HeightofChat = 0;
+                                           $("#EventGroupChat #GroupChatContent").children().each(function(){HeightofChat = HeightofChat + $(this).outerHeight(true);})
+                                           $("#EventGroupChat #GroupChatContent").animate({ scrollTop: HeightofChat }, "slow"); //scroll to the last message
+
+
+                                            //Clear textarea after sending
+                                           $("#SelectedEvent #GroupChatForm textarea").val("");
+                                   
+                                           //Send our userid, the eventID (event group chat we are using), and the message to the server
+                                           //using websockets
+                                            EventGroupChatSocket.emit('/SendGroupMessage', {userid:  $.cookie("UserID"), Chat_EventID: $.cookie("EventIDOpened"), chatmessage: TypedMessage });
+                                   
+                                       }
+                                   }
+                                   );
+ 
+ 
+
+                 EventGroupChatSocket.on('ReceiveEventMessages' ,
+                                         function(msg)
+                                         {
+
+                                             //Only append the message if
+                                             //1) The Event group chat is open
+                                             //2) The Event open is the same event which the group message was directed at
+                                             if( $("#SelectedEvent #EventGroupChat").length > 0 && $.cookie("EventIDOpened") == msg.eventID )
+                                             {
+                                             
+                                                    //$EventChatMessage has the message and the image of the person who sent it
+                                                    var $EventChatMessage = $('<div>',
+                                                                                      {
+                                                                                      class: 'ChatContentDatas',
+                                                                                      }
+                                                                              );
+                                                    
+                                                    
+                                                    
+                                                    //Make an img tag for the profile pic of the person who sent it
+                                                    //Then append it to $EventChatMessage
+                                                    var $SentByProfilePic = $('<img>',
+                                                                                      {
+                                                                                      src: msg.SenderDP,
+                                                                                      width: '25px',
+                                                                                      height: '25px',
+                                                                                      class: 'EventMessageDisplayPic'
+                                                                                      }
+                                                                              );
+                                                    
+                                                    $EventChatMessage.append($SentByProfilePic);
+                                             
+                                             
+                                                        //Message sent by others
+                                                        var  $p = $('<p>',
+                                                                        {
+                                                                            text: msg.chatmessage
+                                                                        }
+                                                                    );
+                                                        
+                                                        //Add a class so it floats to the right
+                                                        $EventChatMessage.addClass('MessageNotByMe');
+                                                        
+                                                        $EventChatMessage.append($p);
+                                             
+                                                  
+                                                        $('#GroupChatContent').append($EventChatMessage);
+                                             
+                                             
+                                                         //Calculate the height of the chatbox to scroll down automatically
+                                                         var HeightofChat = 0;
+                                                         $("#EventGroupChat #GroupChatContent").children().each(function(){HeightofChat = HeightofChat + $(this).outerHeight(true);})
+                                                         $("#EventGroupChat #GroupChatContent").animate({ scrollTop: HeightofChat }, "slow"); //scroll to the last message
+                                             }
+
+                                         }
+                                         );
+
  
  
 
@@ -1494,6 +2272,8 @@ $(document).ready
                                 
                                                     function()
                                                     {
+                                                        //Leave the EventID room (if was joined)
+                                                        EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
                                 
                                                         //Remove all other displayed information about "About" (if exists)
                                                         $('#AboutUser').remove();
@@ -1517,14 +2297,14 @@ $(document).ready
                                                         //unwrap div with the class for blurring the background from #ProfileHeader
                                                         $('#ProfileHeader').unwrap();
                                 
-                                
                                                         $('#EventSuccessful').hide();
                                 
+                                                        //Remove and re-create as a sort of refresh
+                                                        $('#SearchEventSection').remove();
                                 
+                                                        //Remove "change password" section
+                                                        $('#PasswordChange').remove();
                                 
-                                                        //Only run function if SearchEvent information is not displayed
-                                                        if( $('#SearchEventSection').length == 0 )
-                                                        {
                                 
                                 
                                                             //Create a section to show the search form
@@ -1550,7 +2330,8 @@ $(document).ready
                                                                                                              type: 'text',
                                                                                                              id: 'SearchForEvents',
                                                                                                              placeholder: 'Search for events by using dropdown menu or typing',
-                                                                                                             maxlength: 30
+                                                                                                             maxlength: 30,
+                                                                                                            autocomplete: 'off'
                                                                                                             //Give the user the ability to both type and click from dropdown menu
                                                                                                             // readonly: ""
                                                                                                            }
@@ -1587,50 +2368,53 @@ $(document).ready
                                                             
                                                             //Append the <ul> to the <div>
                                                             $AvailableEventTypes.append($AvailableEventTypesUL);
-                                                            
-                                                            
-                                                            //When the DB is set, we should make an .ajax call and loop over the sports available in the DB
-                                                            //Loop over all the sporting events available and append them
-                                                            $.each(Sports,
-                                                                           function(index, item)
-                                                                           {
-                                                                           
-                                                                               //Now add the available sports to each <li>
-                                                                               var $IndividualEventType = $('<li>',
-                                                                                                                    {
-                                                                                                                      class: 'IndividualEventType'
-                                                                                                                    }
-                                                                                                            );
-                                                                               
-                                                                               //Now add the SVG of the sport first
-                                                                               var $IndividualEventImg = $('<img>',
+                                
+                                
+                                                            //Get all event types available
+                                                            $.ajax({
+                                                                   type: 'GET',
+                                                                   url: "/GetAllSports",
+                                                                   dataType: 'JSON',
+                                                                   success: function (response)
+                                                                   {
+                                                                   
+                                                                       //Loop over all the sporting events available and append them
+                                                                       $.each(response,
+                                                                              function(index, item)
+                                                                              {
+                                                                              
+                                                                                  //Now add the available sports to each <li>
+                                                                                  var $IndividualEventType = $('<li>',
                                                                                                                    {
-                                                                                                                     src: item.url,
-                                                                                                                     width: '11px'
+                                                                                                                   class: 'IndividualEventType'
                                                                                                                    }
-                                                                                                           );
-                                                                               
-                                                                               //Now add the name of the sport
-                                                                               var $IndividualEventName = $('<p>',
-                                                                                                                {
-                                                                                                                  text: item.EventName
-                                                                                                                }
-                                                                                                            );
-                                                                               
-                                                                               $IndividualEventType.append($IndividualEventImg);  //Append the Sport SVG to the <li>
-                                                                               $IndividualEventType.append($IndividualEventName);  //Append the sport name to the <li>
-                                                                               $AvailableEventTypesUL.append($IndividualEventType);  //Append the  <li> to the <ul>
-                                                                           
-                                                                           }
-                                                                   );
-
-                                
-                                
-                                
-                                
-                                
-                                
-                                                        }
+                                                                                                               );
+                                                                                  
+                                                                                  //Now add the SVG of the sport first
+                                                                                  var $IndividualEventImg = $('<img>',
+                                                                                                                      {
+                                                                                                                      src: './assets/images/'+ item.SportType + '.svg',
+                                                                                                                      width: '11px'
+                                                                                                                      }
+                                                                                                              );
+                                                                                  
+                                                                                  //Now add the name of the sport
+                                                                                  var $IndividualEventName = $('<p>',
+                                                                                                                   {
+                                                                                                                   text: item.SportType
+                                                                                                                   }
+                                                                                                               );
+                                                                                  
+                                                                                  $IndividualEventType.append($IndividualEventImg);  //Append the Sport SVG to the <li>
+                                                                                  $IndividualEventType.append($IndividualEventName);  //Append the sport name to the <li>
+                                                                                  $AvailableEventTypesUL.append($IndividualEventType);  //Append the  <li> to the <ul>
+                                                                              
+                                                                              }
+                                                                              );
+                                                                   
+                                                                   
+                                                                   }
+                                                                   }); //End of AJAX
                                 
                                                     }
                                 
@@ -2087,12 +2871,17 @@ $(document).ready
                                                     function()
                                                     {
                             
-                            
+                                                //Only allow to join once
+                                                if( $(this).text() == 'Join Event' )
+                                                {
                                                     var EventToJoin = $(this).children('input').val();
  
                                                     //Change Join Event to Joined
                                                     $(this).text('Joined! View the event in your Events Tab!');
                                                     $(this).css('width','200px');
+                            
+                                    //We joined the event, remove it ffrom the search
+                                    $('#SearchEventsPreviewBox #SearchEventsUL .IndividualEventPreview input[value=' +EventToJoin+ ']').parent().remove();
                             
                                                     //Send an AJAX to the server that the user joined this event
                                                     $.ajax({
@@ -2107,6 +2896,7 @@ $(document).ready
                                                            }
                                                            }); //End of AJAX
                                                     }
+                                                }
                             );
 
 
@@ -2299,6 +3089,8 @@ $(document).ready
                             
                                                 function()
                                                 {
+                                                    //Leave the EventID room [If was entered in the first place]
+                                                    EventGroupChatSocket.emit('LeaveRoom', $.cookie("EventIDOpened") );
                             
                                                     //Remove all other displayed information about "About" (if exists)
                                                     $('#AboutUser').remove();
@@ -2319,6 +3111,9 @@ $(document).ready
                                                     $('#SearchEventSection').remove();
                             
                                                     $('#EventSuccessful').hide();
+                            
+                                                    //Remove "change password" section
+                                                    $('#PasswordChange').remove();
                             
                             
                             
@@ -2381,7 +3176,8 @@ $(document).ready
                                                                                                            {
                                                                                                               type: 'text',
                                                                                                               name: 'EventName',
-                                                                                                               required: "true"
+                                                                                                               required: "true",
+                                                                                                             autocomplete: 'off'
                                                                                                            }
                                                                                                   )
                                                                                                 );
@@ -2409,7 +3205,8 @@ $(document).ready
                                                                                                             {
                                                                                                               type: 'text',
                                                                                                               name: 'EventType',
-                                                                                                              required: "true"
+                                                                                                              required: "true",
+                                                                                                            autocomplete: 'off'
                                                                                                             }
                                                                                                     )
                                                                                                   );
@@ -2424,8 +3221,8 @@ $(document).ready
                             
                             
                                                     //Default value for the sport picker is Football
-                                                    //So the user, doesn't leave it emopty
-                                                    $('#EventTypeLabel input').val( 'Football');
+                                                    //So the user, doesn't leave it empty
+                                                    $('#EventTypeLabel input').val( 'football');
                                                     $('#EventTypeLabel input').css( 'background-image', 'url("./assets/images/football.svg")');
                                                     $('#EventTypeLabel input').css( 'background-repeat' , 'no-repeat');
                                                     $('#EventTypeLabel input').css( 'background-size', '14px');
@@ -2456,44 +3253,52 @@ $(document).ready
                                                      //Append the <ul> to the <div>
                                                      $AvailableEventTypes.append($AvailableEventTypesUL);
                             
-                            
-                                                     //When the DB is set, we should make an .ajax call and loop over the sports available in the DB
-                                                    //Loop over all the sporting events available and append them
-                                                    $.each(Sports,
-                                                                   function(index, item)
-                                                                   {
-
-                                                                       //Now add the available sports to each <li>
-                                                                       var $IndividualEventType = $('<li>',
-                                                                                                          {
-                                                                                                            class: 'IndividualEventType'
-                                                                                                          }
-                                                                                                  );
-                                                           
-                                                                       //Now add the SVG of the sport first
-                                                                       var $IndividualEventImg = $('<img>',
-                                                                                                            {
-                                                                                                                src: item.url,
-                                                                                                                width: '11px'
-                                                                                                            }
-                                                                                                    );
-                                                           
-                                                                       //Now add the name of the sport
-                                                                       var $IndividualEventName = $('<p>',
-                                                                                                           {
-                                                                                                             text: item.EventName
-                                                                                                           }
-                                                                                                   );
-
-                                                                       $IndividualEventType.append($IndividualEventImg);  //Append the Sport SVG to the <li>
-                                                                       $IndividualEventType.append($IndividualEventName);  //Append the sport name to the <li>
-                                                                       $AvailableEventTypesUL.append($IndividualEventType);  //Append the  <li> to the <ul>
-                                                           
-                                                                   }
-                                                           );
                         
-        
-                            
+                                                    //Get all event types available
+                                                    $.ajax({
+                                                           type: 'GET',
+                                                           url: "/GetAllSports",
+                                                           dataType: 'JSON',
+                                                           success: function (response)
+                                                           {
+                                                  
+                                                            //Loop over all the sporting events available and append them
+                                                            $.each(response,
+                                                                           function(index, item)
+                                                                           {
+
+                                                                               //Now add the available sports to each <li>
+                                                                               var $IndividualEventType = $('<li>',
+                                                                                                                  {
+                                                                                                                    class: 'IndividualEventType'
+                                                                                                                  }
+                                                                                                          );
+                                                                   
+                                                                               //Now add the SVG of the sport first
+                                                                               var $IndividualEventImg = $('<img>',
+                                                                                                                    {
+                                                                                                                        src: './assets/images/'+ item.SportType + '.svg',
+                                                                                                                        width: '11px'
+                                                                                                                    }
+                                                                                                            );
+                                                                   
+                                                                               //Now add the name of the sport
+                                                                               var $IndividualEventName = $('<p>',
+                                                                                                                   {
+                                                                                                                     text: item.SportType
+                                                                                                                   }
+                                                                                                           );
+
+                                                                               $IndividualEventType.append($IndividualEventImg);  //Append the Sport SVG to the <li>
+                                                                               $IndividualEventType.append($IndividualEventName);  //Append the sport name to the <li>
+                                                                               $AvailableEventTypesUL.append($IndividualEventType);  //Append the  <li> to the <ul>
+                                                                   
+                                                                           }
+                                                                   );
+                                                
+                                
+                                                           }
+                                                           }); //End of AJAX
                             
                             
                         
@@ -2514,7 +3319,8 @@ $(document).ready
                                                                                                               {
                                                                                                                 type: 'number',
                                                                                                                 name: 'EventNumppl',
-                                                                                                                required: "true"
+                                                                                                                required: "true",
+                                                                                                                autocomplete: 'off'
                                                                                                               }
                                                                                                     )
                                                                                                   );
@@ -2544,7 +3350,8 @@ $(document).ready
                                                                                                                     type: 'text',
                                                                                                                     class:'DateTimePicker_Event',
                                                                                                                     name: 'EventDateTime',
-                                                                                                                    required: "true"
+                                                                                                                    required: "true",
+                                                                                                                   autocomplete: 'off'
                                                                                                                 }
                                                                                                       )
                                                                                                     );
@@ -2582,7 +3389,8 @@ $(document).ready
                                                                                                                       type: 'text',
                                                                                                                       class:'TimePicker_Event',
                                                                                                                       name: 'EventEndTime',
-                                                                                                                      required: "true"
+                                                                                                                      required: "true",
+                                                                                                                      autocomplete: 'off'
                                                                                                                     }
                                                                                                         )
                                                                                                       );
@@ -2623,7 +3431,8 @@ $(document).ready
                                                                                                                     type: 'text',
                                                                                                                     class:'TimePicker_Event',
                                                                                                                     name: 'EventLocation',
-                                                                                                                    required: "true"
+                                                                                                                    required: "true",
+                                                                                                                    autocomplete: 'off'
                                                                                                                    }
                                                                                                        )
                                                                                                      );
@@ -2652,7 +3461,8 @@ $(document).ready
                                                                                                                       rows: 4,
                                                                                                                       maxlength: 400,
                                                                                                                       name: 'EventDescription',
-                                                                                                                      required: "true"
+                                                                                                                      required: "true",
+                                                                                                                      autocomplete: 'off'
                                                                                                                     }
                                                                                                         )
                                                                                                       );
@@ -2712,6 +3522,7 @@ $(document).ready
                             
                                                         function()
                                                         {
+                                                            $('.BodyNavClicked').removeClass('BodyNavClicked');
                             
                                                             //Remove the datepicker
                                                             $('.xdsoft_datetimepicker').remove();
@@ -2775,91 +3586,201 @@ $(document).ready
  
  
              $.datetimepicker.setLocale('en');
-
- 
- 
-
  
  
  
  
  
  
+ /**************************************added by Paul: PARHAM HERE (4) start*************************************************/
+ 
+/***** Change Password section START *****/
+ 
+ //When click on "change password" button, show up section for changing password of user.
+ $(document).on("click", "#Change_Pass", showChangePassToUser);
+ 
+ //Show section for changing password of user.
+ function showChangePassToUser()
+ {
+ //Remove other displayed info to display "change password" section.
+ removeOtherDisplayedInfo();
+ 
+ var $changePassSection = $("<section/>",
+                            {
+                            id: "PasswordChange" //Please don't change this ID
+                            }
+                            );
+ 
+ $changePassSection.insertAfter("#ProfileHeader");
+ 
+ //create form to send the server
+ $form_pass = $("<form/>",
+                {
+                id: "form_pass"
+                }
+                );
+ 
+ $header = $("<p/>",
+             {
+             text: "Change Password"
+             }
+             );
+ 
+ //There are three inputs: current password, new password, confirm new password.
+ $currentPass = $("<input>",
+                  {
+                  type: "password",
+                  name: "currentPass",
+                  class: "password",
+                  value: "",
+                  placeholder: "Type current password",
+                  pattern: ".{6,13}",
+                  required: "true"
+                  }
+                  );
+ 
+ $newPass = $("<input>",
+              {
+              type: "password",
+              name: "newPass",
+              class: "password",
+              value: "",
+              placeholder: "Type new password",
+              pattern: ".{6,13}",
+              required: "true"
+              }
+              );
+ 
+ $confirmPass = $("<input>",
+                  {
+                  type: "password",
+                  name: "confirmNewPass",
+                  class: "password",
+                  value: "",
+                  placeholder: "Confirm new password",
+                  pattern: ".{6,13}",
+                  required: "true"
+                  }
+                  );
+ 
+ $change_button = $("<input>",
+                    {
+                    class: "change_button",
+                    type: "submit",
+                    value: "Change"
+                    }
+                    );
+ 
+ $form_pass.append($header);
+ $form_pass.append($currentPass);
+ $form_pass.append($newPass);
+ $form_pass.append($confirmPass);
+ $form_pass.append($change_button);
+ 
+ //error message placeholder.
+ $error_msg = $("<div/>",
+                {
+                id: "error_msg"
+                }
+                );
  
  
  
-             var socket = io();  //Connects to the root socket namespace
-//
-//             $('#Babz').submit(function()
-//                              {
-//                                  //Push the message into the socket, can also use AJAX to inform the database!
-//                                  socket.emit('chat message', $('#m').val());
-//                                  $('#m').val(''); //Clear the chat box
-//                                  return false;  //Dont submit anymore, we already submitted
-//                              }
-//                             );
-//
-//             $('#SearchBar').submit(function()
-//                                   {
-//                                   //Push the message into the socket, can also use AJAX to inform the database!
-//                                   socket2.emit('Yo socket 2, this is the search bar', $('#SearchBarInput').val());
-//                                   $('#SearchBarInput').val(''); //Clear the search bar
-//                                   return false;
-//                                   }
-//                                    );
- 
-//                 socket2.on('connect', function () {
-//                               chat.emit('hi!');
-//                         });
- 
- 
-            var GroupChatEventsSocket = io('/GroupChatEvents');
- 
-             GroupChatEventsSocket.on('connect', function ()
-                                                {
-                                                 // alert('Connected to groupchatevents multiplex socket');
-                                                }
-                                      );
- 
-             $('#SearchBar').submit(function()
-                                   {
-                                   //Push the message into the socket, can also use AJAX to inform the database!
-//                                   GroupChatEventsSocket.emit('GroupChatMessage', $('#SearchBarInput').val()); //only this namespace socket gets it, lik multiplex
-//
-//                                    socket.emit('GroupChatMessage', $('#SearchBarInput').val());  //Only socket namespace / gets the message
-//                                   socket.broadcast.emit('GroupChatMessage', $('#SearchBarInput').val());
-                                    GroupChatEventsSocket.emit('GroupChatMessage', {myID:  $.cookie("UserID"), friendid: $.cookie("FriendIDClicked") });
-                                   $('#SearchBarInput').val(''); //Clear the search bar
-                                   return false;
-                                   }
-                                    );
-
+ $changePassSection.append($form_pass);
+ $changePassSection.append($error_msg);
  
  
  
-     $('#Babz').submit(function()
-                                 {
-                               GroupChatEventsSocket.disconnect();
+ }
+ 
+ //Request to server when submiting new password.
+ $(document).on("submit", "#form_pass",
+                function(e)
+                {
+                e.preventDefault();
+                
+                //Format into JSON.
+                // Format for "change password" section:
+                // {"currentPass":<current password>, "newPass":<new password>,
+                // "confirmNewPass": <confirm new password>}
+                var pass_info  = $("#form_pass").serializeArray();
+                
+                var data = [];
+                var data_dic = {};
+                
+                $.each(pass_info,
+                       function(index, item)
+                       {
+                       data_dic[item.name] = item.value;
+                       }
+                       );
+                
+                //request to server, and the server will send the following status in JSON to the user:
+                // status -2: failed to change password since current password doesn't match to the actual one.
+                // status -1: failed to change password since new password and its confirmation don't match.
+                // status 0: successed to change password.
+                $.ajax({
+                       type: 'POST',
+                       url: "/ChangePassword",  //URL to send to the server
+                       dataType: 'JSON',
+                       data: data_dic,
+                       success: function(response)
+                       {
                        
-//                       GroupChatEventsSocket.socket.reconnect();
-                       console.log('Client DCed client side from groupchatsocket');
-                           return false;
-                                 }
-                                );
+                       console.log(response.status);
+                       
+                       $("#passwordChangeApproved").remove();
+                       $("#error_msg").hide();
+                       
+                       //send proper error msg on fail, or display approved image on success.
+                       if (response.status === -2)
+                       {
+                       $("#error_msg").text("Please enter the correct current password.");
+                       $("#error_msg").show();
+                       $("#error_msg").css({
+                                           "border":"3px solid red",
+                                           "padding":"5px",
+                                           "border-radius":"4px"
+                                           });
+                       
+                       }
+                       else if (response.status === -1)
+                       {
+                       $("#error_msg").text("Please enter the same new password.");
+                       $("#error_msg").show();
+                       $("#error_msg").css({
+                                           "border":"3px solid red",
+                                           "padding":"5px",
+                                           "border-radius":"4px"
+                                           });
+                       
+                       }
+                       else
+                       {
+                       var $ApprovedTick = $('<img>',
+                                             {
+                                             src: '../assets/images/approved.svg',  //The image url
+                                             alt: "Approved",
+                                             width: '50px',
+                                             id: 'passwordChangeApproved'
+                                             }
+                                             );
+                       
+                       //Append it to the header
+                       $ApprovedTick.insertBefore('#form_pass');
+                       }
+                       }
+                       }); //End of AJAX
+                
+                
+                }
+                );
  
- $('#ProfilePic').click(function()
-                   {
-//                   GroupChatEventsSocket.disconnect();
-                   
-                                          GroupChatEventsSocket.connect();
-                   console.log('client reconnected!');
-                   return false;
-                   }
-                   );
+/***** Change Password section END *****/
  
+/**************************************added by Paul: PARHAM HERE (4) start*************************************************/
 
- 
- 
+
  
     } //End of $(document).ready function
 

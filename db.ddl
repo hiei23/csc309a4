@@ -1,5 +1,6 @@
 
 DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE IF EXISTS Admins CASCADE;
 DROP TABLE IF EXISTS UnreadNotifications CASCADE;
 DROP TABLE IF EXISTS Friends CASCADE;
 DROP TABLE IF EXISTS Sports CASCADE;
@@ -8,6 +9,7 @@ DROP TABLE IF EXISTS Event CASCADE;
 DROP TABLE IF EXISTS EventUsers CASCADE;
 DROP TABLE IF EXISTS EventGroupChat CASCADE;
 DROP TABLE IF EXISTS OneToOneChat CASCADE;
+DROP TABLE IF EXISTS Ratings CASCADE;
 
 CREATE TABLE Users
 (
@@ -25,8 +27,17 @@ CREATE TABLE Users
     about text,
     createdAt TIMESTAMP DEFAULT now(),
     ProfileImage text,
-    fbid text
+    fbid text,
+    hashedpassword VARCHAR(100)
 ) ;
+
+CREATE TABLE Admins
+(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(40) NOT NULL,
+    account VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(30) NOT NULL
+);
 
 --Used to display to icon numbers when the user first logs in
 CREATE TABLE UnreadNotifications
@@ -95,12 +106,12 @@ CREATE TABLE Event
 );
 
 
-
 --The users attending each Event
 CREATE TABLE EventUsers
 (
     id INTEGER REFERENCES Event(Eventid) ON DELETE CASCADE,
     userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+    EventRatingSubmitted text DEFAULT 'no',
     PRIMARY KEY(id, userid)
 );
 
@@ -121,19 +132,16 @@ CREATE TABLE OneToOneChat
     MessageTime TIMESTAMP DEFAULT now()
 );
 
+CREATE TABLE Ratings
+(
+    userid INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+    eventid INTEGER REFERENCES Event(Eventid) ON DELETE CASCADE,
+    comment text,
+    rating INTEGER,
+    ratingDateTime TIMESTAMP DEFAULT now()
+);
 
 
-
-
-
-
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 1, 'Hi Everybody!', '2016 07 20'::timestamp);
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 4, 'Bye Guyz!', '2016 07 21'::timestamp );
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 1, 'Take Care',  '2016-07-22 21:45:00'::timestamp);
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 1, 'YOYOY Exam time',  '2016-07-23 21:45:00'::timestamp);
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 2, 'Stop am studying',  '2016-07-23 21:46:00'::timestamp);
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 4, 'Parham Not Again!!',  '2016-07-23 21:47:00'::timestamp);
-INSERT INTO EventGroupChat (eventid, sentById, chatmessage, MessageTime ) VALUES(11, 1, 'Wazzup boyzz!!',  '2016-07-23 21:49:00'::timestamp);
 
 
 
@@ -152,9 +160,6 @@ INSERT INTO Sports (name) VALUES('tennis');
 INSERT INTO Sports (name) VALUES('volleyball');
 INSERT INTO Sports (name) VALUES('football');
 INSERT INTO Sports (name) VALUES('swimming');
-
-
-
 
 
 
